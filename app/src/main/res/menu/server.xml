@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+         Single menu item
+         Set id, icon and Title for each menu item
+    -->
+
+    <item
+        android:id="@+id/menu_server_refresh"
+        android:icon="@drawable/navigation_refresh"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/Refresh"/>
+
+</menu>

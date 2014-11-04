@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_vertical_margin">1dp</dimen>
+    <dimen name="column_padding_X">3dp</dimen>
+    <dimen name="column_padding_Y">0pt</dimen>
+    <dimen name="column_round_corners">10dp</dimen>
+    <dimen name="font_size">15sp</dimen>
+    <dimen name="font_size_sm">10sp</dimen>
+    <!--  
+    <dimen name="activity_vertical_margin">1sp</dimen>
+    <dimen name="column_padding_X">3sp</dimen>
+    <dimen name="column_padding_Y">0sp</dimen>
+    <dimen name="column_round_corners">10sp</dimen>
+    <dimen name="font_size">20sp</dimen>
+    <dimen name="font_size_sm">10sp</dimen>
+-->
+</resources>

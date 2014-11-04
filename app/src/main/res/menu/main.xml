@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+         Single menu item
+         Set id, icon and Title for each menu item
+    -->
+
+    <item
+        android:id="@+id/menu_patch"
+        android:icon="@drawable/collections_view_as_grid"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_patch"/>
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/action_settings"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_settings"/>
+     <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/content_save"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_save"/>
+      <item
+        android:id="@+id/menu_load"
+        android:icon="@drawable/collections_collection"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_load"/>
+    <!-- item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/action_about"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_about"/-->
+
+</menu>

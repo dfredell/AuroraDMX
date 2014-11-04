@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="channel_color_title">Channel Color</string>
+
+    <string name="pref_default_fade_time">5</string>
+    <string name="pref_default_channels">20</string>
+    <string name="pref_sacn_universe_def">1</string>
+    
+</resources>

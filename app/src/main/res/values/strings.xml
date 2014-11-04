@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AuroraDMX</string>
+    <string name="menu_settings">Settings</string>
+    <string name="Save">Save</string>
+    <string name="AddCue">Add Cue</string>
+    <string name="cue">Cue</string>
+    <string name="editName">Name : </string>
+    <string name="delete">Delete</string>
+    <string name="deletedCue">Deleted Cue</string>
+    <string name="Refresh">Refresh</string>
+    <string name="canNotDeleteWhileFading">Can not delete while fading</string>
+    <string name="onlyTwoDec">Only 2 decimal places allowed</string>
+    <string name="errNumConv">Error Number Conversion</string>
+    <string name="Error">Error</string>
+    <string name="cueMustBePos">Cue numbers must be positive</string>
+    <string name="serverError">Server Error</string>
+    <string name="dmxRangeError">DMX Channel Range 1 &#8211; 200</string>
+    <string name="waitingOnFade">Waiting on Fade</string>
+    <string name="FadeUp">Fade Up : </string>
+    <string name="FadeDown">Fade Down : </string>
+    <string name="title_activity_CueObj">Cue Object</string>
+    <string name="title_activity_EditCueMenu">Edit Cue Menu</string>
+    <string name="dimmer">Dimmer</string>
+    <string name="channel">Channel</string>
+    <string name="menu_clearPatch">Clear Patch</string>
+    <string name="menu_oneToOne">One To One</string>
+    <string name="menu_patch">Patch</string>
+    <!-- string name="menu_about">About</string -->
+    <string name="restore_defaults">Restore Defaults</string>
+    <string name="title_activity_patch">Patch</string>
+    <string name="unlock_channels_title">Purchase App</string>
+    <string name="unlock_channels_sum">Allow more than 5 channels</string>
+    <string name="dmxRangePurchaseLimit">Free version limited to 5 channels</string>
+    <string name="errorProcessPurchases">Unable to process purchases currently</string>
+    <string name="select_protocol_title">Select DMX protocol</string>
+    <string name="pref_header_artnet">ArtNet Server</string>
+    <string name="pref_sacn_universe_title">sACN Universe</string>
+    <string name="pref_header_sacn">sACN Server</string>
+    <string name="pref_header_sacn_unicast">sACN Unicast Server</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_load">Load</string>
+    <string name="pref_sacn_unicast_ip_def">192.168.0.0</string>
+    <string name="serverUnknown">Server %s Not Found</string>
+    <string name="serverName">Server</string>
+    
+
+</resources>

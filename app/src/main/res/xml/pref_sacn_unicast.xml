@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="pref_sacn">
+
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_sacn_universe_def"
+        android:inputType="number"
+        android:key="protocol_sacn_universe"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_sacn_universe_title" 
+        android:maxLength="2"/>
+    
+    <EditTextPreference
+        android:defaultValue="@string/pref_sacn_unicast_ip_def"
+        android:inputType="text"
+        android:key="protocol_sacn_unicast_ip"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/serverName" 
+        android:maxLength="15"/>
+    
+    <PreferenceCategory android:key="targetCategory"></PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,75 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="example_checkbox"
+        android:summary="@string/pref_description_social_recommendations"
+        android:title="@string/pref_title_social_recommendations" />
+    -->
+
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_fade_time"
+        android:inputType="number"
+        android:key="fade_up_time"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Default cue fade up time" 
+        android:maxLength="3"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_fade_time"
+        android:inputType="number"
+        android:key="fade_down_time"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Default cue fade down time" 
+        android:maxLength="3"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_channels"
+        android:inputType="number"
+        android:key="channels"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Number of channels" 
+        android:maxLength="3"/>
+    <!--
+         NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it.
+    -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+
+	<Preference android:key="unlock_channels"
+            android:summary="@string/unlock_channels_sum"
+            android:title="@string/unlock_channels_title"/>
+    
+    <ListPreference
+        android:defaultValue="#ffd700"
+        android:entries="@array/pref_color_list_titles"
+        android:entryValues="@array/pref_color_list_values"
+        android:key="channel_color"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/channel_color_title" />
+    
+    <ListPreference
+        android:defaultValue="#ffd700"
+        android:entries="@array/pref_select_protocol_titles"
+        android:entryValues="@array/pref_select_protocol_values"
+        android:key="select_protocol"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/select_protocol_title" />
+
+    <com.AuroraByteSoftware.AuroraDMX.ui.YesNoDialog
+	    android:dialogMessage="Are you sure you want to revert all settings to their default values?"
+	    android:summary="Revert all settings to their default values."
+	    android:title="@string/restore_defaults" />
+
+</PreferenceScreen>

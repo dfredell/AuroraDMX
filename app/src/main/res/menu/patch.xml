@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+        
+     <item
+        android:id="@+id/menu_patch_onetoone"
+        android:icon="@drawable/device_access_storage"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_oneToOne"/>
+      <item
+        android:id="@+id/menu_patch_clear"
+        android:icon="@drawable/navigation_cancel"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_clearPatch"/>
+
+</menu>

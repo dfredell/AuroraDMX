@@ -20,6 +20,5 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:20.0.0'
-    compile files('libs/commons-lang3-3.3.2-javadoc.jar')
     compile files('libs/commons-lang3-3.3.2.jar')
 }

@@ -152,7 +152,7 @@ public class ProjectManagement extends MainActivity {
 		}
 
 		// create a new "Add Cue" button
-		((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton("Add Cue"));
+		((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton(mainActivity.getString(R.string.AddCue)));
 		mainActivity.setUpNetwork();
 		// System.out.println("open complete");
 

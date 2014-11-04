@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.AuroraByteSoftware.AuroraDMX"
-    android:versionCode="10"
-    android:versionName="1.5" >
+    package="com.AuroraByteSoftware.AuroraDMX">
 
-    <uses-sdk
-        android:minSdkVersion="15"
-        android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />

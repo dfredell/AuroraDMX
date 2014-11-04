@@ -395,7 +395,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		cueCount++;
 
 		// create a new "Add Cue" button
-		((LinearLayout) findViewById(R.id.CueLine)).addView(makeButton("Add Cue"));
+		((LinearLayout) findViewById(R.id.CueLine)).addView(makeButton(getString(R.string.AddCue)));
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -504,7 +504,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		PatchActivity.patchOneToOne();
 
 		// create a new "Add Cue" button
-		((LinearLayout) findViewById(R.id.CueLine)).addView(makeButton("Add Cue"));
+		((LinearLayout) findViewById(R.id.CueLine)).addView(makeButton(getString(R.string.AddCue)));
 		setUpNetwork();
 	}
 

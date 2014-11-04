@@ -64,7 +64,7 @@ public class EditCueMenu extends MainActivity {
 			}
 		});
 		// Create the Insert button for the Edit Cue menu
-		builder.setNegativeButton("Insert", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(R.string.insert, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				ViewGroup layout = (ViewGroup) alCues.get(currentCue).getButton().getParent();

@@ -19,7 +19,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Default cue fade up time" 
+        android:title="@string/default_fadeUp"
         android:maxLength="3"/>
     <EditTextPreference
         android:defaultValue="@string/pref_default_fade_time"
@@ -28,7 +28,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Default cue fade down time" 
+        android:title="@string/default_fadeDown"
         android:maxLength="3"/>
     <EditTextPreference
         android:defaultValue="@string/pref_default_channels"
@@ -37,7 +37,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Number of channels" 
+        android:title="@string/number_of_channels"
         android:maxLength="3"/>
     <!--
          NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
@@ -68,8 +68,8 @@
         android:title="@string/select_protocol_title" />
 
     <com.AuroraByteSoftware.AuroraDMX.ui.YesNoDialog
-	    android:dialogMessage="Are you sure you want to revert all settings to their default values?"
-	    android:summary="Revert all settings to their default values."
+	    android:dialogMessage="@string/confirm_revert"
+	    android:summary="@string/confirm_revert_summary"
 	    android:title="@string/restore_defaults" />
 
 </PreferenceScreen>

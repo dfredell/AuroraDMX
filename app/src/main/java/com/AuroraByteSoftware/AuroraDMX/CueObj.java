@@ -50,7 +50,7 @@ public class CueObj extends MainActivity implements Serializable {
 			button = a_button;
 			name = cueName;
 		} else {// Cue can not be below 0
-			Toast.makeText(button.getContext(), "Cue numbers must be positive", Toast.LENGTH_SHORT)
+			Toast.makeText(button.getContext(), getString(R.string.cueMustBePos), Toast.LENGTH_SHORT)
 					.show();
 		}
 	}

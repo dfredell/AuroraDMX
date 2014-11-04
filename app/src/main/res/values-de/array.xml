@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_color_list_titles">
+        <item>Weiß</item>
+        <item>Rot</item>
+        <item>Gold</item>
+        <item>Grün</item>
+        <item>Türkis</item>
+        <item>Violett</item>
+    </string-array>
+    <string-array name="pref_color_list_values">
+        <item>#FFFFFF</item>
+        <item>#8B0000</item>
+        <item>#ffd700</item>
+        <item>#228B22</item>
+        <item>#00CED1</item>
+        <item>#9400D3</item>
+    </string-array>
+
+    <string-array name="pref_select_protocol_titles">
+        <item>ArtNet</item>
+        <item>sACN E1.31 Broadcast</item>
+        <item>sACN E1.31 Unicast</item>
+    </string-array>
+    <string-array name="pref_select_protocol_values">
+        <item>ARTNET</item>
+        <item>SACN</item>
+        <item>SACNUNI</item>
+    </string-array>
+</resources>

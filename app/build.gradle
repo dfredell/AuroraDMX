@@ -1,20 +1,27 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
-
+    signingConfigs {
+    }
+    compileSdkVersion 21
+    buildToolsVersion '21.1.0'
     defaultConfig {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
-        targetSdkVersion 20
+        targetSdkVersion 21
+        versionCode 12
+        versionName '1.5'
     }
-
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+    productFlavors {
+    }
+    dexOptions {
+        incremental true
     }
 }
 

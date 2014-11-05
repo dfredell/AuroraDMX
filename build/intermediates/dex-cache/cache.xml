@@ -2,47 +2,41 @@
 <pre-dex-items>
 
     <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/internal_impl-20.0.0-683202aae12cf7d2192bed018b34ca60a920d66d.jar"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
+        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/internal_impl-21.0.0-658e30a5b0a46bff535eb01b4c72387545d02126.jar"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
         jumboMode="false"
         revision="21.1.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0"/>
     <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-683202aae12cf7d2192bed018b34ca60a920d66d.jar"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
-    <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/support-annotations-20.0.0-4ea26a86ba0f491fb7af179ed94cdd90f78c9eba.jar"
-        jar="/Applications/adt-bundle-mac/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/debug/classes-a88888deea66f39a39aff0b6048218af58d6e4a3.jar"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.larswerkman/HoloColorPicker/1.4/classes.jar"
         jumboMode="false"
         revision="21.1.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+        sha1="5d5a825cbf0f67237377034c2c4edf9ba7e60fbe"/>
     <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/classes-a172fd29f8b9c218cb1bb1db727a9c9db5cac436.jar"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/classes-1d4e22c7b148b60792ddfd6d9eb91fbbdf8c40e9.jar"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
         jumboMode="false"
         revision="21.1.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6"/>
     <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/debug/classes-a172fd29f8b9c218cb1bb1db727a9c9db5cac436.jar"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/support-annotations-21.0.0-1614d51541cce596545e3565a676541746fb19bc.jar"
+        jar="/Applications/adt-bundle-mac/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
         jumboMode="false"
-        revision="20.0.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
+        revision="21.1.0"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e"/>
     <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/debug/commons-lang3-3.3.2-042214310495db7eead7789aa6d1b570c99beaab.jar"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/libs/commons-lang3-3.3.2.jar"
+        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/classes-deedcdc3e33639caa0d49f5dbcffb6d547366665.jar"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.0/classes.jar"
         jumboMode="false"
-        revision="20.0.0"
-        sha1="659861b4acde07a0527211e40d256119face1d15"/>
+        revision="21.1.0"
+        sha1="0c0c19759e5868604a3b4c2c0074ee9404d73c76"/>
     <item
-        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-4ea26a86ba0f491fb7af179ed94cdd90f78c9eba.jar"
-        jar="/Applications/adt-bundle-mac/sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
+        dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/internal_impl-21.0.0-39d64e87bcd4aee47b097d9aa33f08f717d3b5b8.jar"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.0/libs/internal_impl-21.0.0.jar"
         jumboMode="false"
-        revision="20.0.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+        revision="21.1.0"
+        sha1="5a8e01742aee890c56fe638ea7c921b91a3fdc62"/>
     <item
         dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/pre-dexed/release/commons-lang3-3.3.2-042214310495db7eead7789aa6d1b570c99beaab.jar"
         jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/libs/commons-lang3-3.3.2.jar"

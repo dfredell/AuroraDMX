@@ -18,6 +18,9 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetUpdate;
+import com.AuroraByteSoftware.AuroraDMX.network.SendSacnUpdate;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditCueMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity;
 import com.AuroraByteSoftware.Billing.util.IabException;

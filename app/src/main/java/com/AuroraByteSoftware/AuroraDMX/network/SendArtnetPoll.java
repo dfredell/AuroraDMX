@@ -1,7 +1,10 @@
-package com.AuroraByteSoftware.AuroraDMX;
+package com.AuroraByteSoftware.AuroraDMX.network;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+
+import com.AuroraByteSoftware.AuroraDMX.MainActivity;
+
 import fr.azelart.artnetstack.domain.artnet.ArtNetObject;
 import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
 import fr.azelart.artnetstack.domain.controller.Controller;
@@ -13,7 +16,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
-class SendArtnetPoll extends Thread {
+public class SendArtnetPoll extends Thread {
 	private Context superContext=null;
 	@Override
 	public void run() {

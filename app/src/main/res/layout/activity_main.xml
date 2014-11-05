@@ -32,6 +32,7 @@
             android:orientation="horizontal"
             android:paddingBottom="3pt" >
         </LinearLayout>
+
     </com.AuroraByteSoftware.AuroraDMX.ui.MyHorizontalScrollView>
 
     <HorizontalScrollView

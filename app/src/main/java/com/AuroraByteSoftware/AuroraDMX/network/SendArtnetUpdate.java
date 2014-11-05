@@ -1,6 +1,11 @@
-package com.AuroraByteSoftware.AuroraDMX;
+package com.AuroraByteSoftware.AuroraDMX.network;
 
 import android.widget.Toast;
+
+import com.AuroraByteSoftware.AuroraDMX.MainActivity;
+import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.SettingsActivity;
+
 import fr.azelart.artnetstack.utils.ArtNetPacketEncoder;
 
 import java.io.IOException;
@@ -10,7 +15,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.TimerTask;
 
-class SendArtnetUpdate extends TimerTask {
+public class SendArtnetUpdate extends TimerTask {
 
 	private final MainActivity mainActivity;
     private String server = "";

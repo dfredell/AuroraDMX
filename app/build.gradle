@@ -9,8 +9,8 @@ android {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 12
-        versionName '1.5'
+        versionCode 13
+        versionName '1.6'
     }
     buildTypes {
         release {
@@ -22,10 +22,12 @@ android {
     }
     dexOptions {
         incremental true
+        preDexLibraries = false
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.0.0'
     compile files('libs/commons-lang3-3.3.2.jar')
+    compile 'com.android.support:support-v13:21.0.0'
+    compile 'com.larswerkman:HoloColorPicker:1.4'
 }

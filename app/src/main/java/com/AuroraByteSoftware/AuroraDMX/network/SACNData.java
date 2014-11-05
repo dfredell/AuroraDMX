@@ -1,4 +1,4 @@
-package com.AuroraByteSoftware.AuroraDMX;
+package com.AuroraByteSoftware.AuroraDMX.network;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;

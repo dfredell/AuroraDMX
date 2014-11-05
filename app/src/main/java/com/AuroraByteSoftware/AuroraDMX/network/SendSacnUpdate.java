@@ -1,6 +1,9 @@
-package com.AuroraByteSoftware.AuroraDMX;
+package com.AuroraByteSoftware.AuroraDMX.network;
 
 import android.widget.Toast;
+
+import com.AuroraByteSoftware.AuroraDMX.MainActivity;
+import com.AuroraByteSoftware.AuroraDMX.R;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -18,7 +21,7 @@ import java.util.TimerTask;
  * @author furtchet
  * 
  */
-class SendSacnUpdate extends TimerTask {
+public class SendSacnUpdate extends TimerTask {
 
 	private SACNData sacnPacket = null;
 	private final byte[] sacnMessage = new byte[638];

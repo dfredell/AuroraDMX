@@ -134,17 +134,21 @@ class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 * @param a_chLevel set the level
 	 */
 	public void setChLevel(double a_chLevel) {
-        if(MainActivity.sharedPref.getBoolean("channel_display_value", false)) {
-            tvVal.setText(Integer.toString((int) a_chLevel));
-        }else {
-            if (a_chLevel >= MAX_LEVEL) {
+        if (a_chLevel >= MAX_LEVEL) {
+            if(MainActivity.sharedPref.getBoolean("channel_display_value", false)) {
+                tvVal.setText(Integer.toString((int) a_chLevel));
+            }else {
                 tvVal.setText("Full");
-                toggleButton.setChecked(true);
-            } else {
-                tvVal.setText((int) (a_chLevel * 100 / MAX_LEVEL) + "%");
-                if (preFullLevel != a_chLevel)
-                    toggleButton.setChecked(false);
             }
+            toggleButton.setChecked(true);
+        } else {
+            if(MainActivity.sharedPref.getBoolean("channel_display_value", false)) {
+                tvVal.setText(Integer.toString((int) a_chLevel));
+            }else {
+                tvVal.setText((int) (a_chLevel * 100 / MAX_LEVEL) + "%");
+            }
+            if (preFullLevel != a_chLevel)
+                toggleButton.setChecked(false);
         }
 		seekBar.setProgress((int) a_chLevel);
 		chLevel = a_chLevel;

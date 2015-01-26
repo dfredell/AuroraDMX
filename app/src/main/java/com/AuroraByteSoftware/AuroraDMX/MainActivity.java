@@ -207,6 +207,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			patch = Arrays.copyOf(patch, number_channels + 1);
 		}
 
+        //Reset all the levels to display the percentage or step value
+        for (ColumnObj alColumn : alColumns) {
+            alColumn.setChLevel(alColumn.getChLevel());
+        }
+
 		sharedPref.edit().putString(SettingsActivity.channels, Integer.toString(number_channels)).apply();
 	}
 

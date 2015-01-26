@@ -62,5 +62,7 @@
     <string name="pref_default_fade_time">5</string>
     <string name="pref_default_channels">20</string>
     <string name="pref_sacn_universe_def">1</string>
+    <string name="display_value_title">Brightness as Steps</string>
+    <string name="display_value_summary">Displays the channel value as 255 steps instead of 100%</string>
 
 </resources>

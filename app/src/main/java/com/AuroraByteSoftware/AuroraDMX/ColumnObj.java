@@ -37,7 +37,7 @@ class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	private double chLevel = 0;
 	private final int MAX_LEVEL = 255;
     private double steep = 0;
-	
+
 	public ColumnObj(int a_ChNum, Context context, int scrollColor) {
 		ChNum = a_ChNum;
 		viewGroup = new LinearLayout(context);
@@ -134,14 +134,18 @@ class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 * @param a_chLevel set the level
 	 */
 	public void setChLevel(double a_chLevel) {
-		if (a_chLevel >= MAX_LEVEL) {
-			tvVal.setText("Full");
-			toggleButton.setChecked(true);
-		} else {
-			tvVal.setText((int) (a_chLevel * 100 / MAX_LEVEL) + "%");
-			if (preFullLevel != a_chLevel)
-				toggleButton.setChecked(false);
-		}
+        if(MainActivity.sharedPref.getBoolean("channel_display_value", false)) {
+            tvVal.setText(Integer.toString((int) a_chLevel));
+        }else {
+            if (a_chLevel >= MAX_LEVEL) {
+                tvVal.setText("Full");
+                toggleButton.setChecked(true);
+            } else {
+                tvVal.setText((int) (a_chLevel * 100 / MAX_LEVEL) + "%");
+                if (preFullLevel != a_chLevel)
+                    toggleButton.setChecked(false);
+            }
+        }
 		seekBar.setProgress((int) a_chLevel);
 		chLevel = a_chLevel;
 	}

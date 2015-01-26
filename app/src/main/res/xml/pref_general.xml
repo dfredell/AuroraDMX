@@ -1,14 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!--
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="example_checkbox"
-        android:summary="@string/pref_description_social_recommendations"
-        android:title="@string/pref_title_social_recommendations" />
-    -->
-
-
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     
@@ -66,6 +57,12 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/select_protocol_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="channel_display_value"
+        android:summary="@string/display_value_summary"
+        android:title="@string/display_value_title" />
 
     <com.AuroraByteSoftware.AuroraDMX.ui.YesNoDialog
 	    android:dialogMessage="@string/confirm_revert"

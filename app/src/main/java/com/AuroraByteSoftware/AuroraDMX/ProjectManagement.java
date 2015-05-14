@@ -41,6 +41,12 @@ public class ProjectManagement extends MainActivity {
 		HashSet<String> listOfProjects = (HashSet<String>) sharedPref.getStringSet(PREF_SAVES, new HashSet<String>());
 		listOfProjects.add(key);
 
+        //Get the channel names as an array
+        String channelNames[] = new String[alColumns.size()];
+        for (int i = 0; i < alColumns.size(); i++) {
+            channelNames[i] = alColumns.get(i).getChText();
+        }
+
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
@@ -50,7 +56,8 @@ public class ProjectManagement extends MainActivity {
 			objectOutput.writeObject(cueCount);
 			objectOutput.writeObject(sharedPref.getString(SettingsActivity.serveraddress, ""));
 			objectOutput.writeObject(getCurrentChannelArray());
-			byte[] data = arrayOutputStream.toByteArray();
+            objectOutput.writeObject(channelNames);
+            byte[] data = arrayOutputStream.toByteArray();
 
 			objectOutput.close();
 			arrayOutputStream.close();
@@ -88,6 +95,7 @@ public class ProjectManagement extends MainActivity {
 		Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
 		ObjectInputStream in;
 		int[] chLvls = new int[0];
+		String[] channelNames = null;
 
 		try {
 			in = new ObjectInputStream(base64InputStream);
@@ -110,15 +118,19 @@ public class ProjectManagement extends MainActivity {
 			Object readObject4CueCount = in.readObject();
 			Object readObject5IPAdr = in.readObject();
 			Object readObject6ChAry = null;
+			Object readObject6ChNames = null;
 			try {
 				readObject6ChAry = in.readObject();
+                readObject6ChNames = in.readObject();
 			} catch (EOFException e) {
 				// Do nothing we hit the end of the stored data
 			}
 
 			if (readObject1Channels.getClass().equals(Integer.class)) {
-				mainActivity.setNumberOfChannels((Integer) readObject1Channels);
-				sharedPref.edit().putString(SettingsActivity.channels, readObject1Channels + "").commit();
+                if (readObject6ChNames != null && readObject6ChNames.getClass().equals(String[].class))
+                    channelNames = (String[]) readObject6ChNames;
+				mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames);
+				sharedPref.edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
 			}
 			if (readObject2Cues.getClass().equals(alCues.getClass()))
 				alCues = (ArrayList<CueObj>) readObject2Cues;
@@ -127,7 +139,7 @@ public class ProjectManagement extends MainActivity {
 			if (readObject4CueCount.getClass().equals(Double.class))
 				cueCount = (Double) readObject4CueCount;
 			if (readObject5IPAdr.getClass().equals(String.class))
-				sharedPref.edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).commit();
+				sharedPref.edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
 			if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class))
 				chLvls = (int[]) readObject6ChAry;
 

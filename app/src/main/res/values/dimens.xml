@@ -5,6 +5,7 @@
     <dimen name="column_padding_X">3dp</dimen>
     <dimen name="column_padding_Y">0pt</dimen>
     <dimen name="column_round_corners">10dp</dimen>
+    <dimen name="column_text_padding">20dp</dimen>
     <dimen name="font_size">15sp</dimen>
     <dimen name="font_size_sm">10sp</dimen>
     <!--  

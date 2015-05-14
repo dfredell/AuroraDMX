@@ -7,6 +7,7 @@
     <string name="AddCue">Add Cue</string>
     <string name="cue">Cue</string>
     <string name="editName">Name : </string>
+    <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="insert">Insert</string>
     <string name="deletedCue">Deleted Cue</string>
@@ -28,7 +29,6 @@
     <string name="menu_clearPatch">Clear Patch</string>
     <string name="menu_oneToOne">One To One</string>
     <string name="menu_patch">Patch</string>
-    <!-- string name="menu_about">About</string -->
     <string name="restore_defaults">Restore Defaults</string>
     <string name="title_activity_patch">Patch</string>
     <string name="unlock_channels_title">Purchase App</string>
@@ -47,7 +47,9 @@
     <string name="serverName">Server</string>
     <string name="confirm_revert">Are you sure you want to revert all settings to their default values?</string>
     <string name="confirm_revert_summary">Revert all settings to their default values.</string>
-
+    <string name="display_value_title">Brightness as Steps</string>
+    <string name="display_value_summary">Displays the channel value as 255 steps instead of 100%</string>
+    <string name="cancel">Cancel</string>
 
 
     <!-- Preferences -->
@@ -62,7 +64,6 @@
     <string name="pref_default_fade_time">5</string>
     <string name="pref_default_channels">20</string>
     <string name="pref_sacn_universe_def">1</string>
-    <string name="display_value_title">Brightness as Steps</string>
-    <string name="display_value_summary">Displays the channel value as 255 steps instead of 100%</string>
+    <string name="editLevel">Level</string>
 
 </resources>

@@ -111,7 +111,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		alCues = new ArrayList<CueObj>();
 		alColumns = new ArrayList<ColumnObj>();
 		int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
-		setNumberOfChannels(number_channels);
+		setNumberOfChannels(number_channels, null);
 	}
 
 	void setUpNetwork() {
@@ -141,7 +141,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		
 	}
 
-	void setNumberOfChannels(int number_channels) {
+	void setNumberOfChannels(int number_channels, String[] channelNames) {
 		// check for app purchace
 		boolean paid = true;
 		try {
@@ -179,8 +179,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		orgColor = color;
 		if (change > 0) {// Adding channels
 			for (int x = (number_channels - change); x < number_channels && x < 512; x++) {
-				alColumns.add(new ColumnObj(x + 1, getApplicationContext(), color));
-				mainLayout.addView(alColumns.get(x).getViewGroup());
+                if(channelNames != null)
+    				alColumns.add(new ColumnObj(x + 1, getApplicationContext(), color, this, channelNames[x]));
+                else
+                    alColumns.add(new ColumnObj(x + 1, getApplicationContext(), color, this, null));
+                mainLayout.addView(alColumns.get(x).getViewGroup());
 			}
 			for (CueObj cue : alCues) {// Pad ch's in cues
 				cue.padChannels(number_channels);
@@ -409,7 +412,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		// System.out.println("Pref Change");
 		if (key.equals(SettingsActivity.channels)) {
-			setNumberOfChannels(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")));
+			setNumberOfChannels(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null);
 		}
 	}
 
@@ -436,7 +439,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		} catch (Throwable t) {
 			Log.w("ExternalStorage", "Error reading channel number", t);
 		}
-		setNumberOfChannels(number_channels);
+		setNumberOfChannels(number_channels, null);
 		setUpNetwork();
 	}
 

@@ -38,22 +38,22 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 	public static List<ColumnObj> alColumns = null;
 	static ArrayList<CueObj> alCues = null;
-    public static SharedPreferences sharedPref;
+    private static SharedPreferences sharedPref;
 	static Double cueCount = 1.0;// cueCount++ = new cue num
 	public static DatagramSocket clientSocket = null;
 	private int orgColor = 0;
 	private Timer ArtNet;
 	private Timer SACN;
 	private Timer SACNUnicast;
-	public static final ArrayList<String> foundServers = new ArrayList<String>();
+	public static final ArrayList<String> foundServers = new ArrayList<>();
 	public static ProgressDialog progressDialog = null;
 	public static final int ALLOWED_PATCHED_DIMMERS = 50;
 	public static final int MAX_DIMMERS = 512;
 	public static int[][] patch;
-	private static final String TAG = "com.AuroraByteSoftware.AuroraDMX";
+	private static final String TAG = "AuroraDMX";
 	private static IabHelper mHelper;
 	public static final String ITEM_SKU = "unlock_channels";
-	private final List<String> listOfSkus = new ArrayList<String>();
+	private final List<String> listOfSkus = new ArrayList<>();
 	private ProjectManagement pm = null;
 
 	/** Called when the activity is first created. */
@@ -108,16 +108,20 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		sharedPref.registerOnSharedPreferenceChangeListener(this);
-		alCues = new ArrayList<CueObj>();
-		alColumns = new ArrayList<ColumnObj>();
+		alCues = new ArrayList<>();
+		alColumns = new ArrayList<>();
 		int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
 		setNumberOfChannels(number_channels, null);
+	}
+
+	public static SharedPreferences getSharedPref() {
+		return sharedPref;
 	}
 
 	void setUpNetwork() {
 		// System.out.println("SetupNetwork ServerAddress: "+sharedPref.getString(SettingsActivity.serveraddress,
 		// ""));
-		String protocol = sharedPref.getString("select_protocol", "");
+		String protocol = getSharedPref().getString("select_protocol", "");
 
 		if (clientSocket != null)
 			clientSocket.close();
@@ -154,13 +158,11 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		} catch (IabException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IllegalStateException e) {
+		} catch (IllegalStateException | NullPointerException e) {
 			// Do nothing we must not be connected yet
-		} catch (NullPointerException e) {
-			//Something went wrong...
 		}
 
-        // Input cleansing
+		// Input cleansing
 		if (number_channels > 200) {
 			Toast.makeText(MainActivity.this, R.string.dmxRangeError, Toast.LENGTH_SHORT).show();
 			number_channels = 200;
@@ -175,14 +177,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		int change = number_channels - alColumns.size();
 		LinearLayout mainLayout = (LinearLayout) findViewById(R.id.ChanelLayout);
 
-		int color = Color.parseColor(sharedPref.getString("channel_color", "#ffcc00"));
-		orgColor = color;
+		orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
 		if (change > 0) {// Adding channels
 			for (int x = (number_channels - change); x < number_channels && x < 512; x++) {
                 if(channelNames != null)
-    				alColumns.add(new ColumnObj(x + 1, getApplicationContext(), color, this, channelNames[x]));
+    				alColumns.add(new ColumnObj(x + 1, getApplicationContext(), this, channelNames[x]));
                 else
-                    alColumns.add(new ColumnObj(x + 1, getApplicationContext(), color, this, null));
+                    alColumns.add(new ColumnObj(x + 1, getApplicationContext(), this, null));
                 mainLayout.addView(alColumns.get(x).getViewGroup());
 			}
 			for (CueObj cue : alCues) {// Pad ch's in cues
@@ -215,7 +216,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             alColumn.setChLevel(alColumn.getChLevel());
         }
 
-		sharedPref.edit().putString(SettingsActivity.channels, Integer.toString(number_channels)).apply();
+		getSharedPref().edit().putString(SettingsActivity.channels, Integer.toString(number_channels)).apply();
 	}
 
 	// Initiating Menu XML file (menu.xml)
@@ -288,10 +289,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 						out[patch[ch][dim] -1] = newLvl;
 				}
 			}
-		} catch (IndexOutOfBoundsException i) {
-			// Do nothing, probably got hit because we are loading a new server
-            i.printStackTrace();
-        } catch (Throwable t) {
+		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 		return out;
@@ -367,7 +365,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 * @param chLevels set levels
 	 * @param cueNum number for the cue
 	 */
-    void createCue(Button button, int[] chLevels, double cueNum) {
+    private void createCue(Button button, int[] chLevels, double cueNum) {
 		createCue(button, chLevels, cueNum, this.getString(R.string.cue) + " " + cueNum, -1, -1);
 	}
 
@@ -380,12 +378,12 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	 * @param cueNum cue number
 	 * @param cueName the cue name
 	 */
-    void createCue(Button button, int[] chLevels, double cueNum, String cueName, int fadeUpTime, int fadeDownTime) {
+	private void createCue(Button button, int[] chLevels, double cueNum, String cueName, int fadeUpTime, int fadeDownTime) {
 		// Rename the old button to Cue #
 
 		try {
-			fadeUpTime = (fadeUpTime == -1) ? Integer.parseInt(sharedPref.getString("fade_up_time", "5")) : fadeUpTime;
-			fadeDownTime = (fadeDownTime == -1) ? Integer.parseInt(sharedPref.getString("fade_down_time", "5")) : fadeDownTime;
+			fadeUpTime = (fadeUpTime == -1) ? Integer.parseInt(getSharedPref().getString("fade_up_time", "5")) : fadeUpTime;
+			fadeDownTime = (fadeDownTime == -1) ? Integer.parseInt(getSharedPref().getString("fade_down_time", "5")) : fadeDownTime;
 		} catch (Throwable t) {
 			t.printStackTrace();
 			Toast.makeText(MainActivity.this, R.string.errNumConv, Toast.LENGTH_SHORT).show();
@@ -419,14 +417,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 	protected void onResume() {
 		super.onResume();
 		// System.out.println("onResume");
-		sharedPref.registerOnSharedPreferenceChangeListener(this);
+		getSharedPref().registerOnSharedPreferenceChangeListener(this);
 
-		if (sharedPref.getBoolean(SettingsActivity.restoredefaults, false)) {
+		if (getSharedPref().getBoolean(SettingsActivity.restoredefaults, false)) {
 			restoreDefaults();
-			sharedPref.edit().putBoolean(SettingsActivity.restoredefaults, false).apply();
+			getSharedPref().edit().putBoolean(SettingsActivity.restoredefaults, false).apply();
 		}
 		// Change the color
-		int color = Color.parseColor(sharedPref.getString("channel_color", "#ffcc00"));
+		int color = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
 		if (color != orgColor) {// update the channel color
 			for (ColumnObj col : alColumns) {
 				col.setScrollColor(color);
@@ -435,7 +433,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		// Change the num of ch.
 		int number_channels = 5;
 		try {
-			number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
+			number_channels = Integer.parseInt(getSharedPref().getString(SettingsActivity.channels, "5"));
 		} catch (Throwable t) {
 			Log.w("ExternalStorage", "Error reading channel number", t);
 		}
@@ -461,8 +459,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 			clientSocket.close();
 		// System.out.println("onPause");
 		pm.save(null);
-		if (sharedPref != null)
-			sharedPref.unregisterOnSharedPreferenceChangeListener(this);
+		if (getSharedPref() != null)
+			getSharedPref().unregisterOnSharedPreferenceChangeListener(this);
 		super.onPause();
 	}
 
@@ -490,10 +488,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 		return button;
 	}
 
-	void restoreDefaults() {
+	private void restoreDefaults() {
 		// System.out.println("Restoring Defaults");
 		// Remove all the preferences
-		sharedPref.edit().clear().apply();
+		getSharedPref().edit().clear().apply();
 		// Stop ArtNet
 		clientSocket.close();
 		alCues.clear();

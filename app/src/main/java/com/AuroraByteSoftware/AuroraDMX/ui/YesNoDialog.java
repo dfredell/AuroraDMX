@@ -32,7 +32,7 @@ public class YesNoDialog extends DialogPreference {
         super.onDialogClosed(positiveResult);
         if (callChangeListener(positiveResult)) {
             //System.out.println(positiveResult);
-			MainActivity.sharedPref.edit().putBoolean(SettingsActivity.restoredefaults, positiveResult).commit();
+			MainActivity.getSharedPref().edit().putBoolean(SettingsActivity.restoredefaults, positiveResult).commit();
         }
     }
 }

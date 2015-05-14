@@ -73,8 +73,8 @@ public class EditCueMenu extends MainActivity {
 				int fadeUpTime = 5;
 				int fadeDownTime = 5;
 				try {
-					fadeUpTime = Integer.parseInt(sharedPref.getString("fade_up_time", "5"));
-					fadeDownTime = Integer.parseInt(sharedPref.getString("fade_down_time", "5"));
+					fadeUpTime = Integer.parseInt(getSharedPref().getString("fade_up_time", "5"));
+					fadeDownTime = Integer.parseInt(getSharedPref().getString("fade_down_time", "5"));
 				} catch (Throwable t) {
 					Toast.makeText(mainActivity, R.string.errNumConv, Toast.LENGTH_SHORT).show();
 				}

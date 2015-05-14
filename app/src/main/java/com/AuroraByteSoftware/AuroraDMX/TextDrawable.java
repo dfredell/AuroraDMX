@@ -2,7 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 /**
  * Copyright (c) 2012 Wireless Designs, LLC
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -10,10 +10,10 @@ package com.AuroraByteSoftware.AuroraDMX;
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -25,25 +25,22 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 //https://github.com/devunwired/textdrawable/blob/master/sample/src/main/java/com/example/textdrawable/drawable/TextDrawable.java
 
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
-
-
-        import android.content.Context;
-        import android.content.res.ColorStateList;
-        import android.content.res.Resources;
-        import android.content.res.TypedArray;
-        import android.graphics.Canvas;
-        import android.graphics.Color;
-        import android.graphics.ColorFilter;
-        import android.graphics.Paint;
-        import android.graphics.Path;
-        import android.graphics.Rect;
-        import android.graphics.Typeface;
-        import android.graphics.drawable.Drawable;
-        import android.text.Layout;
-        import android.text.StaticLayout;
-        import android.text.TextPaint;
-        import android.util.TypedValue;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.util.TypedValue;
 
 /**
  * A Drawable object that draws text.
@@ -120,7 +117,7 @@ public class TextDrawable extends Drawable {
             ap = context.obtainStyledAttributes(appearanceId, appearanceAttributes);
         }
         if (ap != null) {
-            for (int i=0; i < ap.getIndexCount(); i++) {
+            for (int i = 0; i < ap.getIndexCount(); i++) {
                 int attr = ap.getIndex(i);
                 switch (attr) {
                     case 0: //Text Size
@@ -359,8 +356,8 @@ public class TextDrawable extends Drawable {
             mTextBounds.setEmpty();
         } else {
             //Measure text bounds
-            double desired = Math.ceil( Layout.getDesiredWidth(mText, mTextPaint) );
-            mTextLayout = new StaticLayout(mText, mTextPaint, (int)desired,
+            double desired = Math.ceil(Layout.getDesiredWidth(mText, mTextPaint));
+            mTextLayout = new StaticLayout(mText, mTextPaint, (int) desired,
                     mTextAlignment, 1.0f, 0.0f, false);
             mTextBounds.set(0, 0, mTextLayout.getWidth(), mTextLayout.getHeight());
         }
@@ -376,7 +373,7 @@ public class TextDrawable extends Drawable {
         int newColor = mTextColors.getColorForState(stateSet, Color.WHITE);
         if (mTextPaint.getColor() != newColor) {
             mTextPaint.setColor(newColor);
-            return  true;
+            return true;
         }
 
         return false;

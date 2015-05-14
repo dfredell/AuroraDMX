@@ -24,6 +24,7 @@
     <string name="FadeDown">Fade Down : </string>
     <string name="title_activity_CueObj">Cue Object</string>
     <string name="title_activity_EditCueMenu">Edit Cue Menu</string>
+    <string name="title_activity_EditChannelMenu">Edit Channel Menu</string>
     <string name="dimmer">Dimmer</string>
     <string name="channel">Channel</string>
     <string name="menu_clearPatch">Clear Patch</string>

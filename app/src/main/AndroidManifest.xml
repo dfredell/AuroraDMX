@@ -38,6 +38,18 @@
             android:name="com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity"
             android:label="@string/title_activity_patch" >
         </activity>
+        <activity
+            android:name="com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu"
+            android:label="@string/title_activity_EditChannelMenu" >
+        </activity>
+        <activity
+            android:name="com.AuroraByteSoftware.AuroraDMX.CueObj"
+            android:label="Cue" >
+        </activity>
+        <activity
+            android:name="com.AuroraByteSoftware.AuroraDMX.ProjectManagement"
+            android:label="ProjectManagement" >
+        </activity>
     </application>
 
 </manifest>

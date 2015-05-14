@@ -10,7 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.TimerTask;
 
 /**
@@ -31,18 +30,15 @@ public class SendSacnUpdate extends TimerTask {
 
 	public SendSacnUpdate(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
-		String univ = MainActivity.sharedPref.getString("protocol_sacn_universe", "1").trim();
-		String protocol = MainActivity.sharedPref.getString("select_protocol", "");
+		String univ = MainActivity.getSharedPref().getString("protocol_sacn_universe", "1").trim();
+		String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
 		if ("SACNUNI".equals(protocol))
-			server = MainActivity.sharedPref.getString("protocol_sacn_unicast_ip", "239.255.0." + universe).trim();
+			server = MainActivity.getSharedPref().getString("protocol_sacn_unicast_ip", "239.255.0." + universe).trim();
 		System.out.println("unicast "+server);
 		try {
 			universe = Integer.parseInt(univ);
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | NumberFormatException e) {
 			// ignore
-			universe = 1;
-		} catch (NumberFormatException e) {
-			//Just default to universe 1
 			universe = 1;
 		}
 
@@ -84,13 +80,6 @@ public class SendSacnUpdate extends TimerTask {
 			if (!MainActivity.clientSocket.isClosed()) {
 				MainActivity.clientSocket.send(sendPacket);
 			}
-		} catch (SocketException e) {
-			// if (null != e && e.getCause().toString().contains("ENETUNREACH"))
-			// {
-			// MainActivity.clientSocket.close();
-			// e.printStackTrace();
-			// } else
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

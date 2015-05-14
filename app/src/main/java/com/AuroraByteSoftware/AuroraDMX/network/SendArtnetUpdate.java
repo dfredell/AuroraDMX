@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.TimerTask;
 
 public class SendArtnetUpdate extends TimerTask {
@@ -22,7 +21,7 @@ public class SendArtnetUpdate extends TimerTask {
 
 	public SendArtnetUpdate(MainActivity a_mainActivity) {
 		this.mainActivity = a_mainActivity;
-		server = MainActivity.sharedPref.getString(SettingsActivity.serveraddress.trim(),"");
+		server = MainActivity.getSharedPref().getString(SettingsActivity.serveraddress.trim(),"");
 	}
 
 	@Override
@@ -60,13 +59,6 @@ public class SendArtnetUpdate extends TimerTask {
 			if (!MainActivity.clientSocket.isClosed()) {
 				MainActivity.clientSocket.send(sendPacket);
 			}
-		} catch (SocketException e) {
-			// if (null != e && e.getCause().toString().contains("ENETUNREACH"))
-			// {
-			// MainActivity.clientSocket.close();
-			// e.printStackTrace();
-			// } else
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

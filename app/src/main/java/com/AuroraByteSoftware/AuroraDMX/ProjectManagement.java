@@ -10,11 +10,20 @@ import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -29,16 +38,19 @@ public class ProjectManagement extends MainActivity {
 	
 	private static boolean DeleteInProgress = false;
 
+	public ProjectManagement(){
+		mainActivity = null;
+	}
+
 	public ProjectManagement(MainActivity mainActivity) {
-		// TODO Auto-generated constructor stub
 		this.mainActivity = mainActivity;
 	}
 
 	void save(String key) {
 		if (key == null) {
-			key = sharedPref.getString(PREF_DEF, PREF_OLD_POINTER);
+			key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
 		}
-		HashSet<String> listOfProjects = (HashSet<String>) sharedPref.getStringSet(PREF_SAVES, new HashSet<String>());
+		HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
 		listOfProjects.add(key);
 
         //Get the channel names as an array
@@ -54,7 +66,7 @@ public class ProjectManagement extends MainActivity {
 			objectOutput.writeObject(alCues);
 			objectOutput.writeObject(patch);
 			objectOutput.writeObject(cueCount);
-			objectOutput.writeObject(sharedPref.getString(SettingsActivity.serveraddress, ""));
+			objectOutput.writeObject(getSharedPref().getString(SettingsActivity.serveraddress, ""));
 			objectOutput.writeObject(getCurrentChannelArray());
             objectOutput.writeObject(channelNames);
             byte[] data = arrayOutputStream.toByteArray();
@@ -68,10 +80,10 @@ public class ProjectManagement extends MainActivity {
 			b64.close();
 			out.close();
 
-			SharedPreferences.Editor ed = sharedPref.edit();
+			SharedPreferences.Editor ed = getSharedPref().edit();
 			ed.putString(key, new String(out.toByteArray()));
 			ed.putStringSet(PREF_SAVES, listOfProjects);
-			ed.commit();
+			ed.apply();
 
 			// Storage.writeFile(data);
 
@@ -86,10 +98,10 @@ public class ProjectManagement extends MainActivity {
 	void open(String key) {
 		// System.out.println("open");
 		if (key == null) {
-			key = sharedPref.getString(PREF_DEF, PREF_OLD_POINTER);
+			key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
 		}
 		// Read data back
-		byte[] bytes = sharedPref.getString(key, "{}").getBytes();
+		byte[] bytes = getSharedPref().getString(key, "{}").getBytes();
 
 		ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
 		Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
@@ -130,7 +142,7 @@ public class ProjectManagement extends MainActivity {
                 if (readObject6ChNames != null && readObject6ChNames.getClass().equals(String[].class))
                     channelNames = (String[]) readObject6ChNames;
 				mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames);
-				sharedPref.edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
+				getSharedPref().edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
 			}
 			if (readObject2Cues.getClass().equals(alCues.getClass()))
 				alCues = (ArrayList<CueObj>) readObject2Cues;
@@ -139,7 +151,7 @@ public class ProjectManagement extends MainActivity {
 			if (readObject4CueCount.getClass().equals(Double.class))
 				cueCount = (Double) readObject4CueCount;
 			if (readObject5IPAdr.getClass().equals(String.class))
-				sharedPref.edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
+				getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
 			if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class))
 				chLvls = (int[]) readObject6ChAry;
 
@@ -174,9 +186,9 @@ public class ProjectManagement extends MainActivity {
 		}
 
 		// Save a new default
-		SharedPreferences.Editor ed = sharedPref.edit();
+		SharedPreferences.Editor ed = getSharedPref().edit();
 		ed.putString(PREF_DEF, key);
-		ed.commit();
+		ed.apply();
 
 		// Set the title to the project
 		if (PREF_OLD_POINTER.equals(key))
@@ -215,13 +227,13 @@ public class ProjectManagement extends MainActivity {
 	 * Dialog to load a saved project
 	 */
 	public void onLoadClick() {
-		HashSet<String> listOfProjects = (HashSet<String>) sharedPref.getStringSet(PREF_SAVES, new HashSet<String>());
+		HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
 		if (listOfProjects.contains(PREF_OLD_POINTER)) {
 			listOfProjects.remove(PREF_OLD_POINTER);
 			listOfProjects.add(PREF_OLD_POINTER_HUMAN);
 		}
 		final String[] listOfProjectsArray = listOfProjects.toArray(new String[listOfProjects.size()]);
-		final ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_list_item_1, android.R.id.text1, listOfProjectsArray);
+		final ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, android.R.id.text1, listOfProjectsArray);
 
 		DeleteInProgress = false;
 		// Long press to remove
@@ -240,14 +252,14 @@ public class ProjectManagement extends MainActivity {
 					public void onClick(DialogInterface dialog, int which) {
 						// MyDataObject.remove(positionToRemove);
 						// adapter.notifyDataSetChanged();
-						HashSet<String> listOfProjects = (HashSet<String>) sharedPref.getStringSet(PREF_SAVES, new HashSet<String>());
+						HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
 						listOfProjects.remove(proj);
 						
 						//Remove the project 
-						SharedPreferences.Editor ed = sharedPref.edit();
+						SharedPreferences.Editor ed = getSharedPref().edit();
 						ed.remove(proj);
 						ed.putStringSet(PREF_SAVES, listOfProjects);
-						ed.commit();
+						ed.apply();
 					}
 				});
 				adb.show();

@@ -35,10 +35,10 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
     private double chLevel = 0;
 	private final int MAX_LEVEL = 255;
     private double steep = 0;
-    private MainActivity mainActivity;
+    private final MainActivity mainActivity;
     private String chText = "";
 
-	public ColumnObj(int a_ChNum, final Context context, int scrollColor, MainActivity mainActivity, String channelName) {
+	public ColumnObj(int a_ChNum, final Context context, MainActivity mainActivity, String channelName) {
 		ChNum = a_ChNum;
         this.mainActivity = mainActivity;
         this.chText = channelName == null ? this.chText : channelName;
@@ -91,7 +91,7 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 		viewGroup.addView(editButton);
 	}
 	
-	private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int width){
+	private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height){
 		GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[] {
 				Color.rgb(0, 0, 0), scrollColor });
 		shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
@@ -107,7 +107,7 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
         d.setTextAlign(Layout.Alignment.ALIGN_CENTER);
 
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
-        layerDrawable.setLayerInset(2, 10, (width/2)-15, 0, 0);//set offset of the text layer
+        layerDrawable.setLayerInset(2, 10, (height/2)-15, 0, 0);//set offset of the text layer
         return layerDrawable;
 	}
 
@@ -147,7 +147,7 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 * @param a_chLevel set the level
 	 */
     public void setChLevel(double a_chLevel) {
-        if (MainActivity.sharedPref.getBoolean("channel_display_value", false)) {
+        if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
             tvVal.setText(Integer.toString((int) a_chLevel));
         } else {
             if (a_chLevel >= MAX_LEVEL)
@@ -216,7 +216,7 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
     public void setColumnText(String text, Context context){
         chText = text;
 
-        LayerDrawable mylayer = generateLayerDrawable(context, Color.parseColor(MainActivity.sharedPref.getString("channel_color", "#ffcc00")), seekBar.getMeasuredWidth());
+        LayerDrawable mylayer = generateLayerDrawable(context, Color.parseColor(MainActivity.getSharedPref().getString("channel_color", "#ffcc00")), seekBar.getMeasuredWidth());
 
         seekBar.setProgressDrawable(mylayer);
         seekBar.updateThumb();

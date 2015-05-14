@@ -48,7 +48,7 @@ public class SettingsActivity extends PreferenceActivity {
 	/** {@inheritDoc} */
 	@Override
 	public void onBuildHeaders(List<Header> target) {
-		String protocol = MainActivity.sharedPref.getString("select_protocol", "");
+		String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
 		if ("SACNUNI".equals(protocol))
 			loadHeadersFromResource(R.xml.pref_headers_sacn_unicast, target);
 		else if ("SACN".equals(protocol))
@@ -183,8 +183,7 @@ public class SettingsActivity extends PreferenceActivity {
 			setHasOptionsMenu(true);
 
 			checkboxPrefManual = (CheckBoxPreference) findPreference("checkboxPrefManual");
-			checkboxPrefManual.setSummary(MainActivity.sharedPref.getString(
-					SettingsActivity.manualserver, "192.168.0.0"));
+			checkboxPrefManual.setSummary(MainActivity.getSharedPref().getString(SettingsActivity.manualserver, "192.168.0.0"));
 			// Set listener
 			checkboxPrefManual.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
@@ -288,7 +287,7 @@ public class SettingsActivity extends PreferenceActivity {
 								others.setChecked(false);// Uncheck the other boxes
 						}
 						if (preference instanceof CheckBoxPreference)//Set server IP
-							MainActivity.sharedPref.edit().putString(SettingsActivity.serveraddress, (String) preference.getTitle()).commit();
+							MainActivity.getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) preference.getTitle()).commit();
 
 
 						checkboxPrefManual = (CheckBoxPreference) findPreference("checkboxPrefManual");

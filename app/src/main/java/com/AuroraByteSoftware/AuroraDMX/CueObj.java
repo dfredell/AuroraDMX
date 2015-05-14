@@ -25,6 +25,10 @@ public class CueObj extends MainActivity implements Serializable {
 	private boolean fadeInProgress = false;
 	private String name = "";
 
+	public CueObj(){
+
+	}
+
 	/**
 	 * @return the button
 	 */

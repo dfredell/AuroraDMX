@@ -30,7 +30,7 @@ class SACNData {
 		addDMPLayer();
 	}
 
-	void addRootLayer() {
+	private void addRootLayer() {
 		// Preamble Size
 		message[0] = (byte) 0x00;
 		message[1] = (byte) 0x10;
@@ -72,7 +72,7 @@ class SACNData {
 		}
 	}
 
-	void addFrameLayer() throws UnsupportedEncodingException {
+	private void addFrameLayer() throws UnsupportedEncodingException {
 		// Flags and Length
 		message[38] = (byte) 0x72;
 		message[39] = (byte) 0x58;
@@ -100,7 +100,7 @@ class SACNData {
 
 	}
 
-	void addDMPLayer() {
+	private void addDMPLayer() {
 		// Flags and Length
 		message[115] = (byte) 0x72;
 		message[116] = (byte) 0x0b;

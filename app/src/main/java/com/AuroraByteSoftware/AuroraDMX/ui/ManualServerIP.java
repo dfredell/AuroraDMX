@@ -17,7 +17,7 @@ public class ManualServerIP {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setCancelable(true);
 
-        builder.setNegativeButton("Cancal", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 //Do nothing

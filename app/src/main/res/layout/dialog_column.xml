@@ -52,4 +52,10 @@
             <!--android:id="@+id/convertToColorWheel" />-->
     </LinearLayout>
 
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RGB"
+        android:id="@+id/chanel_rgb" />
+
 </LinearLayout>

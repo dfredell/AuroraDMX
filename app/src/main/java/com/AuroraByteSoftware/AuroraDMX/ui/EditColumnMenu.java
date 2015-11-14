@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.ColumnObj;
@@ -31,6 +32,9 @@ public class EditColumnMenu extends MainActivity {
 
 				EditText editColumnName = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnName);
 				EditText editColumnLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnLevel);
+				Switch rgbSwitch = (Switch) ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
+
+				columnObj.setIsRGB(rgbSwitch.isChecked());
 
 				try {
 					String columnName = editColumnName.getText().toString();
@@ -66,6 +70,7 @@ public class EditColumnMenu extends MainActivity {
         //Set previous text
         ((EditText) promptsView.findViewById(R.id.editColumnName)).setText(chText);
         ((EditText) promptsView.findViewById(R.id.editColumnLevel)).setText(Integer.toString(chLevel));
+		((Switch) promptsView.findViewById(R.id.chanel_rgb)).setChecked(columnObj.isRGB());
 
 		AlertDialog alert = builder.create();
 		alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

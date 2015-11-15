@@ -10,15 +10,13 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.AuroraByteSoftware.AuroraDMX.ColumnObj;
+import com.AuroraByteSoftware.AuroraDMX.MainActivity;
+import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.R;
 
-public class AmbilWarnaDialog {
-    public interface OnAmbilWarnaListener {
-        void onCancel(AmbilWarnaDialog dialog);
+import java.util.Arrays;
 
-        void onOk(AmbilWarnaDialog dialog, int color);
-    }
+public class AmbilWarnaDialog {
 
     final View view;
     final View viewHue;
@@ -27,18 +25,18 @@ public class AmbilWarnaDialog {
     final ImageView viewTarget;
     final ViewGroup viewContainer;
     final float[] currentColorHsv = new float[3];
-    final ColumnObj columnObj;
+    final RGBFixture rgbFixture;
 
 
     /**
      * Create an AmbilWarnaDialog.
      *  @param context       activity context
      * @param color         current color
-     * @param columnObj
+     * @param fixture to add current value
      */
-    public  AmbilWarnaDialog(final Context context, int color, ColumnObj columnObj) {
+    public  AmbilWarnaDialog(final Context context, int color, RGBFixture fixture) {
 
-        this.columnObj = columnObj;
+        this.rgbFixture = fixture;
 
         // remove alpha if not supported
             color = color | 0xff000000;
@@ -127,10 +125,9 @@ public class AmbilWarnaDialog {
     protected void updateChannelLevel(){
         int r = (getColor() >> 16) & 0xFF;
         int g = (getColor() >> 8) & 0xFF;
-        int b = (getColor() >> 0) & 0xFF;
-        columnObj.setChLevel(r);
-        columnObj.setChText("R:"+r+" G:"+g+" B:"+b);
-        columnObj.setRgbLevel(new int[]{r,g,b});
+        int b = getColor() & 0xFF;
+        rgbFixture.setChText("R:" + r + " G:" + g + " B:" + b);
+        rgbFixture.setRgbLevel(Arrays.asList(r, g, b));
     }
 
     protected void moveCursor() {

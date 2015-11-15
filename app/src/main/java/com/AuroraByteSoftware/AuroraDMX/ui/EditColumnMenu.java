@@ -1,7 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,14 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.AuroraByteSoftware.AuroraDMX.ColumnObj;
+import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.fixture.FixtureUtility;
 
 public class EditColumnMenu extends MainActivity {
 
-	public static void createEditColumnMenu(View v, final Context context, final ColumnObj columnObj, String chText, int chLevel) {
+	public static void createEditColumnMenu(View v, final MainActivity context, final Fixture fixture, String chText, int chLevel) {
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -34,15 +34,19 @@ public class EditColumnMenu extends MainActivity {
 				EditText editColumnLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnLevel);
 				Switch rgbSwitch = (Switch) ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
 
-				columnObj.setIsRGB(rgbSwitch.isChecked());
+				if(rgbSwitch.isChecked() && !fixture.isRGB()) {
+					FixtureUtility.switchToRGB(fixture, context);
+				} else if(!rgbSwitch.isChecked() && fixture.isRGB()){
+					FixtureUtility.switchToStandard(fixture, context);
+				}
 
 				try {
 					String columnName = editColumnName.getText().toString();
                     System.out.println("Col name: "+columnName);
-                    columnObj.setColumnText(columnName,context);
+                    fixture.setColumnText(columnName, context);
 
                     int columnLevel = Integer.parseInt(editColumnLevel.getText().toString());
-                    columnObj.setChLevel(columnLevel);
+//TODO                    fixture.setChLevel(columnLevel);
 
                 } catch (NumberFormatException n) {
 					Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
@@ -70,7 +74,7 @@ public class EditColumnMenu extends MainActivity {
         //Set previous text
         ((EditText) promptsView.findViewById(R.id.editColumnName)).setText(chText);
         ((EditText) promptsView.findViewById(R.id.editColumnLevel)).setText(Integer.toString(chLevel));
-		((Switch) promptsView.findViewById(R.id.chanel_rgb)).setChecked(columnObj.isRGB());
+		((Switch) promptsView.findViewById(R.id.chanel_rgb)).setChecked(fixture.isRGB());
 
 		AlertDialog alert = builder.create();
 		alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

@@ -1,4 +1,4 @@
-package com.AuroraByteSoftware.AuroraDMX;
+package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 
 import android.content.Context;
@@ -21,10 +21,16 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.AuroraByteSoftware.AuroraDMX.MainActivity;
+import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
-public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
+import java.util.Arrays;
+import java.util.List;
+
+public class StandardFixture extends Fixture implements OnSeekBarChangeListener, OnClickListener {
 
 
 	private LinearLayout viewGroup = null;
@@ -35,63 +41,87 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
     private double chLevel = 0;
 	private final int MAX_LEVEL = 255;
     private double steep = 0;
-    private final MainActivity mainActivity;
+    private MainActivity context;
     private String chText = "";
+    private TextView tvChNum;
 
-	public ColumnObj(int a_ChNum, final Context context, MainActivity mainActivity, String channelName) {
-		ChNum = a_ChNum;
-        this.mainActivity = mainActivity;
+    public StandardFixture(final MainActivity context, String channelName) {
+        this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
-        viewGroup = new LinearLayout(context);
-		viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.MATCH_PARENT));
-		viewGroup.setOrientation(LinearLayout.VERTICAL);
+		init();
+	}
 
-		TextView tvChNum = new TextView(context);
+    public StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
+        this.context = context;
+        this.chText = channelName == null ? this.chText : channelName;
+        this.viewGroup = viewGroup;
+
+        seekBar = createSeekBar();
+        viewGroup.addView(seekBar, 2);
+
+        viewGroup.getChildAt(3).setOnClickListener(this);
+
+        tvChNum = ((TextView)viewGroup.getChildAt(0));
+        tvVal = ((TextView)viewGroup.getChildAt(1));
+        setChLevel(0);
+    }
+
+    @Override
+    public void init() {
+        this.viewGroup = new LinearLayout(context);
+		this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+		this.viewGroup.setOrientation(LinearLayout.VERTICAL);
+
+		tvChNum = new TextView(context);
 		tvChNum.setText(ChNum + "");
 		tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
 		tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		viewGroup.addView(tvChNum);
+		this.viewGroup.addView(tvChNum);
 		tvVal = new TextView(context);
 		tvVal.setText("0%");
 		tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 		tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
-		viewGroup.addView(tvVal);
+		this.viewGroup.addView(tvVal);
 
-		seekBar = new VerticalSeekBar(context); // make
+		seekBar = createSeekBar();
+        this.viewGroup.addView(seekBar);
+//        mainActivity.incrementPatch(0);
+
+		Button editButton = new Button(context);
+        editButton.setOnClickListener(this);
+        editButton.setText(R.string.edit);
+		this.viewGroup.addView(editButton);
+	}
+
+    private VerticalSeekBar createSeekBar() {
+        VerticalSeekBar verticalSeekBar = new VerticalSeekBar(context);// make
 
         LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
-		// Sets weight to 1
-		layoutParams2.setMargins(
+        // Sets weight to 1
+        layoutParams2.setMargins(
                 (int) context.getResources().getDimension(R.dimen.column_padding_X),
                 (int) context.getResources().getDimension(R.dimen.column_padding_Y),
                 (int) context.getResources().getDimension(R.dimen.column_padding_X),
                 (int) context.getResources().getDimension(R.dimen.column_padding_Y));
-		seekBar.setLayoutParams(layoutParams2);
+        verticalSeekBar.setLayoutParams(layoutParams2);
 
-		seekBar.setThumb(new ShapeDrawable());// No thumb
+        verticalSeekBar.setThumb(new ShapeDrawable());// No thumb
 
-		seekBar.setMax(MAX_LEVEL);
-		seekBar.setOnSeekBarChangeListener(this);
+        verticalSeekBar.setMax(MAX_LEVEL);
+        verticalSeekBar.setOnSeekBarChangeListener(this);
 
         //Populate the text after the seekBar has rendered on the screen
-        seekBar.post(new Runnable() {
+        verticalSeekBar.post(new Runnable() {
             @Override
             public void run() {
-                setColumnText(chText,context);
+                setColumnText(chText, context);
             }
         });
+        return verticalSeekBar;
+    }
 
-		viewGroup.addView(seekBar);
-
-        Button editButton = new Button(context);
-        editButton.setOnClickListener(this);
-        editButton.setText(R.string.edit);
-		viewGroup.addView(editButton);
-	}
-	
-	private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height){
+    private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height){
 		GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[] {
 				Color.rgb(0, 0, 0), scrollColor });
 		shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
@@ -107,7 +137,7 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
         d.setTextAlign(Layout.Alignment.ALIGN_CENTER);
 
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
-        layerDrawable.setLayerInset(2, 10, (height/2)-15, 0, 0);//set offset of the text layer
+        layerDrawable.setLayerInset(2, 10, (height / 2) - 15, 0, 0);//set offset of the text layer
         return layerDrawable;
 	}
 
@@ -117,7 +147,8 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 * 
 	 * @return the viewGroup
 	 */
-	public LinearLayout getViewGroup() {
+	@Override
+    public LinearLayout getViewGroup() {
 		return viewGroup;
 	}
 
@@ -125,8 +156,6 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		setChLevel(progress);
 		chLevel = progress;
-		// System.out.println("Ch " + ChNum + "\t" + progress + "%");
-
 	}
 
 	@Override
@@ -146,6 +175,7 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 * 
 	 * @param a_chLevel set the level
 	 */
+    @Override
     public void setChLevel(double a_chLevel) {
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
             tvVal.setText(Integer.toString((int) a_chLevel));
@@ -163,8 +193,9 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 * get the level of the channel
 	 * 
 	 */
-	public int getChLevel() {
-		return (int) chLevel;
+	@Override
+    public List<Integer> getChLevels() {
+		return Arrays.asList((int) chLevel);
 	}
 
 	/**
@@ -172,10 +203,11 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	 */
 	@Override
 	public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup,mainActivity,this,chText,(int)chLevel);
+        EditColumnMenu.createEditColumnMenu(viewGroup,context,this,chText,(int)chLevel);
 	}
 
 
+    @Override
     public String toString() {
 		return ("Ch: " + ChNum + "\tLvl: " + chLevel);
 	}
@@ -183,14 +215,16 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	/**
 	 * Creates 255 steeps between current and endVal
 	 */
-	public void setupIncrementLevelFade(int endVal) {
+	@Override
+    public void setupIncrementLevelFade(int endVal) {
 		steep = (endVal - chLevel) / 256.0;
 	}
 
 	/**
 	 * Adds one step Up to the current level
 	 */
-	public void incrementLevelUp() {
+	@Override
+    public void incrementLevelUp() {
 		if(steep>0)
 			setChLevel(chLevel + steep);
 	}
@@ -198,21 +232,24 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 	/**
 	 * Adds one step Down to the current level
 	 */
-	public void incrementLevelDown() {
+	@Override
+    public void incrementLevelDown() {
 		if(steep<0)
 			setChLevel(chLevel + steep);
 	}
 	
 
-	public void setScrollColor(int scrollColor){
+	@Override
+    public void setScrollColor(int scrollColor){
         seekBar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int height = seekBar.getMeasuredHeight();
-		LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(),scrollColor, height);
+		LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(), scrollColor, height);
 		seekBar.setProgressDrawable(mylayer);
 		seekBar.updateThumb();
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
     }
 
+    @Override
     public void setColumnText(String text, Context context){
         chText = text;
 
@@ -226,7 +263,23 @@ public class ColumnObj implements OnSeekBarChangeListener, OnClickListener {
 
     }
 
+    @Override
     public String getChText() {
         return chText;
+    }
+
+	@Override
+    public boolean isRGB() {
+		return false;
+	}
+
+    @Override
+    public void removeSelector() {
+        viewGroup.removeView(seekBar);
+    }
+
+    @Override
+    public void setFixtureNumber(int currentFixtureNum) {
+        tvChNum.setText(Integer.toString(currentFixtureNum));
     }
 }

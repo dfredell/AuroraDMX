@@ -24,7 +24,7 @@ public class PatchActivity extends Activity {
 		setContentView(R.layout.activity_patch);
 
 		chGridView = (GridView) findViewById(R.id.gridView1);
-		chGridView.setAdapter(new GridCell(this, MainActivity.alColumns.size(), true));
+		chGridView.setAdapter(new GridCell(this, MainActivity.MAX_CHANNEL, true));
 
 		dimGridView = (GridView) findViewById(R.id.gridView2);
         GridCell dimGridCell = new GridCell(this, MainActivity.MAX_DIMMERS, false);

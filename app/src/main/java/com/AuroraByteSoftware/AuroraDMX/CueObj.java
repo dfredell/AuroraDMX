@@ -5,8 +5,10 @@ import android.graphics.PorterDuff.Mode;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
+
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,7 +21,7 @@ public class CueObj extends MainActivity implements Serializable {
 	private int fadeUpTime = 5;
 	private int fadeDownTime = 5;
 	private double cueNum = 0;
-	private int levels[];
+	private List<Integer> levels;
 	private transient Button button;
 	private int highlight = 0;
 	private boolean fadeInProgress = false;
@@ -45,7 +47,7 @@ public class CueObj extends MainActivity implements Serializable {
 	}
 
 	public CueObj(double a_cueNum, String cueName, int a_fadeUpTime, int a_fadeDownTime,
-			int a_levels[], Button a_button) {
+			List<Integer> a_levels, Button a_button) {
 		if (a_cueNum > 0) {
 			fadeUpTime = a_fadeUpTime;
 			fadeDownTime = a_fadeDownTime;
@@ -99,7 +101,7 @@ public class CueObj extends MainActivity implements Serializable {
 	/**
 	 * @return the levels
 	 */
-	public int[] getLevels() {
+	public List<Integer> getLevels() {
 		return levels;
 	}
 
@@ -175,7 +177,7 @@ public class CueObj extends MainActivity implements Serializable {
 							if (alCues.get(nextCueNum).getHighlight() < 256) {
 								alCues.get(nextCueNum).setHighlight(0,
 										alCues.get(nextCueNum).getHighlight() + 1, 0);
-								for (ColumnObj col : alColumns) {
+								for (Fixture col : alColumns) {
 									col.incrementLevelUp();
 									if (prevCueNum == -1)
 										col.incrementLevelDown();
@@ -209,7 +211,7 @@ public class CueObj extends MainActivity implements Serializable {
 									if (alCues.get(prevCueNum).getHighlight() != 0) {
 										alCues.get(prevCueNum).setHighlight(
 												alCues.get(prevCueNum).getHighlight() - 1, 0, 0);
-										for (ColumnObj col : alColumns) {
+										for (Fixture col : alColumns) {
 											col.incrementLevelDown();
 										}
 									} else {
@@ -228,7 +230,7 @@ public class CueObj extends MainActivity implements Serializable {
 	}
 
 	public void padChannels(int number_channels) {
-		levels = Arrays.copyOf(levels, number_channels);
+		levels = levels.subList(0,number_channels);
 	}
 
 	public String getCueName() {

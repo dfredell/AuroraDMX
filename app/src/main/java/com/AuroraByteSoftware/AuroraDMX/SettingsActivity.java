@@ -14,6 +14,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,6 +51,7 @@ public class SettingsActivity extends PreferenceActivity {
     public static final String manualserver = "manualserver";
     public static final String serveraddress = "serveraddress";
     public static final String restoredefaults = "restoredefaults";
+    private static final String TAG = "AuroraDMX";
     private static Thread t;
     private static SettingsActivity settings;
 
@@ -141,7 +143,7 @@ public class SettingsActivity extends PreferenceActivity {
             findPreference("unlock_channels").setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     //open browser or intent here
-                    //System.out.println("unlock_channels");
+                    Log.i(TAG, "unlock_channels");
                     if (MainActivity.getmHelper() != null) {
                         MainActivity.getmHelper().flagEndAsync();
                         MainActivity.getmHelper().launchPurchaseFlow(getActivity(), MainActivity.ITEM_SKU, 1001,
@@ -168,7 +170,7 @@ public class SettingsActivity extends PreferenceActivity {
                 Toast.makeText(context, result.getMessage(), Toast.LENGTH_LONG).show();
 
             } else if (purchase.getSku().equals(MainActivity.ITEM_SKU)) {
-                System.out.println("Item bought");
+                Log.d(TAG, "Item bought");
             }
         }
     };
@@ -234,7 +236,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         public void refreshServers() {
-            //System.out.println("Refresh");
+            Log.d(TAG, "Refresh");
             PreferenceCategory targetCategory = (PreferenceCategory) findPreference("targetCategory");
             if (targetCategory != null)
                 targetCategory.removeAll();

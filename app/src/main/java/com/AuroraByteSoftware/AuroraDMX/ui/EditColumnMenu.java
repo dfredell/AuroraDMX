@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.FixtureUtility;
 
 public class EditColumnMenu extends MainActivity {
+
+    private static final String TAG = "AuroraDMX";
 
     public static void createEditColumnMenu(View v, final MainActivity context, final Fixture fixture, String chText, int chLevel) {
 
@@ -42,7 +45,7 @@ public class EditColumnMenu extends MainActivity {
 
                 try {
                     String columnName = editColumnName.getText().toString();
-                    System.out.println("Col name: " + columnName);
+                    Log.d(TAG, "Col name: " + columnName);
                     fixture.setColumnText(columnName, context);
 
                     int columnLevel = Integer.parseInt(editColumnLevel.getText().toString());

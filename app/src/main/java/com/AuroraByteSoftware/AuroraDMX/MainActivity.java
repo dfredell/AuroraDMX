@@ -67,7 +67,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pm = new ProjectManagement(this);
-        // System.out.println("onCreate");
+        Log.v(TAG, "onCreate");
         startupIAB();
         startup();
         pm.open(null);
@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                     Log.d(TAG, "Setup finished.");
                     if (!result.isSuccess()) {
                         // Oh noes, there was a problem.
-                        // complain("Problem setting up in-app billing: " + result);
+                        Log.v(TAG,"Problem setting up in-app billing: " + result);
                         return;
                     }
                     // Have we been disposed of in the meantime? If so, quit.
@@ -124,8 +124,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     }
 
     void setUpNetwork() {
-        // System.out.println("SetupNetwork ServerAddress: "+sharedPref.getString(SettingsActivity.serveraddress,
-        // ""));
+        Log.d(TAG, "SetupNetwork ServerAddress: "+sharedPref.getString(SettingsActivity.serveraddress, ""));
         String protocol = getSharedPref().getString("select_protocol", "");
 
         if (clientSocket != null)
@@ -426,7 +425,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // System.out.println("Pref Change");
+        Log.v(TAG, "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
             setNumberOfChannels(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null);
         }
@@ -434,7 +433,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
     protected void onResume() {
         super.onResume();
-        // System.out.println("onResume");
+        Log.v(TAG, "onResume");
         getSharedPref().registerOnSharedPreferenceChangeListener(this);
 
         if (getSharedPref().getBoolean(SettingsActivity.restoredefaults, false)) {
@@ -475,7 +474,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         }
         if (clientSocket != null)
             clientSocket.close();
-        // System.out.println("onPause");
+        Log.v(TAG, "onPause");
         pm.save(null);
         if (getSharedPref() != null)
             getSharedPref().unregisterOnSharedPreferenceChangeListener(this);
@@ -506,7 +505,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     }
 
     private void restoreDefaults() {
-        // System.out.println("Restoring Defaults");
+        Log.v(TAG, "Restoring Defaults");
         // Remove all the preferences
         getSharedPref().edit().clear().apply();
         // Stop ArtNet

@@ -3,6 +3,7 @@ package com.AuroraByteSoftware.AuroraDMX.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.Collections;
 
 public class EditCueMenu extends MainActivity {
     private static int currentCue = -1;// used to and from cue edit
+    private static final String TAG = "AuroraDMX";
 
     @SuppressLint("SetTextI18n")
     public static void createEditCueMenu(final ArrayList<CueObj> alCues, View v,
@@ -93,9 +95,7 @@ public class EditCueMenu extends MainActivity {
                     thisCueNum = alCues.get(currentCue - 1).getCueNum();
                     // mods check what level should be incremented
                     double nextCueNum = alCues.get(currentCue).getCueNum();
-                    System.out.print("a " + thisCueNum);
                     int diff = (int) ((nextCueNum * 100) - (thisCueNum * 100));
-                    System.out.print("b " + thisCueNum);
                     if (diff <= 1) {
                         Toast.makeText(mainActivity, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
                         thisCueNum = -1;
@@ -107,7 +107,7 @@ public class EditCueMenu extends MainActivity {
                         Toast.makeText(mainActivity, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
                         thisCueNum = -1;
                     }
-                    System.out.println("this: " + thisCueNum + " diff " + diff);
+                    Log.v(TAG, "this: " + thisCueNum + " diff " + diff);
                 }
                 thisCueNum = Math.round(thisCueNum * 100.0) / 100.0;
 

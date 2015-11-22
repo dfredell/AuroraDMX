@@ -1,5 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.network;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
@@ -26,6 +27,7 @@ public class SendSacnUpdate extends TimerTask {
     private int universe = 1;
     private String server = null;
     private final MainActivity mainActivity;
+    private static final String TAG = "AuroraDMX";
 
     public SendSacnUpdate(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -33,7 +35,7 @@ public class SendSacnUpdate extends TimerTask {
         String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
         if ("SACNUNI".equals(protocol))
             server = MainActivity.getSharedPref().getString("protocol_sacn_unicast_ip", "239.255.0." + universe).trim();
-        System.out.println("unicast " + server);
+        Log.v(TAG, "unicast " + server);
         try {
             universe = Integer.parseInt(univ);
         } catch (NullPointerException | NumberFormatException e) {

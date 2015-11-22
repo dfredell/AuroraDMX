@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class CueObj extends MainActivity implements Serializable {
     private int highlight = 0;
     private boolean fadeInProgress = false;
     private String name = "";
+    private static final String TAG = "AuroraDMX";
 
     public CueObj() {
 
@@ -107,15 +109,12 @@ public class CueObj extends MainActivity implements Serializable {
     public void setHighlight(int r, int g, int b) {
         highlight = r + g + b;
         if (highlight != 0) {
-            // System.out.println(button.getBackground());
-            // button.setBackgroundColor(Color.rgb(r, g, b));
             button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
             button.postInvalidate();
         } else if (highlight == 255) {
             button.forceLayout();
         } else {
             button.getBackground().setColorFilter(null);
-            // button.setBackgroundDrawable(MainActivity.buttonOrgBackground);
         }
     }
 
@@ -145,7 +144,7 @@ public class CueObj extends MainActivity implements Serializable {
      */
     void startCueFade(final int nextCueNum, final int prevCueNum) {
 
-        // System.out.println("next " + nextCueNum + "\tprev " + prevCueNum);
+        Log.d(TAG, "next " + nextCueNum + "\tprev " + prevCueNum);
 
         // Check if any cues are currently fading
         boolean prevCueReady = true;

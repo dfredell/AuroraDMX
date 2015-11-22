@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -39,7 +40,7 @@ public class ProjectManagement extends MainActivity {
     private static final String PREF_OLD_POINTER_HUMAN = "Default Project";
     private static final String PREF_SAVES = "LIST_OF_SAVED_PROJECTS";
     private static final String PREF_DEF = "DEFAULT_PROJECT_TO_LOAD";
-
+    private static final String TAG = "AuroraDMX";
     private static boolean DeleteInProgress = false;
 
     public ProjectManagement() {
@@ -110,12 +111,12 @@ public class ProjectManagement extends MainActivity {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        // System.out.println("save complete");
+        Log.d(TAG, "save complete");
     }
 
     @SuppressWarnings("unchecked")
     void open(String key) {
-        // System.out.println("open");
+        Log.d(TAG, "open " + key);
         if (key == null) {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
         }
@@ -203,7 +204,6 @@ public class ProjectManagement extends MainActivity {
         // create a new "Add Cue" button
         ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton(mainActivity.getString(R.string.AddCue)));
         mainActivity.setUpNetwork();
-        // System.out.println("open complete");
 
         // Set ch levels
         int chIndex = 0;
@@ -236,7 +236,7 @@ public class ProjectManagement extends MainActivity {
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                System.out.println("entered " + editText.getText());
+                Log.v(TAG, "entered " + editText.getText());
                 if (!"".equals(editText.getText().toString()))
                     save(editText.getText().toString());
             }

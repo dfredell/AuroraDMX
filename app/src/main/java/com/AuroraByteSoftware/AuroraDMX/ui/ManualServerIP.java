@@ -28,7 +28,6 @@ public class ManualServerIP {
             public void onClick(DialogInterface arg0, int arg1) {
                 EditText editTextServerIP = (EditText) ((AlertDialog) arg0)
                         .findViewById(R.id.editTextServerIP);
-                //System.out.println(editTextServerIP.getText().toString());
                 MainActivity.getSharedPref().edit().putString(
                         SettingsActivity.manualserver, editTextServerIP.getText().toString()).apply();
                 checkboxPrefManual.setSummary(editTextServerIP.getText().toString());

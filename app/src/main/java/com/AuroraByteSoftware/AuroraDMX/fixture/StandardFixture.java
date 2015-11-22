@@ -114,7 +114,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         verticalSeekBar.post(new Runnable() {
             @Override
             public void run() {
-                setColumnText(chText, context);
+                setColumnText(chText);
             }
         });
         return verticalSeekBar;
@@ -252,10 +252,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     }
 
     @Override
-    public void setColumnText(String text, Context context) {
+    public void setColumnText(String text) {
         chText = text;
 
-        LayerDrawable mylayer = generateLayerDrawable(context, Color.parseColor(MainActivity.getSharedPref().getString("channel_color", "#ffcc00")), seekBar.getMeasuredWidth());
+        LayerDrawable mylayer = generateLayerDrawable(this.context, Color.parseColor(MainActivity.getSharedPref().getString("channel_color", "#ffcc00")), seekBar.getMeasuredWidth());
 
         seekBar.setProgressDrawable(mylayer);
         seekBar.updateThumb();

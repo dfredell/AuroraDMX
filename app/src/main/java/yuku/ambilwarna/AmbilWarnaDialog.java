@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
@@ -25,6 +26,7 @@ public class AmbilWarnaDialog {
     final ImageView viewCursor;
     final ImageView viewTarget;
     final ViewGroup viewContainer;
+    final TextView viewChannelName;
     final float[] currentColorHsv = new float[3];
     final RGBFixture rgbFixture;
 
@@ -46,6 +48,7 @@ public class AmbilWarnaDialog {
 
         view = LayoutInflater.from(context).inflate(R.layout.ambilwarna_dialog, null);
         viewHue = view.findViewById(R.id.ambilwarna_viewHue);
+        viewChannelName = (TextView) view.findViewById(R.id.rgb_name);
         viewSatVal = (AmbilWarnaSquare) view.findViewById(R.id.ambilwarna_viewSatBri);
         viewCursor = (ImageView) view.findViewById(R.id.ambilwarna_cursor);
         viewTarget = (ImageView) view.findViewById(R.id.ambilwarna_target);
@@ -153,6 +156,10 @@ public class AmbilWarnaDialog {
     private int getColor() {
         final int argb = Color.HSVToColor(currentColorHsv);
         return (argb & 0x00ffffff);
+    }
+
+    public void setChannelName(String name){
+        viewChannelName.setText(name);
     }
 
     public View getView() {

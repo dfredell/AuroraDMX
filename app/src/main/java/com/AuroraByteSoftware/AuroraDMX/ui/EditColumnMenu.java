@@ -46,7 +46,7 @@ public class EditColumnMenu extends MainActivity {
                 try {
                     String columnName = editColumnName.getText().toString();
                     Log.d(TAG, "Col name: " + columnName);
-                    fixture.setColumnText(columnName, context);
+                    fixture.setColumnText(columnName);
 
                     int columnLevel = Integer.parseInt(editColumnLevel.getText().toString());
 //TODO                    fixture.setChLevel(columnLevel);

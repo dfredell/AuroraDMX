@@ -27,7 +27,7 @@ public abstract class Fixture {
 
     public abstract void setScrollColor(int scrollColor);
 
-    public abstract void setColumnText(String text, Context context);
+    public abstract void setColumnText(String text);
 
     public abstract String getChText();
 

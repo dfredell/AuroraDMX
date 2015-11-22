@@ -214,6 +214,11 @@ public class ProjectManagement extends MainActivity {
             chIndex += fixtureUses;
         }
 
+        //Set channelNames
+        for (int i = 0; channelNames != null && i < channelNames.length && i < alColumns.size(); i++) {
+            alColumns.get(i).setColumnText(channelNames[i]);
+        }
+
         // Save a new default
         SharedPreferences.Editor ed = getSharedPref().edit();
         ed.putString(PREF_DEF, key);

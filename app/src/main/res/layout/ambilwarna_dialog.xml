@@ -45,6 +45,15 @@
             android:scaleType="matrix"
             android:src="@drawable/ambilwarna_target" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/rgb_name"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/ambilwarna_viewSatBri"
+            android:textColor="#fff" />
+
     </RelativeLayout>
 
 </FrameLayout>

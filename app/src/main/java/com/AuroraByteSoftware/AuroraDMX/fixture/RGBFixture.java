@@ -58,6 +58,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
         this.viewGroup = viewGroup;
 
         ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this);
+        ambilWarnaDialog.setChannelName(chText);
         rgbSelectView = ambilWarnaDialog.getView();
         viewGroup.addView(rgbSelectView, 2);
 
@@ -188,11 +189,12 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     @Override
     public void setScrollColor(int scrollColor) {
-
+        //RGB has its own color
     }
 
-    public void setColumnText(String text, Context context) {
-
+    public void setColumnText(String text) {
+        this.chText = text;
+        ambilWarnaDialog.setChannelName(text);
     }
 
     @Override

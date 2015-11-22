@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import java.util.List;
 
 /**
+ * Abstract method used to represent a lighting fixture in the theatre
  * Created by furtchet on 11/14/15.
  */
 public abstract class Fixture {
@@ -14,7 +15,7 @@ public abstract class Fixture {
 
     public abstract LinearLayout getViewGroup();
 
-    public abstract void setChLevel(double a_chLevel);
+    public abstract void setChLevels(List<Integer> a_chLevel);
 
     public abstract List<Integer> getChLevels();
 

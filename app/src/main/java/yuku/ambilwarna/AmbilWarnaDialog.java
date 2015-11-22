@@ -15,6 +15,7 @@ import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.R;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class AmbilWarnaDialog {
 
@@ -126,8 +127,8 @@ public class AmbilWarnaDialog {
         int r = (getColor() >> 16) & 0xFF;
         int g = (getColor() >> 8) & 0xFF;
         int b = getColor() & 0xFF;
-        rgbFixture.setChText("R:" + r + " G:" + g + " B:" + b);
-        rgbFixture.setRgbLevel(Arrays.asList(r, g, b));
+        updateChannelLevelText();
+        rgbFixture.setChLevelArray(Arrays.asList(r, g, b));
     }
 
     protected void moveCursor() {
@@ -181,4 +182,20 @@ public class AmbilWarnaDialog {
     private void setVal(float val) {
         currentColorHsv[2] = val;
     }
+
+    public void setRGBLevel(List<Integer> rgbLevel) {
+        Color.RGBToHSV(rgbLevel.get(0),rgbLevel.get(1),rgbLevel.get(2), currentColorHsv);
+        updateChannelLevelText();
+        moveTarget();
+        moveCursor();
+        viewSatVal.setHue(getHue());
+    }
+
+    private void updateChannelLevelText(){
+        int r = (getColor() >> 16) & 0xFF;
+        int g = (getColor() >> 8) & 0xFF;
+        int b = getColor() & 0xFF;
+        rgbFixture.setChText("R:" + r + " G:" + g + " B:" + b);
+    }
+
 }

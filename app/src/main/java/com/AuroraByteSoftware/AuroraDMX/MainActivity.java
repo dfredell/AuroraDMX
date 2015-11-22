@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
+import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.StandardFixture;
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetUpdate;
 import com.AuroraByteSoftware.AuroraDMX.network.SendSacnUpdate;
@@ -115,7 +116,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         alCues = new ArrayList<>();
         alColumns = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
-        setNumberOfChannels(number_channels, null);
+        setNumberOfChannels(number_channels, null, null);
     }
 
     public static SharedPreferences getSharedPref() {
@@ -149,7 +150,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
     }
 
-    void setNumberOfChannels(int number_channels, String[] channelNames) {
+    void setNumberOfChannels(int number_channels, String[] channelNames, boolean[] isRGB) {
         // check for app purchace
         boolean paid = true;
         try {
@@ -184,10 +185,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
         if (change > 0) {// Adding channels
             for (int x = (number_channels - change); x < number_channels && x < 512; x++) {
-                if (channelNames != null)
-                    alColumns.add(new StandardFixture(this, channelNames[x]));
+                if (isRGB != null && isRGB[x])
+                    alColumns.add(new RGBFixture(this, channelNames == null ? null : channelNames[x]));
                 else
-                    alColumns.add(new StandardFixture(this, null));
+                    alColumns.add(new StandardFixture(this, channelNames == null ? null : channelNames[x]));
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
             for (CueObj cue : alCues) {// Pad ch's in cues
@@ -205,14 +206,13 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             for (CueObj cue : alCues) {
                 cue.padChannels(number_channels);
             }
-//			patch = Arrays.copyOf(patch, number_channels + getNumberOfRGB()*2 + 1);
             patch = new int[MAX_DIMMERS + 1][ALLOWED_PATCHED_DIMMERS];
 
         }
 
         //Reset all the levels to display the percentage or step value
         for (Fixture alColumn : alColumns) {
-            alColumn.setChLevel(alColumn.getChLevels().get(0));
+            alColumn.setChLevels(alColumn.getChLevels());
         }
 
         recalculateFixtureNumbers();
@@ -428,7 +428,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         // System.out.println("Pref Change");
         if (key.equals(SettingsActivity.channels)) {
-            setNumberOfChannels(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null);
+            setNumberOfChannels(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null);
         }
     }
 
@@ -455,7 +455,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         } catch (Throwable t) {
             Log.w("ExternalStorage", "Error reading channel number", t);
         }
-        setNumberOfChannels(number_channels, null);
+        setNumberOfChannels(number_channels, null, null);
         setUpNetwork();
     }
 

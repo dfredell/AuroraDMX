@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
@@ -25,7 +27,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class ProjectManagement extends MainActivity {
 
@@ -35,7 +39,7 @@ public class ProjectManagement extends MainActivity {
 	private static final String PREF_OLD_POINTER_HUMAN = "Default Project";
 	private static final String PREF_SAVES = "LIST_OF_SAVED_PROJECTS";
 	private static final String PREF_DEF = "DEFAULT_PROJECT_TO_LOAD";
-	
+
 	private static boolean DeleteInProgress = false;
 
 	public ProjectManagement(){
@@ -53,22 +57,39 @@ public class ProjectManagement extends MainActivity {
 		HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
 		listOfProjects.add(key);
 
-        //Get the channel names as an array
+		//Get number of channels used
+		int channelsUses = 0 ;
+		for (Fixture fixture : alColumns) {
+			channelsUses += fixture.getChLevels().size();
+		}
+
+		//Get ch levels
+		final List<Integer> currentChannelArray = getCurrentChannelArray();
+		final Integer[] currentChannelLevels = currentChannelArray.toArray(new Integer[currentChannelArray.size()]);
+
+		//Get the channel names as an array
         String channelNames[] = new String[alColumns.size()];
         for (int i = 0; i < alColumns.size(); i++) {
             channelNames[i] = alColumns.get(i).getChText();
         }
 
+		// Get an array of isRGB channels
+		boolean[] isRGB = new boolean[alColumns.size()];
+		for (int i = 0; i < alColumns.size(); i++) {
+			isRGB[i]=alColumns.get(i).isRGB();
+		}
+
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
-			objectOutput.writeObject(alColumns.size());
+			objectOutput.writeObject(channelsUses);
 			objectOutput.writeObject(alCues);
 			objectOutput.writeObject(patch);
 			objectOutput.writeObject(cueCount);
 			objectOutput.writeObject(getSharedPref().getString(SettingsActivity.serveraddress, ""));
-			objectOutput.writeObject(getCurrentChannelArray());
+			objectOutput.writeObject(currentChannelLevels);
             objectOutput.writeObject(channelNames);
+            objectOutput.writeObject(isRGB);
             byte[] data = arrayOutputStream.toByteArray();
 
 			objectOutput.close();
@@ -84,8 +105,6 @@ public class ProjectManagement extends MainActivity {
 			ed.putString(key, new String(out.toByteArray()));
 			ed.putStringSet(PREF_SAVES, listOfProjects);
 			ed.apply();
-
-			// Storage.writeFile(data);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -106,8 +125,9 @@ public class ProjectManagement extends MainActivity {
 		ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
 		Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
 		ObjectInputStream in;
-		int[] chLvls = new int[0];
+		List<Integer> chLvls = new ArrayList<>();
 		String[] channelNames = null;
+		boolean[] isRGB = null;
 
 		try {
 			in = new ObjectInputStream(base64InputStream);
@@ -115,10 +135,10 @@ public class ProjectManagement extends MainActivity {
 			// Stop ArtNet
 			if (null != clientSocket && !clientSocket.isClosed())
 				clientSocket.close();
-			
+
 			//Clear current screen
 			alCues.clear();
-			for (ColumnObj columns : alColumns) {
+			for (Fixture columns : alColumns) {
 				columns.getViewGroup().removeAllViews();
 			}
 			alColumns.clear();
@@ -130,18 +150,22 @@ public class ProjectManagement extends MainActivity {
 			Object readObject4CueCount = in.readObject();
 			Object readObject5IPAdr = in.readObject();
 			Object readObject6ChAry = null;
-			Object readObject6ChNames = null;
+			Object readObject7ChNames = null;
+			Object readObject8isRGB = null;
 			try {
 				readObject6ChAry = in.readObject();
-                readObject6ChNames = in.readObject();
+                readObject7ChNames = in.readObject();
+				readObject8isRGB = in.readObject();
 			} catch (EOFException e) {
 				// Do nothing we hit the end of the stored data
 			}
 
 			if (readObject1Channels.getClass().equals(Integer.class)) {
-                if (readObject6ChNames != null && readObject6ChNames.getClass().equals(String[].class))
-                    channelNames = (String[]) readObject6ChNames;
-				mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames);
+                if (readObject7ChNames != null && readObject7ChNames.getClass().equals(String[].class))
+                    channelNames = (String[]) readObject7ChNames;
+				if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
+					isRGB = (boolean[]) readObject8isRGB;
+				mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames, isRGB);
 				getSharedPref().edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
 			}
 			if (readObject2Cues.getClass().equals(alCues.getClass()))
@@ -152,8 +176,9 @@ public class ProjectManagement extends MainActivity {
 				cueCount = (Double) readObject4CueCount;
 			if (readObject5IPAdr.getClass().equals(String.class))
 				getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
-			if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class))
-				chLvls = (int[]) readObject6ChAry;
+			if (readObject6ChAry != null && readObject6ChAry.getClass().equals(Integer[].class))
+				chLvls = Arrays.asList((Integer[]) readObject6ChAry);
+
 
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -181,8 +206,12 @@ public class ProjectManagement extends MainActivity {
 		// System.out.println("open complete");
 
 		// Set ch levels
-		for (int x = 0; x < chLvls.length && x < alColumns.size(); x++) {
-			alColumns.get(x).setChLevel(chLvls[x]);
+		int chIndex = 0;
+		for (int i = 0; i < alColumns.size() && chLvls.size()>chIndex; i++) {
+			Fixture fixture = alColumns.get(i);
+			int fixtureUses = fixture.getChLevels().size();
+			fixture.setChLevels(chLvls.subList(chIndex, chIndex + fixtureUses));
+			chIndex += fixtureUses;
 		}
 
 		// Save a new default
@@ -208,7 +237,7 @@ public class ProjectManagement extends MainActivity {
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				System.out.println("entered " + editText.getText());
-				if (null != editText.getText().toString() && !"".equals(editText.getText().toString()))
+				if (!"".equals(editText.getText().toString()))
 					save(editText.getText().toString());
 			}
 		};
@@ -254,8 +283,8 @@ public class ProjectManagement extends MainActivity {
 						// adapter.notifyDataSetChanged();
 						HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
 						listOfProjects.remove(proj);
-						
-						//Remove the project 
+
+						//Remove the project
 						SharedPreferences.Editor ed = getSharedPref().edit();
 						ed.remove(proj);
 						ed.putStringSet(PREF_SAVES, listOfProjects);

@@ -111,7 +111,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
         d.setTextAlign(Layout.Alignment.ALIGN_CENTER);
 
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
-        layerDrawable.setLayerInset(2, 10, (height/2)-15, 0, 0);//set offset of the text layer
+        layerDrawable.setLayerInset(2, 10, (height / 2) - 15, 0, 0);//set offset of the text layer
         return layerDrawable;
 	}
 
@@ -129,12 +129,13 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
 	/**
 	 * Sets the level of the channel
-	 * 
+	 *
 	 * @param a_chLevel set the level
 	 */
     @Override
-    public void setChLevel(double a_chLevel) {
-
+    public void setChLevels(List<Integer> a_chLevel) {
+        rgbLevel = a_chLevel;
+        ambilWarnaDialog.setRGBLevel(rgbLevel);
 	}
 
 	/**
@@ -173,8 +174,8 @@ public class RGBFixture extends Fixture implements OnClickListener {
 	 */
 	@Override
     public void incrementLevelUp() {
-		if(steep>0)
-			setChLevel(chLevel + steep);
+//		TODO if(steep>0)
+//			setChLevels(chLevel + steep);
 	}
 
 	/**
@@ -182,8 +183,8 @@ public class RGBFixture extends Fixture implements OnClickListener {
 	 */
 	@Override
     public void incrementLevelDown() {
-		if(steep<0)
-			setChLevel(chLevel + steep);
+//		TODO if(steep<0)
+//			setChLevels(chLevel + steep);
 	}
 	
 
@@ -205,10 +206,6 @@ public class RGBFixture extends Fixture implements OnClickListener {
         tvVal.setText(chText);
 	}
 
-	public void setRgbLevel(List<Integer> rgbLevel) {
-		this.rgbLevel = rgbLevel;
-	}
-
 	@Override
     public boolean isRGB() {
 		return true;
@@ -222,5 +219,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
         tvChNum.setText(Integer.toString(currentFixtureNum));
+    }
+
+    public void setChLevelArray(List<Integer> chLevels) {
+        rgbLevel = chLevels;
     }
 }

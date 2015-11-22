@@ -27,7 +27,7 @@ import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class StandardFixture extends Fixture implements OnSeekBarChangeListener, OnClickListener {
@@ -85,7 +85,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
 		seekBar = createSeekBar();
         this.viewGroup.addView(seekBar);
-//        mainActivity.incrementPatch(0);
 
 		Button editButton = new Button(context);
         editButton.setOnClickListener(this);
@@ -154,7 +153,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		setChLevel(progress);
+		setChLevels(Collections.singletonList(progress));
 		chLevel = progress;
 	}
 
@@ -172,20 +171,24 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
 	/**
 	 * Sets the level of the channel
-	 * 
-	 * @param a_chLevel set the level
-	 */
+	 *
+     * @param a_chLevel set the level
+     */
     @Override
-    public void setChLevel(double a_chLevel) {
+    public void setChLevels(List<Integer> a_chLevel) {
+        setChLevel(a_chLevel.get(0));
+	}
+
+    public void setChLevel(int a_chLevel) {
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
-            tvVal.setText(Integer.toString((int) a_chLevel));
+            tvVal.setText(Integer.toString(a_chLevel));
         } else {
             if (a_chLevel >= MAX_LEVEL)
                 tvVal.setText("Full");
             else
-                tvVal.setText((int) (a_chLevel * 100 / MAX_LEVEL) + "%");
+                tvVal.setText((a_chLevel * 100 / MAX_LEVEL) + "%");
         }
-        seekBar.setProgress((int) a_chLevel);
+        seekBar.setProgress(a_chLevel);
         chLevel = a_chLevel;
 	}
 
@@ -195,7 +198,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 	 */
 	@Override
     public List<Integer> getChLevels() {
-		return Arrays.asList((int) chLevel);
+		return Collections.singletonList((int) chLevel);
 	}
 
 	/**
@@ -226,7 +229,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 	@Override
     public void incrementLevelUp() {
 		if(steep>0)
-			setChLevel(chLevel + steep);
+			setChLevel((int) (chLevel + steep));
 	}
 
 	/**
@@ -235,7 +238,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 	@Override
     public void incrementLevelDown() {
 		if(steep<0)
-			setChLevel(chLevel + steep);
+			setChLevel((int) (chLevel + steep));
 	}
 	
 

@@ -217,10 +217,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
         recalculateFixtureNumbers();
 
-        getSharedPref().edit().putString(SettingsActivity.channels, Integer.toString(number_channels)).apply();
+        getSharedPref().edit().putString(SettingsActivity.channels, String.format("%1$s", number_channels)).apply();
     }
 
-    public void incrementPatch(int number_channels) {
+    private void incrementPatch(int number_channels) {
         boolean forceOneToOne = false;
         if (patch == null) {
             patch = new int[MAX_DIMMERS + 1][ALLOWED_PATCHED_DIMMERS];
@@ -385,7 +385,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
      * @param cueNum   number for the cue
      */
     private void createCue(Button button, List<Integer> chLevels, double cueNum) {
-        createCue(button, chLevels, cueNum, this.getString(R.string.cue) + " " + cueNum, -1, -1);
+        createCue(button, chLevels, cueNum, String.format(this.getString(R.string.cue), cueNum), -1, -1);
     }
 
     /**
@@ -407,14 +407,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             Toast.makeText(MainActivity.this, R.string.errNumConv, Toast.LENGTH_SHORT).show();
         }
         if (cueNum == -1) {
-            String name = getResources().getString(R.string.cue) + " " + cueCount;
+            String name = String.format(getResources().getString(R.string.cue), cueCount);
             button.setText(name);
             alCues.add(new CueObj(cueCount, name, fadeUpTime, fadeDownTime, chLevels, button));
         } else {
-            button.setText(getResources().getString(R.string.cue) + " " + cueNum);
+            button.setText(String.format(getResources().getString(R.string.cue), cueNum));
             // Add cue name
             if (cueName.equals("")) {
-                alCues.add(new CueObj(cueNum, getResources().getString(R.string.cue) + " " + cueNum, fadeUpTime, fadeDownTime, chLevels, button));
+                alCues.add(new CueObj(cueNum, String.format(getResources().getString(R.string.cue), cueNum), fadeUpTime, fadeDownTime, chLevels, button));
             } else {
                 alCues.add(new CueObj(cueNum, cueName, fadeUpTime, fadeDownTime, chLevels, button));
             }

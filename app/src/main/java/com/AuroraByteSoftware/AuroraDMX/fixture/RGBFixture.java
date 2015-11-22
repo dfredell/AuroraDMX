@@ -32,79 +32,78 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class RGBFixture extends Fixture implements OnClickListener {
 
 
-	private LinearLayout viewGroup = null;
-	private TextView tvVal = null;
-	private int ChNum = 0;
+    private LinearLayout viewGroup = null;
+    private TextView tvVal = null;
+    private int ChNum = 0;
     private View rgbSelectView;
 
     private double chLevel = 0;
-	private final int MAX_LEVEL = 255;
     private double steep = 0;
-    private MainActivity context;
+    private final MainActivity context;
     private String chText = "";
     private TextView tvChNum;
     private List<Integer> rgbLevel = new ArrayList<>(Collections.nCopies(3, 0));
-	private AmbilWarnaDialog ambilWarnaDialog = null;
+    private AmbilWarnaDialog ambilWarnaDialog = null;
 
-	public RGBFixture(final MainActivity context, String channelName) {
+    public RGBFixture(final MainActivity context, String channelName) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
         this.viewGroup = new LinearLayout(context);
         init();
-	}
+    }
 
-	public RGBFixture(final MainActivity context, String channelName, LinearLayout viewGroup) {
+    public RGBFixture(final MainActivity context, String channelName, LinearLayout viewGroup) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
         this.viewGroup = viewGroup;
 
-        ambilWarnaDialog = new AmbilWarnaDialog(context,0,this);
+        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this);
         rgbSelectView = ambilWarnaDialog.getView();
         viewGroup.addView(rgbSelectView, 2);
 
         viewGroup.getChildAt(3).setOnClickListener(this);
 
-        tvChNum = ((TextView)viewGroup.getChildAt(0));
-        tvVal = ((TextView)viewGroup.getChildAt(1));
+        tvChNum = ((TextView) viewGroup.getChildAt(0));
+        tvVal = ((TextView) viewGroup.getChildAt(1));
         tvVal.setText("R:0 G:0 B:0");
     }
 
-	@Override
+    @Override
     public void init() {
-		this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-		this.viewGroup.setOrientation(LinearLayout.VERTICAL);
+        this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        this.viewGroup.setOrientation(LinearLayout.VERTICAL);
 
         tvChNum = new TextView(context);
-		tvChNum.setText(ChNum + "");
-		tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
-		tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		this.viewGroup.addView(tvChNum);
-		tvVal = new TextView(context);
-		tvVal.setText("R:0 G:0 B:0");
-		tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
-		this.viewGroup.addView(tvVal);
+        tvChNum.setText(String.format("%1$s", ChNum));
+        tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
+        tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        this.viewGroup.addView(tvChNum);
+        tvVal = new TextView(context);
+        tvVal.setText("R:0 G:0 B:0");
+        tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
+        this.viewGroup.addView(tvVal);
 
-		ambilWarnaDialog = new AmbilWarnaDialog(context,0,this);
+        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this);
         rgbSelectView = ambilWarnaDialog.getView();
-		this.viewGroup.addView(rgbSelectView);
+        this.viewGroup.addView(rgbSelectView);
 
-		Button editButton = new Button(context);
+        Button editButton = new Button(context);
         editButton.setOnClickListener(this);
         editButton.setText(R.string.edit);
-		this.viewGroup.addView(editButton);
-	}
-	
-	private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height){
-		GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[] {
-				Color.rgb(0, 0, 0), scrollColor });
-		shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
-		ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
+        this.viewGroup.addView(editButton);
+    }
 
-        GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[] {
-				Color.rgb(10, 10, 10), Color.rgb(110, 110, 110) });
-		shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
-		InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
+    private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height) {
+        GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
+                Color.rgb(0, 0, 0), scrollColor});
+        shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
+        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
+
+        GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
+                Color.rgb(10, 10, 10), Color.rgb(110, 110, 110)});
+        shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
+        InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
 
         TextDrawable d = new TextDrawable(context);
         d.setText(chText);
@@ -113,87 +112,86 @@ public class RGBFixture extends Fixture implements OnClickListener {
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
         layerDrawable.setLayerInset(2, 10, (height / 2) - 15, 0, 0);//set offset of the text layer
         return layerDrawable;
-	}
+    }
 
-	/**
-	 * Get the LinearLayout that contains the text, slider, and button for one
-	 * channel
-	 * 
-	 * @return the viewGroup
-	 */
-	@Override
+    /**
+     * Get the LinearLayout that contains the text, slider, and button for one
+     * channel
+     *
+     * @return the viewGroup
+     */
+    @Override
     public LinearLayout getViewGroup() {
-		return viewGroup;
-	}
+        return viewGroup;
+    }
 
 
-	/**
-	 * Sets the level of the channel
-	 *
-	 * @param a_chLevel set the level
-	 */
+    /**
+     * Sets the level of the channel
+     *
+     * @param a_chLevel set the level
+     */
     @Override
     public void setChLevels(List<Integer> a_chLevel) {
         rgbLevel = a_chLevel;
         ambilWarnaDialog.setRGBLevel(rgbLevel);
-	}
+    }
 
-	/**
-	 * get the level of the channel
-	 * 
-	 */
-	@Override
+    /**
+     * get the level of the channel
+     */
+    @Override
     public List<Integer> getChLevels() {
-		return rgbLevel;
-	}
+        return rgbLevel;
+    }
 
-	/**
-	 * Toggle button
-	 */
-	@Override
-	public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup,context,this,chText,(int)chLevel);
-	}
+    /**
+     * Toggle button
+     */
+    @Override
+    public void onClick(View v) {
+        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel);
+    }
 
 
     @Override
     public String toString() {
-		return ("Ch: " + ChNum + "\tLvl: " + chLevel);
-	}
+        return ("Ch: " + ChNum + "\tLvl: " + chLevel);
+    }
 
-	/**
-	 * Creates 255 steeps between current and endVal
-	 */
-	@Override
+    /**
+     * Creates 255 steeps between current and endVal
+     */
+    @Override
     public void setupIncrementLevelFade(int endVal) {
-		steep = (endVal - chLevel) / 256.0;
-	}
+        steep = (endVal - chLevel) / 256.0;
+    }
 
-	/**
-	 * Adds one step Up to the current level
-	 */
-	@Override
+    /**
+     * Adds one step Up to the current level
+     */
+    @Override
     public void incrementLevelUp() {
 //		TODO if(steep>0)
 //			setChLevels(chLevel + steep);
-	}
+    }
 
-	/**
-	 * Adds one step Down to the current level
-	 */
-	@Override
+    /**
+     * Adds one step Down to the current level
+     */
+    @Override
     public void incrementLevelDown() {
 //		TODO if(steep<0)
 //			setChLevels(chLevel + steep);
-	}
-	
+    }
 
-	@Override
-    public void setScrollColor(int scrollColor){
+
+    @Override
+    public void setScrollColor(int scrollColor) {
 
     }
 
-    public void setColumnText(String text, Context context){
+    public void setColumnText(String text, Context context) {
 
     }
 
@@ -202,14 +200,14 @@ public class RGBFixture extends Fixture implements OnClickListener {
         return chText;
     }
 
-	public void setChText(String chText) {
+    public void setChText(String chText) {
         tvVal.setText(chText);
-	}
+    }
 
-	@Override
+    @Override
     public boolean isRGB() {
-		return true;
-	}
+        return true;
+    }
 
     @Override
     public void removeSelector() {
@@ -218,7 +216,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
-        tvChNum.setText(Integer.toString(currentFixtureNum));
+        tvChNum.setText(String.format("%1$s", currentFixtureNum));
     }
 
     public void setChLevelArray(List<Integer> chLevels) {

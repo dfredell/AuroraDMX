@@ -33,23 +33,23 @@ import java.util.List;
 public class StandardFixture extends Fixture implements OnSeekBarChangeListener, OnClickListener {
 
 
-	private LinearLayout viewGroup = null;
-	private TextView tvVal = null;
-	private int ChNum = 0;
-	private VerticalSeekBar seekBar = null;
+    private LinearLayout viewGroup = null;
+    private TextView tvVal = null;
+    private int ChNum = 0;
+    private VerticalSeekBar seekBar = null;
 
     private double chLevel = 0;
-	private final int MAX_LEVEL = 255;
+    private final int MAX_LEVEL = 255;
     private double steep = 0;
-    private MainActivity context;
+    private final MainActivity context;
     private String chText = "";
     private TextView tvChNum;
 
     public StandardFixture(final MainActivity context, String channelName) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
-		init();
-	}
+        init();
+    }
 
     public StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
         this.context = context;
@@ -61,36 +61,36 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
         viewGroup.getChildAt(3).setOnClickListener(this);
 
-        tvChNum = ((TextView)viewGroup.getChildAt(0));
-        tvVal = ((TextView)viewGroup.getChildAt(1));
+        tvChNum = ((TextView) viewGroup.getChildAt(0));
+        tvVal = ((TextView) viewGroup.getChildAt(1));
         setChLevel(0);
     }
 
     @Override
     public void init() {
         this.viewGroup = new LinearLayout(context);
-		this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-		this.viewGroup.setOrientation(LinearLayout.VERTICAL);
+        this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        this.viewGroup.setOrientation(LinearLayout.VERTICAL);
 
-		tvChNum = new TextView(context);
-		tvChNum.setText(ChNum + "");
-		tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
-		tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		this.viewGroup.addView(tvChNum);
-		tvVal = new TextView(context);
-		tvVal.setText("0%");
-		tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
-		this.viewGroup.addView(tvVal);
+        tvChNum = new TextView(context);
+        tvChNum.setText(String.format("%1$s", ChNum));
+        tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
+        tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        this.viewGroup.addView(tvChNum);
+        tvVal = new TextView(context);
+        tvVal.setText(String.format(context.getString(R.string.ChPercent), 0));
+        tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
+        this.viewGroup.addView(tvVal);
 
-		seekBar = createSeekBar();
+        seekBar = createSeekBar();
         this.viewGroup.addView(seekBar);
 
-		Button editButton = new Button(context);
+        Button editButton = new Button(context);
         editButton.setOnClickListener(this);
         editButton.setText(R.string.edit);
-		this.viewGroup.addView(editButton);
-	}
+        this.viewGroup.addView(editButton);
+    }
 
     private VerticalSeekBar createSeekBar() {
         VerticalSeekBar verticalSeekBar = new VerticalSeekBar(context);// make
@@ -120,16 +120,16 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         return verticalSeekBar;
     }
 
-    private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height){
-		GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[] {
-				Color.rgb(0, 0, 0), scrollColor });
-		shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
-		ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
+    private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height) {
+        GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
+                Color.rgb(0, 0, 0), scrollColor});
+        shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
+        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
 
-        GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[] {
-				Color.rgb(10, 10, 10), Color.rgb(110, 110, 110) });
-		shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
-		InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
+        GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
+                Color.rgb(10, 10, 10), Color.rgb(110, 110, 110)});
+        shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
+        InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
 
         TextDrawable d = new TextDrawable(context);
         d.setText(chText);
@@ -138,122 +138,121 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
         layerDrawable.setLayerInset(2, 10, (height / 2) - 15, 0, 0);//set offset of the text layer
         return layerDrawable;
-	}
+    }
 
-	/**
-	 * Get the LinearLayout that contains the text, slider, and button for one
-	 * channel
-	 * 
-	 * @return the viewGroup
-	 */
-	@Override
+    /**
+     * Get the LinearLayout that contains the text, slider, and button for one
+     * channel
+     *
+     * @return the viewGroup
+     */
+    @Override
     public LinearLayout getViewGroup() {
-		return viewGroup;
-	}
+        return viewGroup;
+    }
 
-	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		setChLevels(Collections.singletonList(progress));
-		chLevel = progress;
-	}
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        setChLevels(Collections.singletonList(progress));
+        chLevel = progress;
+    }
 
-	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		// System.out.println("onStartTrackingTouch");
-	}
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        // TODO Auto-generated method stub
+        // System.out.println("onStartTrackingTouch");
+    }
 
-	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		// System.out.println("onStopTrackingTouch");
-	}
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        // TODO Auto-generated method stub
+        // System.out.println("onStopTrackingTouch");
+    }
 
-	/**
-	 * Sets the level of the channel
-	 *
+    /**
+     * Sets the level of the channel
+     *
      * @param a_chLevel set the level
      */
     @Override
     public void setChLevels(List<Integer> a_chLevel) {
         setChLevel(a_chLevel.get(0));
-	}
+    }
 
-    public void setChLevel(int a_chLevel) {
+    private void setChLevel(int a_chLevel) {
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
-            tvVal.setText(Integer.toString(a_chLevel));
+            tvVal.setText(String.format("%1$s", a_chLevel));
         } else {
             if (a_chLevel >= MAX_LEVEL)
-                tvVal.setText("Full");
+                tvVal.setText(context.getString(R.string.ChFull));
             else
-                tvVal.setText((a_chLevel * 100 / MAX_LEVEL) + "%");
+                tvVal.setText(String.format(context.getString(R.string.ChPercent), (a_chLevel * 100 / MAX_LEVEL)));
         }
         seekBar.setProgress(a_chLevel);
         chLevel = a_chLevel;
-	}
+    }
 
-	/**
-	 * get the level of the channel
-	 * 
-	 */
-	@Override
+    /**
+     * get the level of the channel
+     */
+    @Override
     public List<Integer> getChLevels() {
-		return Collections.singletonList((int) chLevel);
-	}
+        return Collections.singletonList((int) chLevel);
+    }
 
-	/**
-	 * Toggle button
-	 */
-	@Override
-	public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup,context,this,chText,(int)chLevel);
-	}
+    /**
+     * Toggle button
+     */
+    @Override
+    public void onClick(View v) {
+        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel);
+    }
 
 
     @Override
     public String toString() {
-		return ("Ch: " + ChNum + "\tLvl: " + chLevel);
-	}
+        return ("Ch: " + ChNum + "\tLvl: " + chLevel);
+    }
 
-	/**
-	 * Creates 255 steeps between current and endVal
-	 */
-	@Override
+    /**
+     * Creates 255 steeps between current and endVal
+     */
+    @Override
     public void setupIncrementLevelFade(int endVal) {
-		steep = (endVal - chLevel) / 256.0;
-	}
+        steep = (endVal - chLevel) / 256.0;
+    }
 
-	/**
-	 * Adds one step Up to the current level
-	 */
-	@Override
+    /**
+     * Adds one step Up to the current level
+     */
+    @Override
     public void incrementLevelUp() {
-		if(steep>0)
-			setChLevel((int) (chLevel + steep));
-	}
+        if (steep > 0)
+            setChLevel((int) (chLevel + steep));
+    }
 
-	/**
-	 * Adds one step Down to the current level
-	 */
-	@Override
+    /**
+     * Adds one step Down to the current level
+     */
+    @Override
     public void incrementLevelDown() {
-		if(steep<0)
-			setChLevel((int) (chLevel + steep));
-	}
-	
+        if (steep < 0)
+            setChLevel((int) (chLevel + steep));
+    }
 
-	@Override
-    public void setScrollColor(int scrollColor){
+
+    @Override
+    public void setScrollColor(int scrollColor) {
         seekBar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int height = seekBar.getMeasuredHeight();
-		LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(), scrollColor, height);
-		seekBar.setProgressDrawable(mylayer);
-		seekBar.updateThumb();
+        LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(), scrollColor, height);
+        seekBar.setProgressDrawable(mylayer);
+        seekBar.updateThumb();
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
     }
 
     @Override
-    public void setColumnText(String text, Context context){
+    public void setColumnText(String text, Context context) {
         chText = text;
 
         LayerDrawable mylayer = generateLayerDrawable(context, Color.parseColor(MainActivity.getSharedPref().getString("channel_color", "#ffcc00")), seekBar.getMeasuredWidth());
@@ -271,10 +270,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         return chText;
     }
 
-	@Override
+    @Override
     public boolean isRGB() {
-		return false;
-	}
+        return false;
+    }
 
     @Override
     public void removeSelector() {
@@ -283,6 +282,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
-        tvChNum.setText(Integer.toString(currentFixtureNum));
+        tvChNum.setText(String.format("%1$s", currentFixtureNum));
     }
 }

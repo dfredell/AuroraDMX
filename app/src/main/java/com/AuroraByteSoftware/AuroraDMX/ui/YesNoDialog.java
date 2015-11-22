@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.SettingsActivity;
- 
+
 /**
  * The OptionDialogPreference will display a dialog, and will persist the
  * <code>true</code> when pressing the positive button and <code>false</code>
@@ -16,15 +16,17 @@ import com.AuroraByteSoftware.AuroraDMX.SettingsActivity;
 public class YesNoDialog extends DialogPreference {
     /**
      * constructor
+     *
      * @param context parent context
-     * @param attrs data attributes
+     * @param attrs   data attributes
      */
     public YesNoDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
- 
+
     /**
      * deals with action to do once dialog is closed
+     *
      * @param positiveResult true or false
      */
     @Override
@@ -32,7 +34,7 @@ public class YesNoDialog extends DialogPreference {
         super.onDialogClosed(positiveResult);
         if (callChangeListener(positiveResult)) {
             //System.out.println(positiveResult);
-			MainActivity.getSharedPref().edit().putBoolean(SettingsActivity.restoredefaults, positiveResult).commit();
+            MainActivity.getSharedPref().edit().putBoolean(SettingsActivity.restoredefaults, positiveResult).commit();
         }
     }
 }

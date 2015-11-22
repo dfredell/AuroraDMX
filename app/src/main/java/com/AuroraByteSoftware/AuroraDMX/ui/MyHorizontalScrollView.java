@@ -8,12 +8,12 @@ import android.widget.HorizontalScrollView;
 public class MyHorizontalScrollView extends HorizontalScrollView {
 
     @SuppressWarnings("unused")
-	public MyHorizontalScrollView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public MyHorizontalScrollView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		return false;//Disables ch level change and scroll
-	}
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return false;//Disables ch level change and scroll
+    }
 }

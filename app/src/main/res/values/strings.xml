@@ -5,7 +5,9 @@
     <string name="menu_settings">Settings</string>
     <string name="Save">Save</string>
     <string name="AddCue">Add Cue</string>
-    <string name="cue">Cue</string>
+    <string name="ChFull">Full</string>
+    <string name="ChPercent">%1$s%%</string>
+    <string name="cue">Cue %1$s</string>
     <string name="editName">Name : </string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>

@@ -33,300 +33,300 @@ import java.util.List;
 
 public class ProjectManagement extends MainActivity {
 
-	private final MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
-	private static final String PREF_OLD_POINTER = "StoredDataInPref";
-	private static final String PREF_OLD_POINTER_HUMAN = "Default Project";
-	private static final String PREF_SAVES = "LIST_OF_SAVED_PROJECTS";
-	private static final String PREF_DEF = "DEFAULT_PROJECT_TO_LOAD";
+    private static final String PREF_OLD_POINTER = "StoredDataInPref";
+    private static final String PREF_OLD_POINTER_HUMAN = "Default Project";
+    private static final String PREF_SAVES = "LIST_OF_SAVED_PROJECTS";
+    private static final String PREF_DEF = "DEFAULT_PROJECT_TO_LOAD";
 
-	private static boolean DeleteInProgress = false;
+    private static boolean DeleteInProgress = false;
 
-	public ProjectManagement(){
-		mainActivity = null;
-	}
+    public ProjectManagement() {
+        mainActivity = null;
+    }
 
-	public ProjectManagement(MainActivity mainActivity) {
-		this.mainActivity = mainActivity;
-	}
+    public ProjectManagement(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
-	void save(String key) {
-		if (key == null) {
-			key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
-		}
-		HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
-		listOfProjects.add(key);
+    void save(String key) {
+        if (key == null) {
+            key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
+        }
+        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
+        listOfProjects.add(key);
 
-		//Get number of channels used
-		int channelsUses = 0 ;
-		for (Fixture fixture : alColumns) {
-			channelsUses += fixture.getChLevels().size();
-		}
+        //Get number of channels used
+        int channelsUses = 0;
+        for (Fixture fixture : alColumns) {
+            channelsUses += fixture.getChLevels().size();
+        }
 
-		//Get ch levels
-		final List<Integer> currentChannelArray = getCurrentChannelArray();
-		final Integer[] currentChannelLevels = currentChannelArray.toArray(new Integer[currentChannelArray.size()]);
+        //Get ch levels
+        final List<Integer> currentChannelArray = getCurrentChannelArray();
+        final Integer[] currentChannelLevels = currentChannelArray.toArray(new Integer[currentChannelArray.size()]);
 
-		//Get the channel names as an array
+        //Get the channel names as an array
         String channelNames[] = new String[alColumns.size()];
         for (int i = 0; i < alColumns.size(); i++) {
             channelNames[i] = alColumns.get(i).getChText();
         }
 
-		// Get an array of isRGB channels
-		boolean[] isRGB = new boolean[alColumns.size()];
-		for (int i = 0; i < alColumns.size(); i++) {
-			isRGB[i]=alColumns.get(i).isRGB();
-		}
+        // Get an array of isRGB channels
+        boolean[] isRGB = new boolean[alColumns.size()];
+        for (int i = 0; i < alColumns.size(); i++) {
+            isRGB[i] = alColumns.get(i).isRGB();
+        }
 
-		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-		try {
-			ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
-			objectOutput.writeObject(channelsUses);
-			objectOutput.writeObject(alCues);
-			objectOutput.writeObject(patch);
-			objectOutput.writeObject(cueCount);
-			objectOutput.writeObject(getSharedPref().getString(SettingsActivity.serveraddress, ""));
-			objectOutput.writeObject(currentChannelLevels);
+        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
+            objectOutput.writeObject(channelsUses);
+            objectOutput.writeObject(alCues);
+            objectOutput.writeObject(patch);
+            objectOutput.writeObject(cueCount);
+            objectOutput.writeObject(getSharedPref().getString(SettingsActivity.serveraddress, ""));
+            objectOutput.writeObject(currentChannelLevels);
             objectOutput.writeObject(channelNames);
             objectOutput.writeObject(isRGB);
             byte[] data = arrayOutputStream.toByteArray();
 
-			objectOutput.close();
-			arrayOutputStream.close();
+            objectOutput.close();
+            arrayOutputStream.close();
 
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			Base64OutputStream b64 = new Base64OutputStream(out, Base64.DEFAULT);
-			b64.write(data);
-			b64.close();
-			out.close();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Base64OutputStream b64 = new Base64OutputStream(out, Base64.DEFAULT);
+            b64.write(data);
+            b64.close();
+            out.close();
 
-			SharedPreferences.Editor ed = getSharedPref().edit();
-			ed.putString(key, new String(out.toByteArray()));
-			ed.putStringSet(PREF_SAVES, listOfProjects);
-			ed.apply();
+            SharedPreferences.Editor ed = getSharedPref().edit();
+            ed.putString(key, new String(out.toByteArray()));
+            ed.putStringSet(PREF_SAVES, listOfProjects);
+            ed.apply();
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// System.out.println("save complete");
-	}
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // System.out.println("save complete");
+    }
 
-	@SuppressWarnings("unchecked")
-	void open(String key) {
-		// System.out.println("open");
-		if (key == null) {
-			key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
-		}
-		// Read data back
-		byte[] bytes = getSharedPref().getString(key, "{}").getBytes();
+    @SuppressWarnings("unchecked")
+    void open(String key) {
+        // System.out.println("open");
+        if (key == null) {
+            key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
+        }
+        // Read data back
+        byte[] bytes = getSharedPref().getString(key, "{}").getBytes();
 
-		ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
-		Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
-		ObjectInputStream in;
-		List<Integer> chLvls = new ArrayList<>();
-		String[] channelNames = null;
-		boolean[] isRGB = null;
+        ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
+        Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
+        ObjectInputStream in;
+        List<Integer> chLvls = new ArrayList<>();
+        String[] channelNames = null;
+        boolean[] isRGB = null;
 
-		try {
-			in = new ObjectInputStream(base64InputStream);
+        try {
+            in = new ObjectInputStream(base64InputStream);
 
-			// Stop ArtNet
-			if (null != clientSocket && !clientSocket.isClosed())
-				clientSocket.close();
+            // Stop ArtNet
+            if (null != clientSocket && !clientSocket.isClosed())
+                clientSocket.close();
 
-			//Clear current screen
-			alCues.clear();
-			for (Fixture columns : alColumns) {
-				columns.getViewGroup().removeAllViews();
-			}
-			alColumns.clear();
-			((LinearLayout) mainActivity.findViewById(R.id.ChanelLayout)).removeAllViews();
-			//Read objects
-			Object readObject1Channels = in.readObject();
-			Object readObject2Cues = in.readObject();
-			Object readObject3Patch = in.readObject();
-			Object readObject4CueCount = in.readObject();
-			Object readObject5IPAdr = in.readObject();
-			Object readObject6ChAry = null;
-			Object readObject7ChNames = null;
-			Object readObject8isRGB = null;
-			try {
-				readObject6ChAry = in.readObject();
+            //Clear current screen
+            alCues.clear();
+            for (Fixture columns : alColumns) {
+                columns.getViewGroup().removeAllViews();
+            }
+            alColumns.clear();
+            ((LinearLayout) mainActivity.findViewById(R.id.ChanelLayout)).removeAllViews();
+            //Read objects
+            Object readObject1Channels = in.readObject();
+            Object readObject2Cues = in.readObject();
+            Object readObject3Patch = in.readObject();
+            Object readObject4CueCount = in.readObject();
+            Object readObject5IPAdr = in.readObject();
+            Object readObject6ChAry = null;
+            Object readObject7ChNames = null;
+            Object readObject8isRGB = null;
+            try {
+                readObject6ChAry = in.readObject();
                 readObject7ChNames = in.readObject();
-				readObject8isRGB = in.readObject();
-			} catch (EOFException e) {
-				// Do nothing we hit the end of the stored data
-			}
+                readObject8isRGB = in.readObject();
+            } catch (EOFException e) {
+                // Do nothing we hit the end of the stored data
+            }
 
-			if (readObject1Channels.getClass().equals(Integer.class)) {
+            if (readObject1Channels.getClass().equals(Integer.class)) {
                 if (readObject7ChNames != null && readObject7ChNames.getClass().equals(String[].class))
                     channelNames = (String[]) readObject7ChNames;
-				if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
-					isRGB = (boolean[]) readObject8isRGB;
-				mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames, isRGB);
-				getSharedPref().edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
-			}
-			if (readObject2Cues.getClass().equals(alCues.getClass()))
-				alCues = (ArrayList<CueObj>) readObject2Cues;
-			if (readObject3Patch.getClass().equals(patch.getClass()))
-				patch = (int[][]) readObject3Patch;
-			if (readObject4CueCount.getClass().equals(Double.class))
-				cueCount = (Double) readObject4CueCount;
-			if (readObject5IPAdr.getClass().equals(String.class))
-				getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
-			if (readObject6ChAry != null && readObject6ChAry.getClass().equals(Integer[].class))
-				chLvls = Arrays.asList((Integer[]) readObject6ChAry);
+                if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
+                    isRGB = (boolean[]) readObject8isRGB;
+                mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames, isRGB);
+                getSharedPref().edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
+            }
+            if (readObject2Cues.getClass().equals(alCues.getClass()))
+                alCues = (ArrayList<CueObj>) readObject2Cues;
+            if (readObject3Patch.getClass().equals(patch.getClass()))
+                patch = (int[][]) readObject3Patch;
+            if (readObject4CueCount.getClass().equals(Double.class))
+                cueCount = (Double) readObject4CueCount;
+            if (readObject5IPAdr.getClass().equals(String.class))
+                getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
+            if (readObject6ChAry != null && readObject6ChAry.getClass().equals(Integer[].class))
+                chLvls = Arrays.asList((Integer[]) readObject6ChAry);
 
 
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		try {
-			base64InputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            base64InputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		// Refresh views
-		LinearLayout cueLine = ((LinearLayout) mainActivity.findViewById(R.id.CueLine));
-		cueLine.removeAllViews();
-		for (CueObj cue : alCues) {
-			// create a new "Add Cue" button
-			cue.setButton(mainActivity.makeButton(cue.getCueName()));
-			cueLine.addView(cue.getButton());
-			cue.setHighlight(0, 0, 0);
-			cue.setFadeInProgress(false);
-		}
+        // Refresh views
+        LinearLayout cueLine = ((LinearLayout) mainActivity.findViewById(R.id.CueLine));
+        cueLine.removeAllViews();
+        for (CueObj cue : alCues) {
+            // create a new "Add Cue" button
+            cue.setButton(mainActivity.makeButton(cue.getCueName()));
+            cueLine.addView(cue.getButton());
+            cue.setHighlight(0, 0, 0);
+            cue.setFadeInProgress(false);
+        }
 
-		// create a new "Add Cue" button
-		((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton(mainActivity.getString(R.string.AddCue)));
-		mainActivity.setUpNetwork();
-		// System.out.println("open complete");
+        // create a new "Add Cue" button
+        ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton(mainActivity.getString(R.string.AddCue)));
+        mainActivity.setUpNetwork();
+        // System.out.println("open complete");
 
-		// Set ch levels
-		int chIndex = 0;
-		for (int i = 0; i < alColumns.size() && chLvls.size()>chIndex; i++) {
-			Fixture fixture = alColumns.get(i);
-			int fixtureUses = fixture.getChLevels().size();
-			fixture.setChLevels(chLvls.subList(chIndex, chIndex + fixtureUses));
-			chIndex += fixtureUses;
-		}
+        // Set ch levels
+        int chIndex = 0;
+        for (int i = 0; i < alColumns.size() && chLvls.size() > chIndex; i++) {
+            Fixture fixture = alColumns.get(i);
+            int fixtureUses = fixture.getChLevels().size();
+            fixture.setChLevels(chLvls.subList(chIndex, chIndex + fixtureUses));
+            chIndex += fixtureUses;
+        }
 
-		// Save a new default
-		SharedPreferences.Editor ed = getSharedPref().edit();
-		ed.putString(PREF_DEF, key);
-		ed.apply();
+        // Save a new default
+        SharedPreferences.Editor ed = getSharedPref().edit();
+        ed.putString(PREF_DEF, key);
+        ed.apply();
 
-		// Set the title to the project
-		if (PREF_OLD_POINTER.equals(key))
-			key = PREF_OLD_POINTER_HUMAN;
-		mainActivity.setTitle(key);
-	}
+        // Set the title to the project
+        if (PREF_OLD_POINTER.equals(key))
+            key = PREF_OLD_POINTER_HUMAN;
+        mainActivity.setTitle(key);
+    }
 
-	public void onSaveClick() {
-		// TODO Auto-generated method stub
-		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-		builder.setTitle("Save Project");
-		builder.setIcon(R.drawable.content_save);
+    public void onSaveClick() {
+        // TODO Auto-generated method stub
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setTitle("Save Project");
+        builder.setIcon(R.drawable.content_save);
 
-		final EditText editText = new EditText(mainActivity);
+        final EditText editText = new EditText(mainActivity);
 
-		OnClickListener listener = new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				System.out.println("entered " + editText.getText());
-				if (!"".equals(editText.getText().toString()))
-					save(editText.getText().toString());
-			}
-		};
+        OnClickListener listener = new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                System.out.println("entered " + editText.getText());
+                if (!"".equals(editText.getText().toString()))
+                    save(editText.getText().toString());
+            }
+        };
 
-		builder.setPositiveButton("Save", listener);
-		builder.setView(editText);
-		editText.requestFocus();
-		Dialog dialog = builder.create();
-		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        builder.setPositiveButton("Save", listener);
+        builder.setView(editText);
+        editText.requestFocus();
+        Dialog dialog = builder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
-		dialog.show();
+        dialog.show();
 
-	}
+    }
 
-	/**
-	 * Dialog to load a saved project
-	 */
-	public void onLoadClick() {
-		HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
-		if (listOfProjects.contains(PREF_OLD_POINTER)) {
-			listOfProjects.remove(PREF_OLD_POINTER);
-			listOfProjects.add(PREF_OLD_POINTER_HUMAN);
-		}
-		final String[] listOfProjectsArray = listOfProjects.toArray(new String[listOfProjects.size()]);
-		final ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, android.R.id.text1, listOfProjectsArray);
+    /**
+     * Dialog to load a saved project
+     */
+    public void onLoadClick() {
+        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
+        if (listOfProjects.contains(PREF_OLD_POINTER)) {
+            listOfProjects.remove(PREF_OLD_POINTER);
+            listOfProjects.add(PREF_OLD_POINTER_HUMAN);
+        }
+        final String[] listOfProjectsArray = listOfProjects.toArray(new String[listOfProjects.size()]);
+        final ArrayAdapter<String> modeAdapter = new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, android.R.id.text1, listOfProjectsArray);
 
-		DeleteInProgress = false;
-		// Long press to remove
-		OnItemLongClickListener longPressListener = new OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
-				DeleteInProgress = true;
-				AlertDialog.Builder adb = new AlertDialog.Builder(mainActivity);
-				adb.setTitle("Delete");
-				adb.setIcon(R.drawable.alerts_and_states_warning);
-				final String proj = listOfProjectsArray[position];
-				String proj_human = PREF_OLD_POINTER.equals(proj) ? PREF_OLD_POINTER_HUMAN:proj;
-				adb.setMessage("Are you sure you want to delete project '" + proj_human + "'?");
-				adb.setNegativeButton("Cancel", null);
-				adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						// MyDataObject.remove(positionToRemove);
-						// adapter.notifyDataSetChanged();
-						HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
-						listOfProjects.remove(proj);
+        DeleteInProgress = false;
+        // Long press to remove
+        OnItemLongClickListener longPressListener = new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int position, long arg3) {
+                DeleteInProgress = true;
+                AlertDialog.Builder adb = new AlertDialog.Builder(mainActivity);
+                adb.setTitle("Delete");
+                adb.setIcon(R.drawable.alerts_and_states_warning);
+                final String proj = listOfProjectsArray[position];
+                String proj_human = PREF_OLD_POINTER.equals(proj) ? PREF_OLD_POINTER_HUMAN : proj;
+                adb.setMessage("Are you sure you want to delete project '" + proj_human + "'?");
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // MyDataObject.remove(positionToRemove);
+                        // adapter.notifyDataSetChanged();
+                        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
+                        listOfProjects.remove(proj);
 
-						//Remove the project
-						SharedPreferences.Editor ed = getSharedPref().edit();
-						ed.remove(proj);
-						ed.putStringSet(PREF_SAVES, listOfProjects);
-						ed.apply();
-					}
-				});
-				adb.show();
+                        //Remove the project
+                        SharedPreferences.Editor ed = getSharedPref().edit();
+                        ed.remove(proj);
+                        ed.putStringSet(PREF_SAVES, listOfProjects);
+                        ed.apply();
+                    }
+                });
+                adb.show();
 
-				return false;
-			}
-		};
-		ListView listView = new ListView(mainActivity);
-		listView.setLongClickable(true);
-		listView.setClickable(true);
-		listView.setOnItemLongClickListener(longPressListener);
-		listView.setAdapter(modeAdapter);
+                return false;
+            }
+        };
+        ListView listView = new ListView(mainActivity);
+        listView.setLongClickable(true);
+        listView.setClickable(true);
+        listView.setOnItemLongClickListener(longPressListener);
+        listView.setAdapter(modeAdapter);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-		builder.setTitle("Load Project");
-		builder.setIcon(R.drawable.collections_collection);
-		// builder.setAdapter(modeAdapter, listener);
-		builder.setView(listView);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setTitle("Load Project");
+        builder.setIcon(R.drawable.collections_collection);
+        // builder.setAdapter(modeAdapter, listener);
+        builder.setView(listView);
 
-		final Dialog dialog = builder.create();
+        final Dialog dialog = builder.create();
 
-		// Short press to load
-		OnItemClickListener listener = new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
-				//Save the current proj before opening another
-				save(null);
-				String proj = listOfProjectsArray[position];
-				if (PREF_OLD_POINTER_HUMAN.equals(proj))
-					proj = PREF_OLD_POINTER;
-				if(!DeleteInProgress)
-					open(proj);
-				dialog.dismiss();
-			}
-		};
-		listView.setOnItemClickListener(listener);
+        // Short press to load
+        OnItemClickListener listener = new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+                //Save the current proj before opening another
+                save(null);
+                String proj = listOfProjectsArray[position];
+                if (PREF_OLD_POINTER_HUMAN.equals(proj))
+                    proj = PREF_OLD_POINTER;
+                if (!DeleteInProgress)
+                    open(proj);
+                dialog.dismiss();
+            }
+        };
+        listView.setOnItemClickListener(listener);
 
-		dialog.show();
+        dialog.show();
 
-	}
+    }
 }

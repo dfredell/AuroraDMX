@@ -42,7 +42,7 @@ public class ManualServerIP {
         EditText editTextServerIP = (EditText) promptsView.findViewById(R.id.editTextServerIP);
         String addr = MainActivity.getSharedPref().getString(SettingsActivity.manualserver, "192.168.0.0");
         editTextServerIP.setText(addr);
-        editTextServerIP.setSelection(addr != null ? addr.length() : 0);
+        editTextServerIP.setSelection(addr.length());
         builder.setView(promptsView);
 
         AlertDialog alert = builder.create();

@@ -180,9 +180,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
         int change = numberFixtures - alColumns.size();
         int numOfChannelsUsed = 0;
-        for (Fixture fixture : alColumns) {
-            numOfChannelsUsed = fixture.getChLevels().size();
-        }
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.ChanelLayout);
 
         orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
@@ -194,6 +191,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                     alColumns.add(new StandardFixture(this, channelNames == null ? null : channelNames[x]));
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
+            for (Fixture fixture : alColumns) {
+                numOfChannelsUsed += fixture.getChLevels().size();
+            }
             for (CueObj cue : alCues) {// Pad ch's in cues
                 cue.padChannels(numOfChannelsUsed);
             }
@@ -201,6 +201,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             for (int x = (numberFixtures - change); x > numberFixtures && x < 512; x--) {
                 mainLayout.removeView(alColumns.get(x - 1).getViewGroup());
                 alColumns.remove(x - 1);
+            }
+            for (Fixture fixture : alColumns) {
+                numOfChannelsUsed += fixture.getChLevels().size();
             }
             for (CueObj cue : alCues) {
                 cue.padChannels(numOfChannelsUsed);

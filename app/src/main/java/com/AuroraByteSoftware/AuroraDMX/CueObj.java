@@ -144,7 +144,7 @@ public class CueObj extends MainActivity implements Serializable {
      */
     void startCueFade(final int nextCueNum, final int prevCueNum) {
 
-        Log.d(TAG, "next " + nextCueNum + "\tprev " + prevCueNum);
+        Log.d(TAG, "startCueFade next " + nextCueNum + "\tprev " + prevCueNum);
 
         // Check if any cues are currently fading
         boolean prevCueReady = true;

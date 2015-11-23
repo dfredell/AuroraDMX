@@ -37,8 +37,8 @@ public class RGBFixture extends Fixture implements OnClickListener {
     private int ChNum = 0;
     private View rgbSelectView;
 
-    private double chLevel = 0;
-    private double steep = 0;
+    private double step[] = new double[3];
+    private double stepIteram[] = new double[3];
     private final MainActivity context;
     private String chText = "";
     private TextView tvChNum;
@@ -151,21 +151,28 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel);
+        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) 0);
     }
 
 
     @Override
     public String toString() {
-        return ("Ch: " + ChNum + "\tLvl: " + chLevel);
+        return ("Ch: " + ChNum + "\tLvl: " + rgbLevel);
     }
 
     /**
      * Creates 255 steeps between current and endVal
+     *
+     * @param endVal
      */
     @Override
-    public void setupIncrementLevelFade(int endVal) {
-        steep = (endVal - chLevel) / 256.0;
+    public void setupIncrementLevelFade(List<Integer> endVal) {
+        step[0] = (endVal.get(0) - rgbLevel.get(0)) / 256.0;
+        step[1] = (endVal.get(1) - rgbLevel.get(1)) / 256.0;
+        step[2] = (endVal.get(2) - rgbLevel.get(2)) / 256.0;
+        stepIteram[0] = rgbLevel.get(0);
+        stepIteram[1] = rgbLevel.get(1);
+        stepIteram[2] = rgbLevel.get(2);
     }
 
     /**
@@ -173,8 +180,13 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void incrementLevelUp() {
-//		TODO if(steep>0)
-//			setChLevels(chLevel + steep);
+        if (step[0] > 0)
+            stepIteram[0] += step[0];
+        if (step[1] > 0)
+            stepIteram[1] += step[1];
+        if (step[2] > 0)
+            stepIteram[2] += step[2];
+        updateIncrementedLevel();
     }
 
     /**
@@ -182,10 +194,21 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void incrementLevelDown() {
-//		TODO if(steep<0)
-//			setChLevels(chLevel + steep);
+        if (step[0] < 0)
+            stepIteram[0] += step[0];
+        if (step[1] < 0)
+            stepIteram[1] += step[1];
+        if (step[2] < 0)
+            stepIteram[2] += step[2];
+        updateIncrementedLevel();
     }
 
+    private void updateIncrementedLevel() {
+        rgbLevel.set(0, (int) stepIteram[0]);
+        rgbLevel.set(1, (int) stepIteram[1]);
+        rgbLevel.set(2, (int) stepIteram[2]);
+        ambilWarnaDialog.setRGBLevel(rgbLevel);
+    }
 
     @Override
     public void setScrollColor(int scrollColor) {

@@ -11,6 +11,7 @@ import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,10 +41,12 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     private double chLevel = 0;
     private final int MAX_LEVEL = 255;
-    private double steep = 0;
+    private double step = 0;
+    private double stepIteram = 0;
     private final MainActivity context;
     private String chText = "";
     private TextView tvChNum;
+    private static final String TAG = "AuroraDMX";
 
     public StandardFixture(final MainActivity context, String channelName) {
         this.context = context;
@@ -216,10 +219,13 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     /**
      * Creates 255 steeps between current and endVal
+     * @param endVal value when the fade is finished
      */
     @Override
-    public void setupIncrementLevelFade(int endVal) {
-        steep = (endVal - chLevel) / 256.0;
+    public void setupIncrementLevelFade(List<Integer> endVal) {
+        step = (endVal.get(0) - chLevel) / 256.0;
+        stepIteram = chLevel;
+        Log.v(TAG, String.format("Setting up fade %1$s %2$s", endVal.toString(), step));
     }
 
     /**
@@ -227,8 +233,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
      */
     @Override
     public void incrementLevelUp() {
-        if (steep > 0)
-            setChLevel((int) (chLevel + steep));
+        if (step > 0) {
+            stepIteram += step;
+            setChLevel((int) stepIteram);
+        }
     }
 
     /**
@@ -236,8 +244,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
      */
     @Override
     public void incrementLevelDown() {
-        if (steep < 0)
-            setChLevel((int) (chLevel + steep));
+        if (step < 0) {
+            stepIteram += step;
+            setChLevel((int) stepIteram);
+        }
     }
 
 

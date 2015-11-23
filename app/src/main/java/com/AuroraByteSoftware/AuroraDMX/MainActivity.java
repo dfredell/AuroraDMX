@@ -33,6 +33,7 @@ import com.AuroraByteSoftware.Billing.util.Inventory;
 
 import java.net.DatagramSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 
@@ -348,10 +349,15 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                     otherCueFading = true;
             }
             if (!otherCueFading) {
+                Log.d(TAG,String.format("newChLevels %1$s", newChLevels));
+                Log.d(TAG,"oldChLevels "+ getCurrentChannelArray());
                 // Set the channels to the cue
+                int chIndex = 0;
                 for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
                     // If a channel changed value
-                    alColumns.get(x).setupIncrementLevelFade(newChLevels.get(x));
+                    int fixtureUses = alColumns.get(x).getChLevels().size();
+                    alColumns.get(x).setupIncrementLevelFade(newChLevels.subList(chIndex, chIndex + fixtureUses));
+                    chIndex += fixtureUses;
                 }
                 alCues.get(curCue).startCueFade(curCue, prevCueNum);
             } else {

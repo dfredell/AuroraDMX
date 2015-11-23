@@ -58,12 +58,6 @@ public class ProjectManagement extends MainActivity {
         HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
         listOfProjects.add(key);
 
-        //Get number of channels used
-        int channelsUses = 0;
-        for (Fixture fixture : alColumns) {
-            channelsUses += fixture.getChLevels().size();
-        }
-
         //Get ch levels
         final List<Integer> currentChannelArray = getCurrentChannelArray();
         final Integer[] currentChannelLevels = currentChannelArray.toArray(new Integer[currentChannelArray.size()]);
@@ -83,7 +77,7 @@ public class ProjectManagement extends MainActivity {
         ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
         try {
             ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
-            objectOutput.writeObject(channelsUses);
+            objectOutput.writeObject(alColumns.size());
             objectOutput.writeObject(alCues);
             objectOutput.writeObject(patch);
             objectOutput.writeObject(cueCount);
@@ -127,7 +121,7 @@ public class ProjectManagement extends MainActivity {
         Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
         ObjectInputStream in;
         List<Integer> chLvls = new ArrayList<>();
-        String[] channelNames = null;
+        String[] fixtureNames = null;
         boolean[] isRGB = null;
 
         try {
@@ -145,29 +139,30 @@ public class ProjectManagement extends MainActivity {
             alColumns.clear();
             ((LinearLayout) mainActivity.findViewById(R.id.ChanelLayout)).removeAllViews();
             //Read objects
-            Object readObject1Channels = in.readObject();
+            Object readObject1FixtureCount = in.readObject();
             Object readObject2Cues = in.readObject();
             Object readObject3Patch = in.readObject();
             Object readObject4CueCount = in.readObject();
             Object readObject5IPAdr = in.readObject();
             Object readObject6ChAry = null;
-            Object readObject7ChNames = null;
+            Object readObject7FixtureNames = null;
             Object readObject8isRGB = null;
             try {
                 readObject6ChAry = in.readObject();
-                readObject7ChNames = in.readObject();
+                readObject7FixtureNames = in.readObject();
                 readObject8isRGB = in.readObject();
             } catch (EOFException e) {
                 // Do nothing we hit the end of the stored data
             }
 
-            if (readObject1Channels.getClass().equals(Integer.class)) {
-                if (readObject7ChNames != null && readObject7ChNames.getClass().equals(String[].class))
-                    channelNames = (String[]) readObject7ChNames;
+            if (readObject1FixtureCount.getClass().equals(Integer.class)) {
+                if (readObject7FixtureNames != null && readObject7FixtureNames.getClass().equals(String[].class))
+                    fixtureNames = (String[]) readObject7FixtureNames;
                 if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
                     isRGB = (boolean[]) readObject8isRGB;
-                mainActivity.setNumberOfFixtures((Integer) readObject1Channels, channelNames, isRGB);
-                getSharedPref().edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
+
+                mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB);
+                getSharedPref().edit().putString(SettingsActivity.channels, readObject1FixtureCount + "").apply();
             }
             if (readObject2Cues.getClass().equals(alCues.getClass()))
                 alCues = (ArrayList<CueObj>) readObject2Cues;
@@ -214,9 +209,9 @@ public class ProjectManagement extends MainActivity {
             chIndex += fixtureUses;
         }
 
-        //Set channelNames
-        for (int i = 0; channelNames != null && i < channelNames.length && i < alColumns.size(); i++) {
-            alColumns.get(i).setColumnText(channelNames[i]);
+        //Set fixtureNames
+        for (int i = 0; fixtureNames != null && i < fixtureNames.length && i < alColumns.size(); i++) {
+            alColumns.get(i).setColumnText(fixtureNames[i]);
         }
 
         // Save a new default

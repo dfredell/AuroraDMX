@@ -49,6 +49,7 @@ public class SendArtnetUpdate extends TimerTask {
         }
 
         int[] buffer = MainActivity.getCurrentDimmerLevels();
+        //Only transmit unchanging channels every second
         if (Arrays.equals(previousMessage, buffer) && previousMessageSentAgo < 10) {
             previousMessageSentAgo++;
             return;

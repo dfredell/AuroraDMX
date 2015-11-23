@@ -57,12 +57,12 @@ public class SendSacnUpdate extends TimerTask {
     @Override
     public void run() {
         int[] levels = MainActivity.getCurrentDimmerLevels();
+        //Only transmit unchanging channels every second
         if (Arrays.equals(previousMessage, levels) && previousMessageSentAgo < 10) {
             previousMessageSentAgo++;
             return;
         }
         previousMessageSentAgo = 0;
-        previousMessage = levels;
 
         sacnPacket.addDMXData(levels);
         InetAddress address;
@@ -94,5 +94,6 @@ public class SendSacnUpdate extends TimerTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        previousMessage = levels;
     }
 }

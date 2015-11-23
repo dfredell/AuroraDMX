@@ -33,7 +33,6 @@ import com.AuroraByteSoftware.Billing.util.Inventory;
 
 import java.net.DatagramSocket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 
@@ -117,7 +116,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         alCues = new ArrayList<>();
         alColumns = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
-        setNumberOfChannels(number_channels, null, null);
+        setNumberOfFixtures(number_channels, null, null);
     }
 
     public static SharedPreferences getSharedPref() {
@@ -150,7 +149,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
     }
 
-    void setNumberOfChannels(int number_channels, String[] channelNames, boolean[] isRGB) {
+    void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB) {
         // check for app purchace
         boolean paid = true;
         try {
@@ -168,23 +167,27 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         }
 
         // Input cleansing
-        if (number_channels > MAX_CHANNEL) {
+        if (numberFixtures > MAX_CHANNEL) {
             Toast.makeText(MainActivity.this, R.string.dmxRangeError, Toast.LENGTH_SHORT).show();
-            number_channels = MAX_CHANNEL;
-        } else if (number_channels < 1) {
+            numberFixtures = MAX_CHANNEL;
+        } else if (numberFixtures < 1) {
             Toast.makeText(MainActivity.this, R.string.dmxRangeError, Toast.LENGTH_SHORT).show();
-            number_channels = 1;
-        } else if (number_channels > 5 && !paid) {
+            numberFixtures = 1;
+        } else if (numberFixtures > 5 && !paid) {
             Toast.makeText(MainActivity.this, R.string.dmxRangePurchaseLimit, Toast.LENGTH_SHORT).show();
-            number_channels = 5;
+            numberFixtures = 5;
         }
 
-        int change = number_channels - alColumns.size();
+        int change = numberFixtures - alColumns.size();
+        int numOfChannelsUsed = 0;
+        for (Fixture fixture : alColumns) {
+            numOfChannelsUsed = fixture.getChLevels().size();
+        }
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.ChanelLayout);
 
         orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
         if (change > 0) {// Adding channels
-            for (int x = (number_channels - change); x < number_channels && x < 512; x++) {
+            for (int x = (numberFixtures - change); x < numberFixtures && x < 512; x++) {
                 if (isRGB != null && isRGB[x])
                     alColumns.add(new RGBFixture(this, channelNames == null ? null : channelNames[x]));
                 else
@@ -192,22 +195,16 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
             for (CueObj cue : alCues) {// Pad ch's in cues
-                cue.padChannels(number_channels);
+                cue.padChannels(numOfChannelsUsed);
             }
-
-            // Update Patch
-            incrementPatch(number_channels);
-
         } else if (change < 0) {// Removing channels
-            for (int x = (number_channels - change); x > number_channels && x < 512; x--) {
+            for (int x = (numberFixtures - change); x > numberFixtures && x < 512; x--) {
                 mainLayout.removeView(alColumns.get(x - 1).getViewGroup());
                 alColumns.remove(x - 1);
             }
             for (CueObj cue : alCues) {
-                cue.padChannels(number_channels);
+                cue.padChannels(numOfChannelsUsed);
             }
-            patch = new int[MAX_DIMMERS + 1][ALLOWED_PATCHED_DIMMERS];
-
         }
 
         //Reset all the levels to display the percentage or step value
@@ -215,20 +212,19 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             alColumn.setChLevels(alColumn.getChLevels());
         }
 
+        oneToOnePatch();
+
         recalculateFixtureNumbers();
 
-        getSharedPref().edit().putString(SettingsActivity.channels, String.format("%1$s", number_channels)).apply();
+        getSharedPref().edit().putString(SettingsActivity.channels, String.format("%1$s", numberFixtures)).apply();
     }
 
-    private void incrementPatch(int number_channels) {
+    private void oneToOnePatch() {
         boolean forceOneToOne = false;
         if (patch == null) {
             patch = new int[MAX_DIMMERS + 1][ALLOWED_PATCHED_DIMMERS];
             forceOneToOne = true;
-        } else {
-            patch = new int[MAX_DIMMERS + 1][ALLOWED_PATCHED_DIMMERS];
         }
-
         for (int i = 0; i < patch.length; i++) {
             if (forceOneToOne || patch[i] == null) {
                 patch[i] = new int[ALLOWED_PATCHED_DIMMERS];
@@ -433,7 +429,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(TAG, "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
-            setNumberOfChannels(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null);
+            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null);
         }
     }
 
@@ -460,7 +456,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         } catch (Throwable t) {
             Log.w("ExternalStorage", "Error reading channel number", t);
         }
-        setNumberOfChannels(number_channels, null, null);
+        setNumberOfFixtures(number_channels, null, null);
         setUpNetwork();
     }
 

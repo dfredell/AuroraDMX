@@ -20,7 +20,7 @@
     <string name="Error">Error</string>
     <string name="cueMustBePos">Cue numbers must be positive</string>
     <string name="serverError">Server Error</string>
-    <string name="dmxRangeError">DMX Channel Range 1 &#8211; 200</string>
+    <string name="dmxRangeError">Fixture Range 1 &#8211; 200</string>
     <string name="waitingOnFade">Waiting on Fade</string>
     <string name="FadeUp">Fade Up : </string>
     <string name="FadeDown">Fade Down : </string>
@@ -35,8 +35,8 @@
     <string name="restore_defaults">Restore Defaults</string>
     <string name="title_activity_patch">Patch</string>
     <string name="unlock_channels_title">Purchase App</string>
-    <string name="unlock_channels_sum">Allow more than 5 channels</string>
-    <string name="dmxRangePurchaseLimit">Free version limited to 5 channels</string>
+    <string name="unlock_channels_sum">Allow more than 5 fixtures</string>
+    <string name="dmxRangePurchaseLimit">Free version limited to 5 fixtures</string>
     <string name="errorProcessPurchases">Unable to process purchases currently</string>
     <string name="select_protocol_title">Select DMX protocol</string>
     <string name="pref_header_artnet">ArtNet Server</string>
@@ -61,7 +61,7 @@
     <string name="channel_color_title">Channel Color</string>
     <string name="default_fadeUp">Default cue fade up time</string>
     <string name="default_fadeDown">Default cue fade down time</string>
-    <string name="number_of_channels">Number of channels</string>
+    <string name="number_of_channels">Number of fixtures</string>
 
     <!-- Defaults -->
     <string name="pref_default_fade_time">5</string>

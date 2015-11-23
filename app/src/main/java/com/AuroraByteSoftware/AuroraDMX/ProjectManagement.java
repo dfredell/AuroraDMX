@@ -166,7 +166,7 @@ public class ProjectManagement extends MainActivity {
                     channelNames = (String[]) readObject7ChNames;
                 if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
                     isRGB = (boolean[]) readObject8isRGB;
-                mainActivity.setNumberOfChannels((Integer) readObject1Channels, channelNames, isRGB);
+                mainActivity.setNumberOfFixtures((Integer) readObject1Channels, channelNames, isRGB);
                 getSharedPref().edit().putString(SettingsActivity.channels, readObject1Channels + "").apply();
             }
             if (readObject2Cues.getClass().equals(alCues.getClass()))

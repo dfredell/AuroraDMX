@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.TimerTask;
 
 /**
@@ -28,6 +29,8 @@ public class SendSacnUpdate extends TimerTask {
     private String server = null;
     private final MainActivity mainActivity;
     private static final String TAG = "AuroraDMX";
+    private int previousMessageSentAgo = 0;
+    private int[] previousMessage = new int[0];
 
     public SendSacnUpdate(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -54,6 +57,13 @@ public class SendSacnUpdate extends TimerTask {
     @Override
     public void run() {
         int[] levels = MainActivity.getCurrentDimmerLevels();
+        if (Arrays.equals(previousMessage, levels) && previousMessageSentAgo < 10) {
+            previousMessageSentAgo++;
+            return;
+        }
+        previousMessageSentAgo = 0;
+        previousMessage = levels;
+
         sacnPacket.addDMXData(levels);
         InetAddress address;
         try {

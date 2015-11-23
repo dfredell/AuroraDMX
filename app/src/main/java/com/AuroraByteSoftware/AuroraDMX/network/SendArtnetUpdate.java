@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.TimerTask;
 
 import fr.azelart.artnetstack.utils.ArtNetPacketEncoder;
@@ -18,6 +19,8 @@ public class SendArtnetUpdate extends TimerTask {
 
     private final MainActivity mainActivity;
     private String server = "";
+    private int[] previousMessage = new int[0];
+    private int previousMessageSentAgo = 0;
 
     public SendArtnetUpdate(MainActivity a_mainActivity) {
         this.mainActivity = a_mainActivity;
@@ -46,6 +49,12 @@ public class SendArtnetUpdate extends TimerTask {
         }
 
         int[] buffer = MainActivity.getCurrentDimmerLevels();
+        if (Arrays.equals(previousMessage, buffer) && previousMessageSentAgo < 10) {
+            previousMessageSentAgo++;
+            return;
+        }
+        previousMessageSentAgo = 0;
+
         byte[] data = {};
         try {
             data = ArtNetPacketEncoder.encodeArtDmxPacket("00", "00", buffer);
@@ -63,5 +72,6 @@ public class SendArtnetUpdate extends TimerTask {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        previousMessage = buffer;
     }
 }

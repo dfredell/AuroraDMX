@@ -45,17 +45,12 @@
             android:inputType="textCapWords"
             android:maxLength="30">
         </EditText>
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="RGB"-->
-            <!--android:id="@+id/convertToColorWheel" />-->
     </LinearLayout>
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RGB"
+        android:text="@string/edit_fixture_rgb"
         android:id="@+id/chanel_rgb" />
 
 </LinearLayout>

@@ -40,7 +40,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private VerticalSeekBar seekBar = null;
 
     private double chLevel = 0;
-    private final int MAX_LEVEL = 255;
     private double step = 0;
     private double stepIteram = 0;
     private final MainActivity context;
@@ -179,7 +178,8 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
      */
     @Override
     public void setChLevels(List<Integer> a_chLevel) {
-        setChLevel(a_chLevel.get(0));
+        int newLvl = Math.min(MAX_LEVEL, a_chLevel.get(0));
+        setChLevel(newLvl);
     }
 
     private void setChLevel(int a_chLevel) {

@@ -16,6 +16,9 @@ import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.FixtureUtility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EditColumnMenu extends MainActivity {
 
     private static final String TAG = "AuroraDMX";
@@ -34,7 +37,6 @@ public class EditColumnMenu extends MainActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 EditText editColumnName = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnName);
-                EditText editColumnLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnLevel);
                 Switch rgbSwitch = (Switch) ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
 
                 if (rgbSwitch.isChecked() && !fixture.isRGB()) {
@@ -48,8 +50,19 @@ public class EditColumnMenu extends MainActivity {
                     Log.d(TAG, "Col name: " + columnName);
                     fixture.setColumnText(columnName);
 
-                    int columnLevel = Integer.parseInt(editColumnLevel.getText().toString());
-//TODO                    fixture.setChLevel(columnLevel);
+                    List<Integer> specifiedLevel = new ArrayList<>();
+                    if (fixture.isRGB()) {
+                        EditText editRLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editRLevel);
+                        EditText editGLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editGLevel);
+                        EditText editBLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editBLevel);
+                        specifiedLevel.add(Integer.parseInt(editRLevel.getText().toString()));
+                        specifiedLevel.add(Integer.parseInt(editGLevel.getText().toString()));
+                        specifiedLevel.add(Integer.parseInt(editBLevel.getText().toString()));
+                    } else {
+                        EditText editColumnLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnLevel);
+                        specifiedLevel.add(Integer.parseInt(editColumnLevel.getText().toString()));
+                    }
+                    fixture.setChLevels(specifiedLevel);
 
                 } catch (NumberFormatException n) {
                     Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
@@ -70,15 +83,23 @@ public class EditColumnMenu extends MainActivity {
 
         // set prompts.xml to alertdialog builder
         LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_column, (ViewGroup) v.getParent(), false);
+        View promptsView;
 
-        builder.setView(promptsView);
 
         //Set previous text
-        ((EditText) promptsView.findViewById(R.id.editColumnName)).setText(chText);
-        ((EditText) promptsView.findViewById(R.id.editColumnLevel)).setText(String.format("%1$s", chLevel));
+        if (fixture.isRGB()) {
+            promptsView = li.inflate(R.layout.dialog_column_rgb, (ViewGroup) v.getParent(), false);
+            ((EditText) promptsView.findViewById(R.id.editRLevel)).setText(String.format("%1$s", fixture.getChLevels().get(0)));
+            ((EditText) promptsView.findViewById(R.id.editGLevel)).setText(String.format("%1$s", fixture.getChLevels().get(1)));
+            ((EditText) promptsView.findViewById(R.id.editBLevel)).setText(String.format("%1$s", fixture.getChLevels().get(2)));
+        } else {
+            promptsView = li.inflate(R.layout.dialog_column, (ViewGroup) v.getParent(), false);
+            ((EditText) promptsView.findViewById(R.id.editColumnLevel)).setText(String.format("%1$s", chLevel));
+        }
         ((Switch) promptsView.findViewById(R.id.chanel_rgb)).setChecked(fixture.isRGB());
+        ((EditText) promptsView.findViewById(R.id.editColumnName)).setText(chText);
 
+        builder.setView(promptsView);
         AlertDialog alert = builder.create();
         alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 

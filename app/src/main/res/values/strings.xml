@@ -8,7 +8,6 @@
     <string name="ChFull">Full</string>
     <string name="ChPercent">%1$s%%</string>
     <string name="cue">Cue %1$s</string>
-    <string name="editName">Name : </string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="insert">Insert</string>
@@ -22,8 +21,6 @@
     <string name="serverError">Server Error</string>
     <string name="dmxRangeError">Fixture Range 1 &#8211; 200</string>
     <string name="waitingOnFade">Waiting on Fade</string>
-    <string name="FadeUp">Fade Up : </string>
-    <string name="FadeDown">Fade Down : </string>
     <string name="title_activity_CueObj">Cue Object</string>
     <string name="title_activity_EditCueMenu">Edit Cue Menu</string>
     <string name="title_activity_EditChannelMenu">Edit Channel Menu</string>
@@ -69,4 +66,14 @@
     <string name="pref_sacn_universe_def">1</string>
     <string name="editLevel">Level</string>
 
+    <!-- dialog_column -->
+    <string name="edit_rgb_red">Red</string>
+    <string name="edit_rgb_green">Green</string>
+    <string name="edit_rgb_blue">Blue</string>
+    <string name="edit_fixture_rgb">RGB Fixture</string>
+    <string name="editName">Name</string>
+
+    <!-- dialog_cue -->
+    <string name="FadeUp">Fade Up </string>
+    <string name="FadeDown">Fade Down </string>
 </resources>

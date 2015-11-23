@@ -1,6 +1,5 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
-import android.content.Context;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.List;
  * Created by furtchet on 11/14/15.
  */
 public abstract class Fixture {
+    protected final int MAX_LEVEL = 255;
 
     public abstract void init();
 

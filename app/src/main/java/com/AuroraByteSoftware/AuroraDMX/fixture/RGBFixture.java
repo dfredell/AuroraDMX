@@ -134,7 +134,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void setChLevels(List<Integer> a_chLevel) {
-        rgbLevel = a_chLevel;
+        for (int i = 0; i < a_chLevel.size(); i++) {
+            rgbLevel.set(i, Math.min(MAX_LEVEL, a_chLevel.get(i)));
+        }
         ambilWarnaDialog.setRGBLevel(rgbLevel);
     }
 
@@ -151,7 +153,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) 0);
+        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, 0);
     }
 
 

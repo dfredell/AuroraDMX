@@ -39,7 +39,7 @@ import java.util.Timer;
 public class MainActivity extends Activity implements OnClickListener, OnLongClickListener, OnSharedPreferenceChangeListener {
 
     public static List<Fixture> alColumns = null;
-    static ArrayList<CueObj> alCues = null;
+    public static ArrayList<CueObj> alCues = null;
     private static SharedPreferences sharedPref;
     static Double cueCount = 1.0;// cueCount++ = new cue num
     public static DatagramSocket clientSocket = null;
@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
     }
 
-    void setNumberOfFixtures(int numberFixtures, String[] fixtureNames, boolean[] isRGB) {
+    void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB) {
         // check for app purchace
         boolean paid = true;
         try {
@@ -189,9 +189,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         if (change > 0) {// Adding channels
             for (int x = (numberFixtures - change); x < numberFixtures && x < 512; x++) {
                 if (isRGB != null && isRGB[x])
-                    alColumns.add(new RGBFixture(this, fixtureNames == null ? null : fixtureNames[x]));
+                    alColumns.add(new RGBFixture(this, channelNames == null ? null : channelNames[x]));
                 else
-                    alColumns.add(new StandardFixture(this, fixtureNames == null ? null : fixtureNames[x]));
+                    alColumns.add(new StandardFixture(this, channelNames == null ? null : channelNames[x]));
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
             for (CueObj cue : alCues) {// Pad ch's in cues
@@ -352,8 +352,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                 for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
                     // If a channel changed value
                     int fixtureUses = alColumns.get(x).getChLevels().size();
+                    alColumns.get(x).setupIncrementLevelFade(newChLevels.subList(chIndex, chIndex + fixtureUses));
                     chIndex += fixtureUses;
-                    alColumns.get(x).setupIncrementLevelFade(newChLevels.subList(chIndex, chIndex));
                 }
                 alCues.get(curCue).startCueFade(curCue, prevCueNum);
             } else {

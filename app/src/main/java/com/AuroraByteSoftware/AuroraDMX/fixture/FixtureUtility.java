@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 import android.widget.LinearLayout;
 
+import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 
 import java.util.List;
@@ -23,11 +24,16 @@ public class FixtureUtility {
 
         LinearLayout viewGroup = fixture.getViewGroup();
         fixture.removeSelector();
-        Fixture rgbFixture = new RGBFixture(context, "", viewGroup);
+        Fixture rgbFixture = new RGBFixture(context, fixture.getChText(), viewGroup);
 
         alColumns.set(indexOf, rgbFixture);
 
         context.recalculateFixtureNumbers();
+        //Add Red and Green levels at 0
+        for (CueObj cue : MainActivity.alCues) {
+            cue.getLevels().add(indexOf, 0);
+            cue.getLevels().add(indexOf, 0);
+        }
     }
 
     /**
@@ -41,10 +47,15 @@ public class FixtureUtility {
 
         LinearLayout viewGroup = fixture.getViewGroup();
         fixture.removeSelector();
-        Fixture standardFixture = new StandardFixture(context, "", viewGroup);
+        Fixture standardFixture = new StandardFixture(context, fixture.getChText(), viewGroup);
 
         alColumns.set(indexOf, standardFixture);
 
         context.recalculateFixtureNumbers();
+        //Remove Red and Green levels
+        for (CueObj cue : MainActivity.alCues) {
+            cue.getLevels().remove(indexOf);
+            cue.getLevels().remove(indexOf);
+        }
     }
 }

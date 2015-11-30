@@ -137,6 +137,11 @@ public class RGBFixture extends Fixture implements OnClickListener {
         for (int i = 0; i < a_chLevel.size(); i++) {
             rgbLevel.set(i, Math.min(MAX_LEVEL, a_chLevel.get(i)));
         }
+        updateFixtureLevelText();
+    }
+
+    @Override
+    public void updateFixtureLevelText() {
         ambilWarnaDialog.setRGBLevel(rgbLevel);
     }
 

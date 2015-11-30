@@ -161,14 +161,12 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        // TODO Auto-generated method stub
-        // System.out.println("onStartTrackingTouch");
+        // Unused, but required from implements
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        // TODO Auto-generated method stub
-        // System.out.println("onStopTrackingTouch");
+        // Unused, but required from implements
     }
 
     /**
@@ -183,17 +181,24 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     }
 
     private void setChLevel(int a_chLevel) {
-        if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
-            tvVal.setText(String.format("%1$s", a_chLevel));
-        } else {
-            if (a_chLevel >= MAX_LEVEL)
-                tvVal.setText(context.getString(R.string.ChFull));
-            else
-                tvVal.setText(String.format(context.getString(R.string.ChPercent), (a_chLevel * 100 / MAX_LEVEL)));
-        }
         seekBar.setProgress(a_chLevel);
         chLevel = a_chLevel;
+        updateFixtureLevelText();
     }
+
+
+    @Override
+    public void updateFixtureLevelText() {
+        if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
+            tvVal.setText(String.format("%1$s", (int) chLevel));
+        } else {
+            if (chLevel >= MAX_LEVEL)
+                tvVal.setText(context.getString(R.string.ChFull));
+            else
+                tvVal.setText(String.format(context.getString(R.string.ChPercent), ((int) chLevel * 100 / MAX_LEVEL)));
+        }
+    }
+
 
     /**
      * get the level of the channel

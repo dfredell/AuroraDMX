@@ -29,6 +29,7 @@ public class FixtureUtility {
         alColumns.set(indexOf, rgbFixture);
 
         context.recalculateFixtureNumbers();
+        rgbFixture.updateFixtureLevelText();
         //Add Red and Green levels at 0
         for (CueObj cue : MainActivity.alCues) {
             cue.getLevels().add(indexOf, 0);
@@ -52,6 +53,7 @@ public class FixtureUtility {
         alColumns.set(indexOf, standardFixture);
 
         context.recalculateFixtureNumbers();
+        standardFixture.updateFixtureLevelText();
         //Remove Red and Green levels
         for (CueObj cue : MainActivity.alCues) {
             cue.getLevels().remove(indexOf);

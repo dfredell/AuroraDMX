@@ -36,4 +36,6 @@ public abstract class Fixture {
     public abstract void removeSelector();
 
     public abstract void setFixtureNumber(int currentFixtureNum);
+
+    public abstract void updateFixtureLevelText();
 }

@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 21
-    buildToolsVersion '21.1.0'
+    compileSdkVersion 23
+    buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
-        targetSdkVersion 21
-        versionCode 16
-        versionName '1.8'
+        targetSdkVersion 23
+        versionCode 17
+        versionName '2.0'
     }
     buildTypes {
         release {
@@ -27,6 +27,6 @@ android {
 
 dependencies {
     compile files('libs/commons-lang3-3.3.2.jar')
-    compile 'com.android.support:support-v13:21.0.0'
+    compile 'com.android.support:support-v13:23.1.1'
     compile 'com.larswerkman:HoloColorPicker:1.4'
 }

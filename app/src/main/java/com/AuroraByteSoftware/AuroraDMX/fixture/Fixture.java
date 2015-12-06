@@ -37,5 +37,5 @@ public abstract class Fixture {
 
     public abstract void setFixtureNumber(int currentFixtureNum);
 
-    public abstract void updateFixtureLevelText();
+    protected abstract void updateFixtureLevelText();
 }

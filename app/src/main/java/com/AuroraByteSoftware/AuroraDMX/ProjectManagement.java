@@ -21,6 +21,8 @@ import android.widget.ListView;
 
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
@@ -60,7 +62,7 @@ public class ProjectManagement extends MainActivity {
 
         //Get ch levels
         final List<Integer> currentChannelArray = getCurrentChannelArray();
-        final Integer[] currentChannelLevels = currentChannelArray.toArray(new Integer[currentChannelArray.size()]);
+        int[] currentChannelLevels = ArrayUtils.toPrimitive(currentChannelArray.toArray(new Integer[currentChannelArray.size()]));
 
         //Get the channel names as an array
         String channelNames[] = new String[alColumns.size()];
@@ -79,7 +81,7 @@ public class ProjectManagement extends MainActivity {
             ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
             objectOutput.writeObject(alColumns.size());
             objectOutput.writeObject(alCues);
-            objectOutput.writeObject(patch);
+            objectOutput.writeObject(patchList);
             objectOutput.writeObject(cueCount);
             objectOutput.writeObject(getSharedPref().getString(SettingsActivity.serveraddress, ""));
             objectOutput.writeObject(currentChannelLevels);
@@ -123,10 +125,9 @@ public class ProjectManagement extends MainActivity {
         List<Integer> chLvls = new ArrayList<>();
         String[] fixtureNames = null;
         boolean[] isRGB = null;
+        int[][] patch = new int[0][0];
 
         try {
-            in = new ObjectInputStream(base64InputStream);
-
             // Stop ArtNet
             if (null != clientSocket && !clientSocket.isClosed())
                 clientSocket.close();
@@ -138,7 +139,9 @@ public class ProjectManagement extends MainActivity {
             }
             alColumns.clear();
             ((LinearLayout) mainActivity.findViewById(R.id.ChanelLayout)).removeAllViews();
+
             //Read objects
+            in = new ObjectInputStream(base64InputStream);
             Object readObject1FixtureCount = in.readObject();
             Object readObject2Cues = in.readObject();
             Object readObject3Patch = in.readObject();
@@ -168,12 +171,14 @@ public class ProjectManagement extends MainActivity {
                 alCues = (ArrayList<CueObj>) readObject2Cues;
             if (readObject3Patch.getClass().equals(patch.getClass()))
                 patch = (int[][]) readObject3Patch;
+            if (readObject3Patch.getClass().equals(patchList.getClass()))
+                patchList = (ArrayList<ChPatch>) readObject3Patch;
             if (readObject4CueCount.getClass().equals(Double.class))
                 cueCount = (Double) readObject4CueCount;
             if (readObject5IPAdr.getClass().equals(String.class))
                 getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
-            if (readObject6ChAry != null && readObject6ChAry.getClass().equals(Integer[].class))
-                chLvls = Arrays.asList((Integer[]) readObject6ChAry);
+            if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class))
+                chLvls = Arrays.asList(ArrayUtils.toObject((int[]) readObject6ChAry));
 
 
         } catch (Throwable t) {
@@ -198,7 +203,8 @@ public class ProjectManagement extends MainActivity {
 
         // create a new "Add Cue" button
         ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton(mainActivity.getString(R.string.AddCue)));
-        mainActivity.setUpNetwork();
+
+        migrateData(patch);
 
         // Set ch levels
         int chIndex = 0;
@@ -209,7 +215,7 @@ public class ProjectManagement extends MainActivity {
                 Log.e(TAG, "Channel levels are out of sync with fixtures");
                 break;
             }
-            fixture.setChLevels(chLvls.subList(chIndex, chIndex + fixtureUses));
+            fixture.setChLevels(new ArrayList<>(chLvls.subList(chIndex, chIndex + fixtureUses)));
             chIndex += fixtureUses;
         }
 
@@ -227,6 +233,31 @@ public class ProjectManagement extends MainActivity {
         if (PREF_OLD_POINTER.equals(key))
             key = PREF_OLD_POINTER_HUMAN;
         mainActivity.setTitle(key);
+
+        mainActivity.setUpNetwork();
+    }
+
+    /**
+     * Migrating from 1.8 to 2.0 move Cue.levels -> Cue.levelsList
+     *
+     * @param patch
+     */
+    private void migrateData(int[][] patch) {
+        for (CueObj cue : alCues) {
+            if (cue.getOriginalLevels().length > 1 && cue.getLevels() == null) {
+                List<Integer> levelsList = new ArrayList<>(Arrays.asList(ArrayUtils.toObject(cue.getOriginalLevels())));
+                cue.setLevelsList(levelsList);
+                cue.setOriginalLevels(new int[0]);
+            }
+        }
+        if (patch.length > 0) {
+            for (int i = 0; i < patch.length; i++) {
+                patchList.add(new ChPatch());
+                for (int x = 0; x < patch[i].length; x++) {
+                    patchList.get(i).addDimmer(patch[i][x]);
+                }
+            }
+        }
     }
 
     public void onSaveClick() {

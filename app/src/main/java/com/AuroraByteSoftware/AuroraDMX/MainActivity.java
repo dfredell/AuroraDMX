@@ -43,6 +43,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     private static SharedPreferences sharedPref;
     static Double cueCount = 1.0;// cueCount++ = new cue num
     public static DatagramSocket clientSocket = null;
+    private static boolean updatingFixtures = false;
     private int orgColor = 0;
     private Timer ArtNet;
     private Timer SACN;
@@ -52,7 +53,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     public static final int ALLOWED_PATCHED_DIMMERS = 50;
     public static final int MAX_DIMMERS = 512;
     public static final int MAX_CHANNEL = 200;
-    public static int[][] patch;
+    public static List<ChPatch> patchList = new ArrayList<>();
     private static final String TAG = "AuroraDMX";
     private static IabHelper mHelper;
     public static final String ITEM_SKU = "unlock_channels";
@@ -127,14 +128,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         Log.d(TAG, "SetupNetwork ServerAddress: "+sharedPref.getString(SettingsActivity.serveraddress, ""));
         String protocol = getSharedPref().getString("select_protocol", "");
 
-        if (clientSocket != null)
-            clientSocket.close();
-        if (SACNUnicast != null)
-            SACNUnicast.cancel();
-        if (SACN != null)
-            SACN.cancel();
-        if (ArtNet != null)
-            ArtNet.cancel();
+        stopNetwork();
 
         if ("SACNUNI".equals(protocol)) {
             SACNUnicast = new Timer();
@@ -147,6 +141,23 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             ArtNet.scheduleAtFixedRate(new SendArtnetUpdate(this), 200, 100);
         }
 
+    }
+
+    public void stopNetwork() {
+        if (ArtNet != null) {
+            ArtNet.cancel();
+            ArtNet.purge();
+        }
+        if (SACN != null) {
+            SACN.cancel();
+            SACN.purge();
+        }
+        if (SACNUnicast != null) {
+            SACNUnicast.cancel();
+            SACNUnicast.purge();
+        }
+        if (clientSocket != null)
+            clientSocket.close();
     }
 
     void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB) {
@@ -179,7 +190,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         }
 
         int change = numberFixtures - alColumns.size();
-        int numOfChannelsUsed = 0;
+        int numOfChannelsUsed = 0;//use calculateChannelCount() ?
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.ChanelLayout);
 
         orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
@@ -197,6 +208,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             for (CueObj cue : alCues) {// Pad ch's in cues
                 cue.padChannels(numOfChannelsUsed);
             }
+            for (int i = patchList.size(); i < numOfChannelsUsed; i++) {
+                patchList.add(new ChPatch(i));
+            }
         } else if (change < 0) {// Removing channels
             for (int x = (numberFixtures - change); x > numberFixtures && x < 512; x--) {
                 mainLayout.removeView(alColumns.get(x - 1).getViewGroup());
@@ -208,6 +222,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             for (CueObj cue : alCues) {
                 cue.padChannels(numOfChannelsUsed);
             }
+            patchList = new ArrayList<>(patchList.subList(0, numOfChannelsUsed));
         }
 
         //Reset all the levels to display the percentage or step value
@@ -223,16 +238,10 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     }
 
     private void oneToOnePatch() {
-        boolean forceOneToOne = false;
-        if (patch == null) {
-            patch = new int[MAX_DIMMERS + 1][ALLOWED_PATCHED_DIMMERS];
-            forceOneToOne = true;
-        }
-        for (int i = 0; i < patch.length; i++) {
-            if (forceOneToOne || patch[i] == null) {
-                patch[i] = new int[ALLOWED_PATCHED_DIMMERS];
-                patch[i][0] = i;
-            }
+        int orgSize = patchList.size();
+        int endSize = calculateChannelCount();
+        for (int i = orgSize; i < endSize; i++) {
+            patchList.add(new ChPatch(i));
         }
     }
 
@@ -292,6 +301,9 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     }
 
     public static int[] getCurrentDimmerLevels() {
+        if (updatingFixtures) {
+            return null;
+        }
         int out[] = new int[MAX_DIMMERS];
 
         //flatten the channel values from the UI
@@ -300,15 +312,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
             chValues.addAll(fixture.getChLevels());
         }
 //patch[channel][goes to dimmers]
-        for (int ch = 0; ch < chValues.size(); ch++) {
-            for (int i = 0; i < patch[ch].length; i++) {
-                int x = patch[ch + 1][i] - 1;
-                if (x == -1)
+        for (int ch = 1; ch <= chValues.size(); ch++) {
+            for (Integer dim : patchList.get(ch).getDimmers()) {
+                if (dim <= 0)
                     continue;
-                int oldLvl = out[x];
-                int newVal = chValues.get(ch);
+                int oldLvl = out[dim - 1];
+                int newVal = chValues.get(ch - 1);
                 if (oldLvl < newVal)
-                    out[x] = newVal;
+                    out[dim - 1] = newVal;
             }
         }
         return out;
@@ -355,7 +366,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                 for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
                     // If a channel changed value
                     int fixtureUses = alColumns.get(x).getChLevels().size();
-                    alColumns.get(x).setupIncrementLevelFade(newChLevels.subList(chIndex, chIndex + fixtureUses));
+                    alColumns.get(x).setupIncrementLevelFade(new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses)));
                     chIndex += fixtureUses;
                 }
                 alCues.get(curCue).startCueFade(curCue, prevCueNum);
@@ -465,20 +476,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
 
     @Override
     protected void onPause() {
-        if (ArtNet != null) {
-            ArtNet.cancel();
-            ArtNet.purge();
-        }
-        if (SACN != null) {
-            SACN.cancel();
-            SACN.purge();
-        }
-        if (SACNUnicast != null) {
-            SACNUnicast.cancel();
-            SACNUnicast.purge();
-        }
-        if (clientSocket != null)
-            clientSocket.close();
+        stopNetwork();
         Log.v(TAG, "onPause");
         pm.save(null);
         if (getSharedPref() != null)
@@ -576,7 +574,19 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         }
     }
 
+    public int calculateChannelCount() {
+        int currentFixtureNum = 1;
+        for (Fixture fixture : alColumns) {
+            currentFixtureNum += fixture.getChLevels().size();
+        }
+        return currentFixtureNum;
+    }
+
     public static List<Fixture> getAlColumns() {
         return alColumns;
+    }
+
+    public static void setUpdatingFixtures(boolean updatingFixtures) {
+        MainActivity.updatingFixtures = updatingFixtures;
     }
 }

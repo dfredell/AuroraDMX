@@ -37,13 +37,6 @@ public class EditColumnMenu extends MainActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 EditText editColumnName = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnName);
-                Switch rgbSwitch = (Switch) ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
-
-                if (rgbSwitch.isChecked() && !fixture.isRGB()) {
-                    FixtureUtility.switchToRGB(fixture, context);
-                } else if (!rgbSwitch.isChecked() && fixture.isRGB()) {
-                    FixtureUtility.switchToStandard(fixture, context);
-                }
 
                 try {
                     String columnName = editColumnName.getText().toString();
@@ -68,6 +61,13 @@ public class EditColumnMenu extends MainActivity {
                     Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
                 } catch (Throwable t) {
                     Toast.makeText(context, R.string.Error, Toast.LENGTH_SHORT).show();
+                }
+                Switch rgbSwitch = (Switch) ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
+
+                if (rgbSwitch.isChecked() && !fixture.isRGB()) {
+                    FixtureUtility.switchToRGB(fixture, context);
+                } else if (!rgbSwitch.isChecked() && fixture.isRGB()) {
+                    FixtureUtility.switchToStandard(fixture, context);
                 }
 
                 dialog.dismiss();

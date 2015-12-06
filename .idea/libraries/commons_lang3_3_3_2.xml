@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/app/libs/commons-lang3-3.3.2.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/commons-lang3-3.3.2-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

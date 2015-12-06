@@ -58,7 +58,7 @@ public class SendSacnUpdate extends TimerTask {
     public void run() {
         int[] levels = MainActivity.getCurrentDimmerLevels();
         //Only transmit unchanging channels every second
-        if (Arrays.equals(previousMessage, levels) && previousMessageSentAgo < 10) {
+        if (Arrays.equals(previousMessage, levels) && previousMessageSentAgo < 10 || levels == null) {
             previousMessageSentAgo++;
             return;
         }

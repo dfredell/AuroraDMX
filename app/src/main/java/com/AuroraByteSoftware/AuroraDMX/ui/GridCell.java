@@ -15,6 +15,7 @@ class GridCell extends BaseAdapter implements OnClickListener {
     private final Context mContext;
     private int count = 0;
     private final boolean isCh;
+    final int SELECTED_COLOR = 0xe03399ff;
 
     public GridCell(Context c, int a_count, boolean a_isChs) {
         mContext = c;
@@ -46,9 +47,9 @@ class GridCell extends BaseAdapter implements OnClickListener {
         button.setMaxLines(1);
         button.setOnClickListener(this);
         if (!isCh && PatchActivity.chContainsDimmer(position)) {
-            button.getBackground().setColorFilter(0xe03399ff, PorterDuff.Mode.SRC_ATOP);
+            button.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
         } else if (isCh && PatchActivity.currentCh - 1 == position) {
-            button.getBackground().setColorFilter(0xe03399ff, PorterDuff.Mode.SRC_ATOP);
+            button.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
         }
         return button;
     }
@@ -69,16 +70,15 @@ class GridCell extends BaseAdapter implements OnClickListener {
                 for (int i = 0; i < numVisibleChildren; i++) {
                     View view = PatchActivity.chGridView.getChildAt(i);
                     if (PatchActivity.currentCh == (i + numVisibleChildrenOffset + 1)) {
-                        view.getBackground().setColorFilter(0xe03399ff, PorterDuff.Mode.SRC_ATOP);
+                        view.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
                     } else {
                         view.getBackground().clearColorFilter();
                     }
                 }
-            } else {// add dim to ch
-                //or remove
-                PatchActivity.addDimToCh(PatchActivity.currentCh, Integer.parseInt(button.getText().toString()));
+            } else {// add or remove dim to ch
+                PatchActivity.toggleDimToCh(PatchActivity.currentCh, Integer.parseInt(button.getText().toString()));
             }
-            button.getBackground().setColorFilter(0xe03399ff, PorterDuff.Mode.SRC_ATOP);
+            button.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
 
             final int numVisibleChildren = PatchActivity.dimGridView.getChildCount();
             int numVisibleChildrenOffset = PatchActivity.dimGridView.getFirstVisiblePosition();
@@ -87,7 +87,7 @@ class GridCell extends BaseAdapter implements OnClickListener {
             for (int i = 0; i < numVisibleChildren; i++) {
                 View view = PatchActivity.dimGridView.getChildAt(i);
                 if (PatchActivity.chContainsDimmer(i + numVisibleChildrenOffset)) {
-                    view.getBackground().setColorFilter(0xe03399ff, PorterDuff.Mode.SRC_ATOP);
+                    view.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
                 } else {
                     view.getBackground().clearColorFilter();
                 }

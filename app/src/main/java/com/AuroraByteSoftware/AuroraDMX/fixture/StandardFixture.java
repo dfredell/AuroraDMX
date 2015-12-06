@@ -188,7 +188,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
 
     @Override
-    public void updateFixtureLevelText() {
+    protected void updateFixtureLevelText() {
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
             tvVal.setText(String.format("%1$s", (int) chLevel));
         } else {

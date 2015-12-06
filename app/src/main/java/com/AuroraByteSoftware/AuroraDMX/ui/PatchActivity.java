@@ -8,12 +8,9 @@ import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.AuroraByteSoftware.AuroraDMX.ChPatch;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.Arrays;
 
 public class PatchActivity extends Activity {
     public static GridView dimGridView;
@@ -26,12 +23,13 @@ public class PatchActivity extends Activity {
         setContentView(R.layout.activity_patch);
 
         chGridView = (GridView) findViewById(R.id.gridView1);
-        chGridView.setAdapter(new GridCell(this, MainActivity.MAX_CHANNEL, true));
+        chGridView.setAdapter(new GridCell(this, MainActivity.patchList.size() - 1, true));
 
         dimGridView = (GridView) findViewById(R.id.gridView2);
         GridCell dimGridCell = new GridCell(this, MainActivity.MAX_DIMMERS, false);
         dimGridView.setAdapter(dimGridCell);
 
+        currentCh = 1;
 
     }
 
@@ -47,10 +45,8 @@ public class PatchActivity extends Activity {
                 Toast.makeText(this, "Patched one to one", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_patch_clear:
-                for (int x = 0; x < MainActivity.patch.length; x++) {
-                    for (int y = 0; y < MainActivity.ALLOWED_PATCHED_DIMMERS; y++) {
-                        MainActivity.patch[x][y] = 0;
-                    }
+                for (ChPatch chPatch : MainActivity.patchList) {
+                    chPatch.getDimmers().clear();
                 }
                 dimGridView.invalidateViews();
                 Toast.makeText(this, "Patch cleared", Toast.LENGTH_SHORT).show();
@@ -63,37 +59,24 @@ public class PatchActivity extends Activity {
     }
 
     public static void patchOneToOne() {
-        for (int x = 0; x < MainActivity.patch.length; x++) {
-            MainActivity.patch[x][0] = x;//Set the first dimmer to its self
-            for (int y = 1; y < MainActivity.ALLOWED_PATCHED_DIMMERS; y++) {
-                MainActivity.patch[x][y] = 0;//set all other dimmers to 0
-            }
+
+        for (int x = 0; x < MainActivity.patchList.size(); x++) {
+            MainActivity.patchList.get(x).getDimmers().clear();
+            MainActivity.patchList.get(x).addDimmer(x);
         }
     }
 
     public static boolean chContainsDimmer(int dim) {
         dim = dim + 1;
-        for (int x = 0; x < MainActivity.ALLOWED_PATCHED_DIMMERS; x++) {
-            if (MainActivity.patch[currentCh][x] == dim)
-                return true;
-        }
-        return false;
+        return MainActivity.patchList.get(currentCh).contains(dim);
     }
 
-    public static void addDimToCh(int ch, int dim) {
-        for (int x = 0; x < MainActivity.ALLOWED_PATCHED_DIMMERS; x++) {
-            if (MainActivity.patch.length < ch)
-                break;
-            if (MainActivity.patch[ch][x] == dim) {//remove dim
-                MainActivity.patch[ch][x] = 0;
-                break;
-            } else if (MainActivity.patch[ch][x] == 0) {//add dim
-                MainActivity.patch[ch][x] = dim;
-                break;
-            }
-        }
-        Arrays.sort(MainActivity.patch[ch]);
-        ArrayUtils.reverse(MainActivity.patch[ch]);
+    public static void toggleDimToCh(int ch, int dim) {
+        final ChPatch chPatch = MainActivity.patchList.get(ch);
+        if (chPatch.contains(dim))
+            chPatch.getDimmers().remove((Integer) dim);
+        else
+            chPatch.addDimmer(dim);
     }
 
     // Initiating Menu XML file (patch.xml)

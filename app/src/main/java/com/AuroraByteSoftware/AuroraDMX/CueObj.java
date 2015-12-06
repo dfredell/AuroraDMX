@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,7 +22,8 @@ public class CueObj extends MainActivity implements Serializable {
     private int fadeUpTime = 5;
     private int fadeDownTime = 5;
     private double cueNum = 0;
-    private List<Integer> levels;
+    private ArrayList<Integer> levelsList;
+    private int[] levels = new int[0];
     private transient Button button;
     private int highlight = 0;
     private boolean fadeInProgress = false;
@@ -29,7 +31,6 @@ public class CueObj extends MainActivity implements Serializable {
     private static final String TAG = "AuroraDMX";
 
     public CueObj() {
-
     }
 
     /**
@@ -52,7 +53,7 @@ public class CueObj extends MainActivity implements Serializable {
             fadeUpTime = a_fadeUpTime;
             fadeDownTime = a_fadeDownTime;
             cueNum = a_cueNum;
-            levels = a_levels;
+            levelsList = new ArrayList<>(a_levels);
             button = a_button;
             name = cueName;
         } else {// Cue can not be below 0
@@ -99,8 +100,8 @@ public class CueObj extends MainActivity implements Serializable {
     /**
      * @return the levels
      */
-    public List<Integer> getLevels() {
-        return levels;
+    public ArrayList<Integer> getLevels() {
+        return levelsList;
     }
 
     /**
@@ -222,7 +223,13 @@ public class CueObj extends MainActivity implements Serializable {
     }
 
     public void padChannels(int number_channels) {
-        levels = levels.subList(0, number_channels);
+        if (number_channels > levelsList.size()) {
+            for (int i = levelsList.size(); i < number_channels; i++) {
+                levelsList.add(0);
+            }
+        } else {
+            levelsList = new ArrayList<>(levelsList.subList(0, number_channels));
+        }
     }
 
     public String getCueName() {
@@ -240,4 +247,15 @@ public class CueObj extends MainActivity implements Serializable {
         return getCueName();
     }
 
+    public int[] getOriginalLevels() {
+        return levels;
+    }
+
+    public void setOriginalLevels(int[] array) {
+        levels = array;
+    }
+
+    public void setLevelsList(List<Integer> levelsList) {
+        this.levelsList = new ArrayList<>(levelsList);
+    }
 }

@@ -250,7 +250,9 @@ public class ProjectManagement extends MainActivity {
                 cue.setOriginalLevels(new int[0]);
             }
         }
+        //Migrate patch[][] to patchList
         if (patch.length > 0) {
+            patchList.clear();
             for (int i = 0; i < patch.length; i++) {
                 patchList.add(new ChPatch());
                 for (int x = 0; x < patch[i].length; x++) {

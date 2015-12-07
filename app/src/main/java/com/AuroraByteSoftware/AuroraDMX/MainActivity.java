@@ -12,9 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -24,7 +21,6 @@ import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.StandardFixture;
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetUpdate;
 import com.AuroraByteSoftware.AuroraDMX.network.SendSacnUpdate;
-import com.AuroraByteSoftware.AuroraDMX.ui.EditCueMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity;
 import com.AuroraByteSoftware.Billing.util.IabException;
 import com.AuroraByteSoftware.Billing.util.IabHelper;
@@ -36,30 +32,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-public class MainActivity extends Activity implements OnClickListener, OnLongClickListener, OnSharedPreferenceChangeListener {
+public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
 
-    public static List<Fixture> alColumns = null;
-    public static ArrayList<CueObj> alCues = null;
     private static SharedPreferences sharedPref;
     static Double cueCount = 1.0;// cueCount++ = new cue num
-    public static DatagramSocket clientSocket = null;
     private static boolean updatingFixtures = false;
     private int orgColor = 0;
-    private Timer ArtNet;
-    private Timer SACN;
-    private Timer SACNUnicast;
+    private static IabHelper mHelper;
+
     public static final ArrayList<String> foundServers = new ArrayList<>();
     public static ProgressDialog progressDialog = null;
+
+    //Static Variables
     public static final int ALLOWED_PATCHED_DIMMERS = 50;
     public static final int MAX_DIMMERS = 512;
     public static final int MAX_CHANNEL = 200;
-    public static List<ChPatch> patchList = new ArrayList<>();
-    private static final String TAG = "AuroraDMX";
-    private static IabHelper mHelper;
-    public static final String ITEM_SKU = "unlock_channels";
-    private final List<String> listOfSkus = new ArrayList<>();
-    private ProjectManagement pm = null;
     private final static String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj9upoasavmU51/j6g7vWchEf/g2SGuntcXPlzVu8vp3avDGMQp8E20iI+IO5vqB4wVKf9QRiAv0DFLw+XAGCpx7t6GDt4Sd/qMOkj49Eas1R1Uvghp4yy9Cc/8pL7QOvSW99pq9Pg2iqqbPXlAlLmByQy2p9qhDhl788dMZsUd2VxL5NHY2zQl7a1emWH/MUpvVHNSJkTSdQrLJ4cruTvEDldtD0jSNadK1NSruwa/BH6ieLVswek1cyE7hm0Od5pWw0XCpkR6L7ZkEkeTovSihA3h+rSy6kxZCqrDzMR++EOCxwS/kB3Ly6M5E6EwjZVbK18UQM8/Ecr7/buYxalQIDAQAB";
+    public static final String ITEM_SKU = "unlock_channels";
+    private static final String TAG = "AuroraDMX";
+
+    /**
+     * patchList[0] is ignored. All numbers are in human format (start at 1) not computer.
+     */
+    public static List<ChPatch> patchList = new ArrayList<>();
+    private final List<String> listOfSkus = new ArrayList<>();
+    public static List<Fixture> alColumns = null;
+    public static ArrayList<CueObj> alCues = null;
+
+    private ProjectManagement pm = null;
+
+    //Network timers
+    private Timer ArtNet;
+    private Timer SACN;
+    private Timer SACNUnicast;
+    public static DatagramSocket clientSocket = null;
 
     /**
      * Called when the activity is first created.
@@ -84,7 +90,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
                     Log.d(TAG, "Setup finished.");
                     if (!result.isSuccess()) {
                         // Oh noes, there was a problem.
-                        Log.v(TAG,"Problem setting up in-app billing: " + result);
+                        Log.v(TAG, "Problem setting up in-app billing: " + result);
                         return;
                     }
                     // Have we been disposed of in the meantime? If so, quit.
@@ -109,8 +115,8 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         setContentView(R.layout.activity_main);
         // Get the MainLayout from the XML
         Button button = (Button) findViewById(R.id.AddCueButton);
-        button.setOnClickListener(this);
-        button.setOnLongClickListener(this);
+        button.setOnClickListener(new CueClickListener());
+        button.setOnLongClickListener(new CueClickListener());
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
@@ -125,7 +131,7 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
     }
 
     void setUpNetwork() {
-        Log.d(TAG, "SetupNetwork ServerAddress: "+sharedPref.getString(SettingsActivity.serveraddress, ""));
+        Log.d(TAG, "SetupNetwork ServerAddress: " + sharedPref.getString(SettingsActivity.serveraddress, ""));
         String protocol = getSharedPref().getString("select_protocol", "");
 
         stopNetwork();
@@ -325,121 +331,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         return out;
     }
 
-    /**
-     * Cue Click handler
-     */
-    @Override
-    public void onClick(View arg0) {
-        Button button = null;
-        if (arg0 instanceof Button) {
-            button = (Button) arg0;
-        }
-        int curCue = -1;// Current cue number on alCues scale
-        boolean otherCueFading = false;
-        for (int x = 0; x < alCues.size(); x++) {
-            if (button == alCues.get(x).getButton()) {
-                curCue = x;
-                break;
-            }
-        }
-
-        if (curCue == -1) {// Adding a new cue
-            createCue(button, getCurrentChannelArray(), -1);
-        } else {
-            // check if anyone else is fading
-
-            // ======= Loading a cue ========
-            List<Integer> newChLevels = alCues.get(curCue).getLevels();
-            // Find previously active cue
-            int prevCueNum = -1;
-            for (int x = 0; x < alCues.size(); x++) {
-                if (alCues.get(x).getHighlight() > 1 && x != curCue)
-                    prevCueNum = x;
-                if (alCues.get(x).isFadeInProgress())
-                    otherCueFading = true;
-            }
-            if (!otherCueFading) {
-                Log.d(TAG,String.format("newChLevels %1$s", newChLevels));
-                Log.d(TAG,"oldChLevels "+ getCurrentChannelArray());
-                // Set the channels to the cue
-                int chIndex = 0;
-                for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
-                    // If a channel changed value
-                    int fixtureUses = alColumns.get(x).getChLevels().size();
-                    alColumns.get(x).setupIncrementLevelFade(new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses)));
-                    chIndex += fixtureUses;
-                }
-                alCues.get(curCue).startCueFade(curCue, prevCueNum);
-            } else {
-                Toast.makeText(MainActivity.this, R.string.waitingOnFade, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /**
-     * Cue Long Click handler
-     */
-    @Override
-    public boolean onLongClick(View v) {
-        boolean buttonIsAddCue = true;
-        for (CueObj cue : alCues) {
-            if (cue.getButton() == v) {
-                buttonIsAddCue = false;
-            }
-        }
-        if (!buttonIsAddCue)
-            EditCueMenu.createEditCueMenu(alCues, v, MainActivity.this);
-        return true;
-    }
-
-    /**
-     * Adds a new cue with the current ch Levels
-     *
-     * @param button   of "Add Cue"
-     * @param chLevels set levels
-     * @param cueNum   number for the cue
-     */
-    private void createCue(Button button, List<Integer> chLevels, double cueNum) {
-        createCue(button, chLevels, cueNum, String.format(this.getString(R.string.cue), cueNum), -1, -1);
-    }
-
-    /**
-     * Adds a new cue with the current ch Levels
-     *
-     * @param button   of "Add Cue"
-     * @param chLevels level of channels
-     * @param cueNum   cue number
-     * @param cueName  the cue name
-     */
-    private void createCue(Button button, List<Integer> chLevels, double cueNum, String cueName, int fadeUpTime, int fadeDownTime) {
-        // Rename the old button to Cue #
-
-        try {
-            fadeUpTime = (fadeUpTime == -1) ? Integer.parseInt(getSharedPref().getString("fade_up_time", "5")) : fadeUpTime;
-            fadeDownTime = (fadeDownTime == -1) ? Integer.parseInt(getSharedPref().getString("fade_down_time", "5")) : fadeDownTime;
-        } catch (Throwable t) {
-            t.printStackTrace();
-            Toast.makeText(MainActivity.this, R.string.errNumConv, Toast.LENGTH_SHORT).show();
-        }
-        if (cueNum == -1) {
-            String name = String.format(getResources().getString(R.string.cue), cueCount);
-            button.setText(name);
-            alCues.add(new CueObj(cueCount, name, fadeUpTime, fadeDownTime, chLevels, button));
-        } else {
-            button.setText(String.format(getResources().getString(R.string.cue), cueNum));
-            // Add cue name
-            if (cueName.equals("")) {
-                alCues.add(new CueObj(cueNum, String.format(getResources().getString(R.string.cue), cueNum), fadeUpTime, fadeDownTime, chLevels, button));
-            } else {
-                alCues.add(new CueObj(cueNum, cueName, fadeUpTime, fadeDownTime, chLevels, button));
-            }
-        }
-        cueCount++;
-
-        // create a new "Add Cue" button
-        ((LinearLayout) findViewById(R.id.CueLine)).addView(makeButton(getString(R.string.AddCue)));
-    }
-
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(TAG, "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
@@ -497,16 +388,6 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         }
     }
 
-
-    Button makeButton(String name) {
-        Button button = new Button(this);
-        button.setText(name);
-        button.setOnClickListener(this);
-        button.setLongClickable(true);
-        button.setOnLongClickListener(this);
-        return button;
-    }
-
     private void restoreDefaults() {
         Log.v(TAG, "Restoring Defaults");
         // Remove all the preferences
@@ -525,14 +406,14 @@ public class MainActivity extends Activity implements OnClickListener, OnLongCli
         cueLine.removeAllViews();
         for (CueObj cue : alCues) {
             // create a new "Add Cue" button
-            cue.setButton(makeButton(cue.getCueName()));
+            cue.setButton(CueClickListener.makeButton(cue.getCueName(), this));
             cueLine.addView(cue.getButton());
             cue.setHighlight(0, 0, 0);
         }
         PatchActivity.patchOneToOne();
 
         // create a new "Add Cue" button
-        ((LinearLayout) findViewById(R.id.CueLine)).addView(makeButton(getString(R.string.AddCue)));
+        ((LinearLayout) findViewById(R.id.CueLine)).addView(CueClickListener.makeButton(getString(R.string.AddCue), this));
         setUpNetwork();
     }
 

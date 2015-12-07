@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.AuroraByteSoftware.AuroraDMX.CueClickListener;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.CueSorter;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
@@ -25,19 +27,19 @@ public class EditCueMenu extends MainActivity {
     private static final String TAG = "AuroraDMX";
 
     @SuppressLint("SetTextI18n")
-    public static void createEditCueMenu(final ArrayList<CueObj> alCues, View v,
-                                         final MainActivity mainActivity) {
+    public static void createEditCueMenu(final ArrayList<CueObj> alCues, Button button) {
         // Find what Cue we are in
         for (int x = 0; x < alCues.size(); x++) {
-            if (alCues.get(x).getButton() == v) {
+            if (alCues.get(x).getButton() == button) {
                 currentCue = x;
             }
         }
+        final Context context = button.getContext();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
         builder.setIcon(R.drawable.action_about);
-        builder.setTitle(String.format(mainActivity.getString(R.string.cue), alCues.get(currentCue).getCueNum()));
+        builder.setTitle(String.format(context.getString(R.string.cue), alCues.get(currentCue).getCueNum()));
 
         builder.setInverseBackgroundForced(true);
         // Create the Save button for the Edit Cue menu
@@ -60,9 +62,9 @@ public class EditCueMenu extends MainActivity {
                     // Set new button name
                     alCues.get(currentCue).getButton().setText(cueName);
                 } catch (NumberFormatException n) {
-                    Toast.makeText(mainActivity, R.string.errNumConv, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
                 } catch (Throwable t) {
-                    Toast.makeText(mainActivity, R.string.Error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.Error, Toast.LENGTH_SHORT).show();
                 }
 
                 dialog.dismiss();
@@ -81,11 +83,11 @@ public class EditCueMenu extends MainActivity {
                     fadeUpTime = Integer.parseInt(getSharedPref().getString("fade_up_time", "5"));
                     fadeDownTime = Integer.parseInt(getSharedPref().getString("fade_down_time", "5"));
                 } catch (Throwable t) {
-                    Toast.makeText(mainActivity, R.string.errNumConv, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
                 }
                 // create a new "Add Cue" button
-                Button button = new Button(mainActivity);
-                button.setOnClickListener(mainActivity);
+                Button button = new Button(context);
+                button.setOnClickListener(new CueClickListener());
 
                 // Create a sub cue number
                 double thisCueNum;
@@ -97,14 +99,14 @@ public class EditCueMenu extends MainActivity {
                     double nextCueNum = alCues.get(currentCue).getCueNum();
                     int diff = (int) ((nextCueNum * 100) - (thisCueNum * 100));
                     if (diff <= 1) {
-                        Toast.makeText(mainActivity, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
                         thisCueNum = -1;
                     } else if (diff <= 10)
                         thisCueNum += 0.01;
                     else if (diff <= 100) {
                         thisCueNum += 0.1;
                     } else {
-                        Toast.makeText(mainActivity, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
                         thisCueNum = -1;
                     }
                     Log.v(TAG, "this: " + thisCueNum + " diff " + diff);
@@ -114,21 +116,21 @@ public class EditCueMenu extends MainActivity {
                 if (thisCueNum > 0) {
 
                     // setup button
-                    button.setText(String.format(mainActivity.getString(R.string.cue), thisCueNum));
+                    button.setText(String.format(context.getString(R.string.cue), thisCueNum));
                     button.setLongClickable(true);
-                    button.setOnLongClickListener(mainActivity);
+                    button.setOnLongClickListener(new CueClickListener());
                     layout.addView(button, currentCue);// add new button after
                     // currentCue
-                    String cueName = String.format(mainActivity.getString(R.string.cue), thisCueNum);
+                    String cueName = String.format(context.getString(R.string.cue), thisCueNum);
                     alCues.add(new CueObj(thisCueNum, cueName, fadeUpTime, fadeDownTime, getCurrentChannelArray(), button));
                     Collections.sort(alCues, new CueSorter());
 
-                    // Toast.makeText(mainActivity, "Inserted " + thisCueNum,
+                    // Toast.makeText(context, "Inserted " + thisCueNum,
                     // Toast.LENGTH_SHORT).show();
                     // dialog.dismiss();
 
                 } else {// Cue can not be below 0
-                    Toast.makeText(mainActivity, R.string.cueMustBePos, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.cueMustBePos, Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             }
@@ -146,8 +148,8 @@ public class EditCueMenu extends MainActivity {
                 // Don't delete if fading
                 if (!fadeInProgress) {
                     Toast.makeText(
-                            mainActivity,
-                            mainActivity.getString(R.string.deletedCue)
+                            context,
+                            context.getString(R.string.deletedCue)
                                     + alCues.get(currentCue).getCueNum(), Toast.LENGTH_SHORT)
                             .show();
                     ViewGroup layout = (ViewGroup) alCues.get(currentCue).getButton().getParent();
@@ -157,14 +159,14 @@ public class EditCueMenu extends MainActivity {
                     alCues.remove(currentCue);
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(mainActivity, R.string.canNotDeleteWhileFading, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.canNotDeleteWhileFading, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         // set prompts.xml to alert dialog builder
-        LayoutInflater li = LayoutInflater.from(mainActivity);
-        View promptsView = li.inflate(R.layout.dialog_cue, (ViewGroup) v.getParent(), false);
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.dialog_cue, (ViewGroup) button.getParent(), false);
 
         EditText editCueName = (EditText) promptsView.findViewById(R.id.editCueName);
         editCueName.setText(alCues.get(currentCue).getCueName());

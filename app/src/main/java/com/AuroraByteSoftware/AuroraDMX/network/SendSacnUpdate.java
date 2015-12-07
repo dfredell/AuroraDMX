@@ -79,7 +79,7 @@ public class SendSacnUpdate extends TimerTask {
             e1.printStackTrace();
             mainActivity.runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(mainActivity, String.format(mainActivity.getResources().getString(R.string.serverUnknown), server), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mainActivity, String.format(mainActivity.getString(R.string.serverUnknown), server), Toast.LENGTH_LONG).show();
                 }
             });
             this.cancel();

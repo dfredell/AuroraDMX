@@ -172,7 +172,7 @@ public class ProjectManagement extends MainActivity {
             if (readObject3Patch.getClass().equals(patch.getClass()))
                 patch = (int[][]) readObject3Patch;
             if (readObject3Patch.getClass().equals(patchList.getClass()))
-                patchList = (ArrayList<ChPatch>) readObject3Patch;
+                patchList = new ArrayList<>((List<ChPatch>) readObject3Patch);
             if (readObject4CueCount.getClass().equals(Double.class))
                 cueCount = (Double) readObject4CueCount;
             if (readObject5IPAdr.getClass().equals(String.class))
@@ -195,14 +195,14 @@ public class ProjectManagement extends MainActivity {
         cueLine.removeAllViews();
         for (CueObj cue : alCues) {
             // create a new "Add Cue" button
-            cue.setButton(mainActivity.makeButton(cue.getCueName()));
+            cue.setButton(CueClickListener.makeButton(cue.getCueName(), mainActivity));
             cueLine.addView(cue.getButton());
             cue.setHighlight(0, 0, 0);
             cue.setFadeInProgress(false);
         }
 
         // create a new "Add Cue" button
-        ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(mainActivity.makeButton(mainActivity.getString(R.string.AddCue)));
+        ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(CueClickListener.makeButton(mainActivity.getString(R.string.AddCue), mainActivity));
 
         migrateData(patch);
 

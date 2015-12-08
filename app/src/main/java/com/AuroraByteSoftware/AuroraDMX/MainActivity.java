@@ -317,7 +317,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         for (Fixture fixture : alColumns) {
             chValues.addAll(fixture.getChLevels());
         }
-//patch[channel][goes to dimmers]
+
         for (int ch = 1; ch <= chValues.size(); ch++) {
             for (Integer dim : patchList.get(ch).getDimmers()) {
                 if (dim <= 0)

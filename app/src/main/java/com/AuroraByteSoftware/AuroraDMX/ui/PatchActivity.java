@@ -59,7 +59,6 @@ public class PatchActivity extends Activity {
     }
 
     public static void patchOneToOne() {
-
         for (int x = 0; x < MainActivity.patchList.size(); x++) {
             MainActivity.patchList.get(x).getDimmers().clear();
             MainActivity.patchList.get(x).addDimmer(x);

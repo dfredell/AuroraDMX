@@ -8,15 +8,15 @@ import android.graphics.ComposeShader;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class AmbilWarnaSquare extends View {
 	Paint paint;
-	Shader luar;
-	final float[] color = { 1.f, 1.f, 1.f };
+    LinearGradient contrastGradient;
+    int previousBoxHeight = 0;
+    final float[] color = {1.f, 1.f, 1.f};
 
 	public AmbilWarnaSquare(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -31,14 +31,19 @@ public class AmbilWarnaSquare extends View {
 		super.onDraw(canvas);
 		if (paint == null) {
 			paint = new Paint();
-			luar = new LinearGradient(0.f, 0.f, 0.f, this.getMeasuredHeight(), 0xffffffff, 0xff000000, TileMode.CLAMP);
 		}
-		int rgb = Color.HSVToColor(color);
-		Shader dalam = new LinearGradient(0.f, 0.f, this.getMeasuredWidth(), 0.f, 0xffffffff, rgb, TileMode.CLAMP);
-		ComposeShader shader = new ComposeShader(luar, dalam, PorterDuff.Mode.MULTIPLY);
-		paint.setShader(shader);
+        if (previousBoxHeight != this.getMeasuredHeight()) {
+            //From white to black
+            contrastGradient = new LinearGradient(0.f, 0.f, 0.f, this.getMeasuredHeight(), 0xffffffff, 0xff000000, TileMode.CLAMP);
+        }
+        int rgb = Color.HSVToColor(color);
+        //from rgb to black
+        LinearGradient colorGradient = new LinearGradient(0.f, 0.f, this.getMeasuredWidth(), 0.f, 0xffffffff, rgb, TileMode.CLAMP);
+        ComposeShader shader = new ComposeShader(contrastGradient, colorGradient, PorterDuff.Mode.MULTIPLY);
+        paint.setShader(shader);
 		canvas.drawRect(0.f, 0.f, this.getMeasuredWidth(), this.getMeasuredHeight(), paint);
-	}
+        previousBoxHeight = this.getMeasuredHeight();
+    }
 
 	void setHue(float hue) {
 		color[0] = hue;

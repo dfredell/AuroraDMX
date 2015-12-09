@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.AuroraByteSoftware.AuroraDMX.MainActivity;
-import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 
 import java.util.Arrays;
 import java.util.List;
@@ -164,6 +163,10 @@ public class AmbilWarnaDialog {
 
     public View getView() {
         return view;
+    }
+
+    public AmbilWarnaSquare getViewSatVal() {
+        return viewSatVal;
     }
 
     private float getHue() {

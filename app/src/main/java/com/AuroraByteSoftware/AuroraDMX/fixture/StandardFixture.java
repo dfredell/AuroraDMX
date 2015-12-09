@@ -70,28 +70,29 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     @Override
     public void init() {
-        this.viewGroup = new LinearLayout(context);
-        this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-        this.viewGroup.setOrientation(LinearLayout.VERTICAL);
+        viewGroup = new LinearLayout(context);
+        viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        viewGroup.setOrientation(LinearLayout.VERTICAL);
 
         tvChNum = new TextView(context);
         tvChNum.setText(String.format("%1$s", ChNum));
         tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
         tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        this.viewGroup.addView(tvChNum);
+        viewGroup.addView(tvChNum);
+
         tvVal = new TextView(context);
         tvVal.setText(String.format(context.getString(R.string.ChPercent), 0));
         tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
-        this.viewGroup.addView(tvVal);
+        viewGroup.addView(tvVal);
 
         seekBar = createSeekBar();
-        this.viewGroup.addView(seekBar);
+        viewGroup.addView(seekBar);
 
         Button editButton = new Button(context);
         editButton.setOnClickListener(this);
         editButton.setText(R.string.edit);
-        this.viewGroup.addView(editButton);
+        viewGroup.addView(editButton);
     }
 
     private VerticalSeekBar createSeekBar() {

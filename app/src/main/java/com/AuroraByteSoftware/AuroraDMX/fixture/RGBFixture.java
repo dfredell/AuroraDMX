@@ -1,15 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ClipDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
-import android.graphics.drawable.InsetDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +11,6 @@ import android.widget.TextView;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
-import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 
 import java.util.ArrayList;
@@ -71,48 +61,29 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     @Override
     public void init() {
-        this.viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-        this.viewGroup.setOrientation(LinearLayout.VERTICAL);
+        viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        viewGroup.setOrientation(LinearLayout.VERTICAL);
 
         tvChNum = new TextView(context);
         tvChNum.setText(String.format("%1$s", ChNum));
         tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
         tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        this.viewGroup.addView(tvChNum);
+        viewGroup.addView(tvChNum);
+
         tvVal = new TextView(context);
         tvVal.setText("R:0 G:0 B:0");
         tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
-        this.viewGroup.addView(tvVal);
+        viewGroup.addView(tvVal);
 
         ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this);
         rgbSelectView = ambilWarnaDialog.getView();
-        this.viewGroup.addView(rgbSelectView);
+        viewGroup.addView(rgbSelectView);
 
         Button editButton = new Button(context);
         editButton.setOnClickListener(this);
         editButton.setText(R.string.edit);
-        this.viewGroup.addView(editButton);
-    }
-
-    private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height) {
-        GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
-                Color.rgb(0, 0, 0), scrollColor});
-        shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
-        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
-
-        GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
-                Color.rgb(10, 10, 10), Color.rgb(110, 110, 110)});
-        shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
-        InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
-
-        TextDrawable d = new TextDrawable(context);
-        d.setText(chText);
-        d.setTextAlign(Layout.Alignment.ALIGN_CENTER);
-
-        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
-        layerDrawable.setLayerInset(2, 10, (height / 2) - 15, 0, 0);//set offset of the text layer
-        return layerDrawable;
+        viewGroup.addView(editButton);
     }
 
     /**
@@ -249,6 +220,15 @@ public class RGBFixture extends Fixture implements OnClickListener {
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
         tvChNum.setText(String.format("%1$s", currentFixtureNum));
+    }
+
+    public void refreshLayout() {
+        ambilWarnaDialog.getView().post(new Runnable() {
+            @Override
+            public void run() {
+                ambilWarnaDialog.getViewSatVal().invalidate();
+            }
+        });
     }
 
     public void setChLevelArray(List<Integer> chLevels) {

@@ -9,8 +9,9 @@
 
 # Features #
 
+* Google analytics 
 * Artnet Universe
 * Master Slider
 * Tablet view
 * Chase
-* Remote chase 
+* Remote chase

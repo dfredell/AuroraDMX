@@ -46,11 +46,11 @@ public class SendArtnetPoll extends Thread {
             DatagramPacket sendPacket = new DatagramPacket(out, out.length, InetAddress.getByName("255.255.255.255"), 6454);
             MainActivity.clientSocket.setBroadcast(true);
             MainActivity.clientSocket.send(sendPacket);
-            Thread.sleep(100);
             MainActivity.clientSocket.send(sendPacket);
-            Thread.sleep(100);
             MainActivity.clientSocket.send(sendPacket);
-            Thread.sleep(100);
+            MainActivity.clientSocket.send(sendPacket);
+            MainActivity.clientSocket.send(sendPacket);
+            MainActivity.clientSocket.send(sendPacket);
             MainActivity.clientSocket.setSoTimeout(1000);
 
             long timeOut = System.currentTimeMillis() + 1000;

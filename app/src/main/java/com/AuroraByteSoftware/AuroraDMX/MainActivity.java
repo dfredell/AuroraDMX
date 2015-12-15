@@ -319,7 +319,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             chValues.addAll(fixture.getChLevels());
         }
 
-        for (int ch = 1; ch <= chValues.size(); ch++) {
+        for (int ch = 1; ch <= chValues.size() && patchList.size() > ch; ch++) {
             for (Integer dim : patchList.get(ch).getDimmers()) {
                 if (dim <= 0)
                     continue;

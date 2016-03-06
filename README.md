@@ -19,3 +19,4 @@
 * Continue DMX when device is locked
 * Moving head
 * Unit tests
+* Multi user

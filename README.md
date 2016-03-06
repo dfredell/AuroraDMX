@@ -17,3 +17,4 @@
 * Chase
 * Remote chase
 * Continue DMX when device is locked
+* Moving head

@@ -18,3 +18,4 @@
 * Remote chase
 * Continue DMX when device is locked
 * Moving head
+* Unit tests

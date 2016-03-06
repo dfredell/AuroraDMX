@@ -5,7 +5,7 @@
 # Bugs #
 
 * Can't find ArtNet
-* Black options on some devices
+* -Black options on some devices-
 * Cue fade at 0
 
 # Features #

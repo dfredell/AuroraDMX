@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.ui.EditCueMenu;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,11 +45,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         if (curCue == -1) {// Adding a new cue
             createCue(button, MainActivity.getCurrentChannelArray(), -1, "", -1, -1);
         } else {
-            // check if anyone else is fading
-
             // ======= Loading a cue ========
-            List<Integer> newChLevels = MainActivity.alCues.get(curCue).getLevels();
-            // Find previously active cue
             int prevCueNum = -1;
             for (int x = 0; x < MainActivity.alCues.size(); x++) {
                 if (MainActivity.alCues.get(x).getHighlight() > 1 && x != curCue)
@@ -58,19 +53,11 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
                 if (MainActivity.alCues.get(x).isFadeInProgress())
                     otherCueFading = true;
             }
+            // Alert if anyone else is fading
             if (otherCueFading) {
                 Toast.makeText(context, R.string.waitingOnFade, Toast.LENGTH_SHORT).show();
             } else {
-                Log.d(TAG, String.format("newChLevels %1$s", newChLevels));
                 Log.d(TAG, "oldChLevels " + MainActivity.getCurrentChannelArray());
-                // Set the channels to the cue
-                int chIndex = 0;
-                for (int x = 0; x < MainActivity.alColumns.size() && x < newChLevels.size(); x++) {
-                    // If a channel changed value
-                    int fixtureUses = MainActivity.alColumns.get(x).getChLevels().size();
-                    MainActivity.alColumns.get(x).setupIncrementLevelFade(new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses)));
-                    chIndex += fixtureUses;
-                }
                 CueFade cueFade = new CueFade();
                 cueFade.startCueFade(MainActivity.alCues.get(curCue), prevCueNum < 0 ? null : MainActivity.alCues.get(prevCueNum));
             }

@@ -5,6 +5,8 @@ import android.util.Log;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,6 +23,10 @@ public class CueFade extends MainActivity implements Serializable {
     public void startCueFade(final CueObj nextCue, final CueObj prevCue) {
 
         Log.d(TAG, "startCueFade next " + nextCue + "\tprev " + prevCue);
+        List<Integer> newChLevels = nextCue.getLevels();
+
+        Log.d(TAG, String.format("newChLevels %1$s", newChLevels));
+
 
         // Check if any cues are currently fading
         boolean prevCueReady = true;
@@ -28,6 +34,16 @@ public class CueFade extends MainActivity implements Serializable {
             prevCueReady = !prevCue.isFadeInProgress();
 
         if (!nextCue.isFadeInProgress() && prevCueReady) {
+            // Set the channels to the cue
+            int chIndex = 0;
+            for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
+                // If a channel changed value
+                int fixtureUses = alColumns.get(x).getChLevels().size();
+                ArrayList<Integer> stepValues = new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses));
+                alColumns.get(x).setupIncrementLevelFade(stepValues);
+                chIndex += fixtureUses;
+            }
+
             // Set fades inProgress
             nextCue.setFadeInProgress(true);
             // Fade up timer

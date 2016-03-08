@@ -58,7 +58,9 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
                 if (MainActivity.alCues.get(x).isFadeInProgress())
                     otherCueFading = true;
             }
-            if (!otherCueFading) {
+            if (otherCueFading) {
+                Toast.makeText(context, R.string.waitingOnFade, Toast.LENGTH_SHORT).show();
+            } else {
                 Log.d(TAG, String.format("newChLevels %1$s", newChLevels));
                 Log.d(TAG, "oldChLevels " + MainActivity.getCurrentChannelArray());
                 // Set the channels to the cue
@@ -69,9 +71,8 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
                     MainActivity.alColumns.get(x).setupIncrementLevelFade(new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses)));
                     chIndex += fixtureUses;
                 }
-                MainActivity.alCues.get(curCue).startCueFade(curCue, prevCueNum);
-            } else {
-                Toast.makeText(context, R.string.waitingOnFade, Toast.LENGTH_SHORT).show();
+                CueFade cueFade = new CueFade();
+                cueFade.startCueFade(MainActivity.alCues.get(curCue), prevCueNum < 0 ? null : MainActivity.alCues.get(prevCueNum));
             }
         }
     }

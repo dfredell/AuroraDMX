@@ -2,17 +2,12 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class CueObj extends MainActivity implements Serializable {
     /**
@@ -135,91 +130,6 @@ public class CueObj extends MainActivity implements Serializable {
      */
     public void setFadeInProgress(boolean fadeInProgress) {
         this.fadeInProgress = fadeInProgress;
-    }
-
-    /**
-     * Fades the cue light from the previous cue to the next cue
-     *
-     * @param nextCueNum not in array list form
-     * @param prevCueNum not in array list form
-     */
-    void startCueFade(final int nextCueNum, final int prevCueNum) {
-
-        Log.d(TAG, "startCueFade next " + nextCueNum + "\tprev " + prevCueNum);
-
-        // Check if any cues are currently fading
-        boolean prevCueReady = true;
-        if (prevCueNum != -1)
-            prevCueReady = !alCues.get(prevCueNum).isFadeInProgress();
-
-        if (!alCues.get(nextCueNum).isFadeInProgress() && prevCueReady) {
-            // Set fades inProgress
-            alCues.get(nextCueNum).setFadeInProgress(true);
-            // Fade up timer
-            final Timer T = new Timer();
-            int temp = (int) Math.ceil((fadeUpTime * 1000.0) / 255);
-            if (temp < 1)
-                temp = 1;
-            final int stepsToEndVal = temp;
-            T.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (alCues.get(nextCueNum).getHighlight() < 256) {
-                                alCues.get(nextCueNum).setHighlight(0,
-                                        alCues.get(nextCueNum).getHighlight() + 1, 0);
-                                for (Fixture col : alColumns) {
-                                    col.incrementLevelUp();
-                                    if (prevCueNum == -1)
-                                        col.incrementLevelDown();
-                                }
-                            } else {
-                                alCues.get(nextCueNum).setFadeInProgress(false);
-                                T.cancel();
-                                T.purge();
-                            }
-                        }
-                    });
-                }
-            }, 0, stepsToEndVal);
-            // }
-
-            // Fade down timer
-            if (prevCueNum != -1) {
-                final Timer T1 = new Timer();
-                alCues.get(prevCueNum).setFadeInProgress(true);
-                final long stepsToEndValDown = (long) ((fadeDownTime + 0.0) / 256 * 1000);
-                if (stepsToEndValDown == 0) {
-                    alCues.get(prevCueNum).setHighlight(0, 0, 0);
-                    alCues.get(prevCueNum).setFadeInProgress(false);
-                } else {
-                    T1.scheduleAtFixedRate(new TimerTask() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (alCues.get(prevCueNum).getHighlight() != 0) {
-                                        alCues.get(prevCueNum).setHighlight(
-                                                alCues.get(prevCueNum).getHighlight() - 1, 0, 0);
-                                        for (Fixture col : alColumns) {
-                                            col.incrementLevelDown();
-                                        }
-                                    } else {
-                                        alCues.get(prevCueNum).setHighlight(0, 0, 0);
-                                        alCues.get(prevCueNum).setFadeInProgress(false);
-                                        T1.cancel();
-                                        T1.purge();
-                                    }
-                                }// end run()
-                            });
-                        }// end run()
-                    }, 0, stepsToEndValDown);// end scheduleAtFixedRate
-                }// end if 0 fade
-            }// end if prevCueNum
-        }// end if fade in progress
     }
 
     public void padChannels(int number_channels) {

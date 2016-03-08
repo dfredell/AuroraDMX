@@ -58,7 +58,7 @@ public class SendArtnetUpdate extends TimerTask {
 
         byte[] data = {};
         try {
-            data = ArtNetPacketEncoder.encodeArtDmxPacket("00", "00", buffer);
+            data = ArtNetPacketEncoder.encodeArtDmxPacket(0, 0, buffer);
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();

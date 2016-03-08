@@ -29,4 +29,5 @@ dependencies {
     compile files('libs/commons-lang3-3.3.2.jar')
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.larswerkman:HoloColorPicker:1.4'
+    compile project(':ArtNetStack')
 }

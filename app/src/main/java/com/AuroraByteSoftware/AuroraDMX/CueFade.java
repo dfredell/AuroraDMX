@@ -17,8 +17,8 @@ public class CueFade extends MainActivity implements Serializable {
     /**
      * Fades the cue light from the previous cue to the next cue
      *
-     * @param nextCue
-     * @param prevCue
+     * @param nextCue the destination cue to set fixture levels
+     * @param prevCue the previous cue used to animate the cue button
      */
     public void startCueFade(final CueObj nextCue, final CueObj prevCue) {
 
@@ -34,13 +34,18 @@ public class CueFade extends MainActivity implements Serializable {
             prevCueReady = !prevCue.isFadeInProgress();
 
         if (!nextCue.isFadeInProgress() && prevCueReady) {
+            //Set up steps
+            // Min of 1 max of 256, larger of fadeUp and fadeDown
+            final int steps = Math.max(1, Math.min(256, Math.max(nextCue.getFadeUpTime(), nextCue.getFadeDownTime()) * 10));
+            Log.d(TAG, String.format("Fading with %1$s steps", steps));
+
             // Set the channels to the cue
             int chIndex = 0;
             for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
                 // If a channel changed value
                 int fixtureUses = alColumns.get(x).getChLevels().size();
                 ArrayList<Integer> stepValues = new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses));
-                alColumns.get(x).setupIncrementLevelFade(stepValues);
+                alColumns.get(x).setupIncrementLevelFade(stepValues, steps);
                 chIndex += fixtureUses;
             }
 
@@ -48,16 +53,13 @@ public class CueFade extends MainActivity implements Serializable {
             nextCue.setFadeInProgress(true);
             // Fade up timer
             final Timer T = new Timer();
-            int temp = (int) Math.ceil((nextCue.getFadeUpTime() * 1000.0) / 255);
-            if (temp < 1)
-                temp = 1;
-            final int stepsToEndVal = temp;
+            int stepsToEndVal = (int) Math.ceil((nextCue.getFadeUpTime() * 1000.0) / steps);
 
             // if the fade time is none, just pop to final
-            if (stepsToEndVal == 1) {
+            if (stepsToEndVal < 1) {
                 nextCue.setHighlight(0, 256, 0);
                 for (Fixture col : alColumns) {
-                    for (int i = 0; i < 256; i++) {
+                    for (int i = 0; i < steps; i++) {
                         col.incrementLevelUp();
                         if (prevCue == null)
                             col.incrementLevelDown();
@@ -66,20 +68,22 @@ public class CueFade extends MainActivity implements Serializable {
                 nextCue.setFadeInProgress(false);
             } else {
                 T.scheduleAtFixedRate(new TimerTask() {
+                    private int progress = 0;
                     @Override
                     public void run() {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (nextCue.getHighlight() < 256) {
-                                    nextCue.setHighlight(0,
-                                            nextCue.getHighlight() + 1, 0);
+                                if (progress < steps) {
+                                    nextCue.setHighlight(0, nextCue.getHighlight() + (265 / steps), 0);
                                     for (Fixture col : alColumns) {
                                         col.incrementLevelUp();
                                         if (prevCue == null)
                                             col.incrementLevelDown();
                                     }
+                                    progress++;
                                 } else {
+                                    nextCue.setHighlight(0, 265, 0);
                                     nextCue.setFadeInProgress(false);
                                     T.cancel();
                                     T.purge();
@@ -94,30 +98,32 @@ public class CueFade extends MainActivity implements Serializable {
             if (prevCue != null) {
                 final Timer T1 = new Timer();
                 prevCue.setFadeInProgress(true);
-                final long stepsToEndValDown = (long) ((nextCue.getFadeDownTime() + 0.0) / 256 * 1000);
+                final long stepsToEndValDown = (long) ((nextCue.getFadeDownTime() + 0.0) / steps * 1000);
                 // If there is an instant fade
-                if (stepsToEndValDown == 0) {
+                if (stepsToEndValDown < 1) {
                     prevCue.setHighlight(0, 0, 0);
                     prevCue.setFadeInProgress(false);
                     prevCue.setHighlight(0, 0, 0);
-                    for (int i = 0; i < 256; i++) {
+                    for (int i = 0; i < steps; i++) {
                         for (Fixture col : alColumns) {
                             col.incrementLevelDown();
                         }
                     }
                 } else {
                     T1.scheduleAtFixedRate(new TimerTask() {
+                        private int progress = 0;
                         @Override
                         public void run() {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (prevCue.getHighlight() != 0) {
-                                        prevCue.setHighlight(
-                                                prevCue.getHighlight() - 1, 0, 0);
+                                    if (progress < steps) {
+                                        int nextBrightness = prevCue.getHighlight() - (256 / steps);
+                                        prevCue.setHighlight(nextBrightness, 0, 0);
                                         for (Fixture col : alColumns) {
                                             col.incrementLevelDown();
                                         }
+                                        progress++;
                                     } else {
                                         prevCue.setHighlight(0, 0, 0);
                                         prevCue.setFadeInProgress(false);

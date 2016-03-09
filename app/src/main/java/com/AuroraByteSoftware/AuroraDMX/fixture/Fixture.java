@@ -19,7 +19,7 @@ public abstract class Fixture {
 
     public abstract List<Integer> getChLevels();
 
-    public abstract void setupIncrementLevelFade(List<Integer> endVal);
+    public abstract void setupIncrementLevelFade(List<Integer> endVal, double steps);
 
     public abstract void incrementLevelUp();
 

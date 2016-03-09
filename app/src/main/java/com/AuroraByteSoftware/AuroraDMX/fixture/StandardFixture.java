@@ -226,10 +226,11 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     /**
      * Creates 255 steeps between current and endVal
      * @param endVal value when the fade is finished
+     * @param steps number of steps to take to get to the final falue
      */
     @Override
-    public void setupIncrementLevelFade(List<Integer> endVal) {
-        step = (endVal.get(0) - chLevel) / 256.0;
+    public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
+        step = (endVal.get(0) - chLevel) / steps;
         stepIteram = chLevel;
         Log.v(TAG, String.format("Setting up fade %1$s %2$s", endVal.toString(), step));
     }
@@ -241,7 +242,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     public void incrementLevelUp() {
         if (step > 0) {
             stepIteram += step;
-            setChLevel((int) stepIteram);
+            setChLevel((int) Math.round(stepIteram));
         }
     }
 
@@ -252,7 +253,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     public void incrementLevelDown() {
         if (step < 0) {
             stepIteram += step;
-            setChLevel((int) stepIteram);
+            setChLevel((int) Math.round(stepIteram));
         }
     }
 

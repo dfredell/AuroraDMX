@@ -140,14 +140,14 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     /**
      * Creates 255 steeps between current and endVal
-     *
-     * @param endVal
+     *  @param endVal value after fade
+     * @param steps number of steps to take to get to the final falue
      */
     @Override
-    public void setupIncrementLevelFade(List<Integer> endVal) {
-        step[0] = (endVal.get(0) - rgbLevel.get(0)) / 256.0;
-        step[1] = (endVal.get(1) - rgbLevel.get(1)) / 256.0;
-        step[2] = (endVal.get(2) - rgbLevel.get(2)) / 256.0;
+    public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
+        step[0] = (endVal.get(0) - rgbLevel.get(0)) / steps;
+        step[1] = (endVal.get(1) - rgbLevel.get(1)) / steps;
+        step[2] = (endVal.get(2) - rgbLevel.get(2)) / steps;
         stepIteram[0] = rgbLevel.get(0);
         stepIteram[1] = rgbLevel.get(1);
         stepIteram[2] = rgbLevel.get(2);
@@ -182,9 +182,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
     }
 
     private void updateIncrementedLevel() {
-        rgbLevel.set(0, (int) stepIteram[0]);
-        rgbLevel.set(1, (int) stepIteram[1]);
-        rgbLevel.set(2, (int) stepIteram[2]);
+        rgbLevel.set(0, (int) Math.round(stepIteram[0]));
+        rgbLevel.set(1, (int) Math.round(stepIteram[1]));
+        rgbLevel.set(2, (int) Math.round(stepIteram[2]));
         ambilWarnaDialog.setRGBLevel(rgbLevel);
     }
 

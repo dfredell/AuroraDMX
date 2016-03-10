@@ -1,7 +1,10 @@
 # Releases #
 
 2.0 RGB
+
 2.1 Fade time of 0. Improved fading performance.
+
+2.2 ArtNet Port/Universe
 
 # Bugs #
 

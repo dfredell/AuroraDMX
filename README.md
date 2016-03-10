@@ -1,12 +1,13 @@
 # Releases #
 
 2.0 RGB
+2.1 Fade time of 0. Improved fading performance.
 
 # Bugs #
 
 * Can't find ArtNet
 * -Black options on some devices-
-* Cue fade at 0
+* -Cue fade at 0-
 
 # Features #
 

@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
+import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
+
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
 
     private static SharedPreferences sharedPref;
@@ -41,7 +43,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     private int orgColor = 0;
     private static IabHelper mHelper;
 
-    public static final ArrayList<String> foundServers = new ArrayList<>();
+    public static final ArrayList<ArtPollReply> foundServers = new ArrayList<>();
     public static ProgressDialog progressDialog = null;
 
     //Static Variables

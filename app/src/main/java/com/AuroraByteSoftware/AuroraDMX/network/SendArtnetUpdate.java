@@ -18,13 +18,21 @@ import fr.azelart.artnetstack.utils.ArtNetPacketEncoder;
 public class SendArtnetUpdate extends TimerTask {
 
     private final MainActivity mainActivity;
-    private String server = "";
+    private String serverIp = "";
+    private int artnetPort = 0;
     private int[] previousMessage = new int[0];
     private int previousMessageSentAgo = 0;
 
     public SendArtnetUpdate(MainActivity a_mainActivity) {
         this.mainActivity = a_mainActivity;
-        server = MainActivity.getSharedPref().getString(SettingsActivity.serveraddress.trim(), "");
+        String serverPref = MainActivity.getSharedPref().getString(SettingsActivity.serveraddress.trim(), "");
+        String[] splitServer = serverPref.split(":");
+        if (splitServer.length == 2) {
+            serverIp = splitServer[0];
+            artnetPort = Integer.parseInt(splitServer[1]);
+        } else {
+            serverIp = serverPref;
+        }
     }
 
     @Override
@@ -36,11 +44,11 @@ public class SendArtnetUpdate extends TimerTask {
                 MainActivity.clientSocket = new DatagramSocket(6454);
                 MainActivity.clientSocket.setReuseAddress(true);
             }
-            IPAddress = InetAddress.getByName(server);
+            IPAddress = InetAddress.getByName(serverIp);
         } catch (Throwable t) {
             mainActivity.runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(mainActivity, String.format(mainActivity.getString(R.string.serverUnknown), server), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mainActivity, String.format(mainActivity.getString(R.string.serverUnknown), serverIp + ":" + artnetPort), Toast.LENGTH_LONG).show();
                 }
             });
             t.printStackTrace();
@@ -58,7 +66,7 @@ public class SendArtnetUpdate extends TimerTask {
 
         byte[] data = {};
         try {
-            data = ArtNetPacketEncoder.encodeArtDmxPacket(0, 0, buffer);
+            data = ArtNetPacketEncoder.encodeArtDmxPacket(artnetPort, 0, buffer);
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();

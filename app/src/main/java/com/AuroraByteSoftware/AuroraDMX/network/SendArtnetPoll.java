@@ -66,9 +66,12 @@ public class SendArtnetPoll extends Thread {
 //					System.out.println(reply.getEsta());
 //					System.out.println(reply.getSubSwitch());
                     Log.i(TAG, String.format("Found ArtNet: '%1$s' '%2$s' %3$s:%4$s:%5$s %6$s", reply.getShortName(), reply.getEsta(), reply.getIp(), reply.getSubNet(), reply.getSubSwitch(), reply.getOemHexa()));
-                    if (!MainActivity.foundServers.contains(packet.getAddress().getHostAddress())) {
-                        MainActivity.foundServers.add(reply.getIp());
-                        MainActivity.foundServers.add(reply.getShortName());
+                    boolean oldServer = false;
+                    for (ArtPollReply foundServer : MainActivity.foundServers) {
+                        oldServer |= foundServer.getIp().equals(reply.getIp());
+                    }
+                    if (!oldServer) {
+                        MainActivity.foundServers.add(reply);
                     }
                 }else if(artNet instanceof ArtPoll){
                     Log.i(TAG, String.format("Did NOT Found ArtNet: '%1$s' '%2$s'", artNet, artNet.getClass().toString()));

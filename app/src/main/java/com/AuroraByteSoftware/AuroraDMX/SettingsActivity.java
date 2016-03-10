@@ -29,6 +29,8 @@ import com.AuroraByteSoftware.Billing.util.Purchase;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -271,16 +273,22 @@ public class SettingsActivity extends PreferenceActivity {
             // in this case a PreferenceCategory with key "targetCategory"
             PreferenceCategory targetCategory = (PreferenceCategory) findPreference("targetCategory");
 
-            for (int srv = 0; srv < MainActivity.foundServers.size() - 1; srv += 2) {
-                // create one check box for each setting you need
-                CheckBoxPreference checkBoxPreference = new CheckBoxPreference(getActivity());
-                checkBoxPreference.setTitle(MainActivity.foundServers.get(srv));
-                checkBoxPreference.setSummary(MainActivity.foundServers.get(srv + 1));
-                checkBoxPreference.setKey("keyName" + srv);// make sure each key
-                // is unique
-                checkBoxPreference.setChecked(false);
+            for (ArtPollReply artPollReply : MainActivity.foundServers) {
+                for (int i = 0; i < 4; i++) {
+                    if (artPollReply.getOutputStatus()[i].dataTransmitted) {
+                        // create one check box for each setting you need
+                        String ipPort = artPollReply.getIp() + ":" + artPollReply.getOutputSubswitch()[i];
+                        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(getActivity());
+                        checkBoxPreference.setTitle(ipPort);
+                        checkBoxPreference.setSummary(artPollReply.getShortName());
+                        checkBoxPreference.setKey("keyName" + ipPort);// make sure each key
+                        // is unique
+                        checkBoxPreference.setChecked(false);
 
-                targetCategory.addPreference(checkBoxPreference);
+                        targetCategory.addPreference(checkBoxPreference);
+                    }
+                }
+
             }
 
             ArrayList<CheckBoxPreference> list = getPreferenceList(targetCategory,
@@ -370,8 +378,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         if (ArtnetPreferenceFragment.class.getName().equals(fragmentName))
             return true;
-        if (SacnUnicastPreferenceFragment.class.getName().equals(fragmentName))
-            return true;
-        return false;
+        return SacnUnicastPreferenceFragment.class.getName().equals(fragmentName);
     }
 }

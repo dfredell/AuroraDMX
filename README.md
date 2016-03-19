@@ -8,14 +8,10 @@
 
 # Bugs #
 
-* Can't find ArtNet
-* -Black options on some devices-
-* -Cue fade at 0-
 
 # Features #
 
 * Google analytics 
-* Artnet Universe
 * Master Slider
 * Tablet view
 * Chase
@@ -24,3 +20,9 @@
 * Moving head
 * Unit tests
 * Multi user
+
+# Done #
+* Artnet Universe
+* -Black options on some devices-
+* -Can't find ArtNet-
+* -Cue fade at 0-

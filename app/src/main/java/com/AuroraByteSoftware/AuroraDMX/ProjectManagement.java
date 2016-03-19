@@ -211,7 +211,7 @@ public class ProjectManagement extends MainActivity {
         for (int i = 0; i < alColumns.size() && chLvls.size() > chIndex; i++) {
             Fixture fixture = alColumns.get(i);
             int fixtureUses = fixture.getChLevels().size();
-            if (chIndex + fixtureUses >= chLvls.size()) {
+            if (chIndex + fixtureUses > chLvls.size()) {
                 Log.e(TAG, "Channel levels are out of sync with fixtures");
                 break;
             }

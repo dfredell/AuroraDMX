@@ -197,7 +197,12 @@ public class SettingsActivity extends PreferenceActivity {
             setHasOptionsMenu(true);
 
             checkboxPrefManual = (CheckBoxPreference) findPreference("checkboxPrefManual");
-            checkboxPrefManual.setSummary(MainActivity.getSharedPref().getString(SettingsActivity.manualserver, "192.168.0.0"));
+            Context context = getActivity();
+            if(context==null){
+                return;
+            }
+            final String server = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsActivity.manualserver, "192.168.0.0");
+            checkboxPrefManual.setSummary(server);
             // Set listener
             checkboxPrefManual.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override
@@ -278,7 +283,11 @@ public class SettingsActivity extends PreferenceActivity {
                     if (artPollReply.getOutputStatus()[i].dataTransmitted) {
                         // create one check box for each setting you need
                         String ipPort = artPollReply.getIp() + ":" + artPollReply.getOutputSubswitch()[i];
-                        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(getActivity());
+                        Context context = getActivity();
+                        if(context==null){
+                            return;
+                        }
+                        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(context);
                         checkBoxPreference.setTitle(ipPort);
                         checkBoxPreference.setSummary(artPollReply.getShortName());
                         checkBoxPreference.setKey("keyName" + ipPort);// make sure each key

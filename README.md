@@ -20,6 +20,8 @@
 * Moving head
 * Unit tests
 * Multi user
+* Keystroke next cue
+* Large next cue button
 
 # Done #
 * Artnet Universe

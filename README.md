@@ -22,6 +22,7 @@
 * Multi user
 * Keystroke next cue
 * Large next cue button
+* Sub-masters
 
 # Done #
 * Artnet Universe

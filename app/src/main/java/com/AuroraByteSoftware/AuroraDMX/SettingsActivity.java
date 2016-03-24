@@ -201,7 +201,7 @@ public class SettingsActivity extends PreferenceActivity {
             if(context==null){
                 return;
             }
-            final String server = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsActivity.manualserver, "192.168.0.0");
+            final String server = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsActivity.manualserver, "192.168.0.0:0");
             checkboxPrefManual.setSummary(server);
             // Set listener
             checkboxPrefManual.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {

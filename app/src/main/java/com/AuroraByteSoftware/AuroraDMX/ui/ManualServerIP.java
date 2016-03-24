@@ -39,7 +39,7 @@ public class ManualServerIP {
         LayoutInflater li = LayoutInflater.from(activity);
         View promptsView = li.inflate(R.layout.dialog_server, null);
         EditText editTextServerIP = (EditText) promptsView.findViewById(R.id.editTextServerIP);
-        String addr = MainActivity.getSharedPref().getString(SettingsActivity.manualserver, "192.168.0.0");
+        String addr = MainActivity.getSharedPref().getString(SettingsActivity.manualserver, "192.168.0.0:0");
         editTextServerIP.setText(addr);
         editTextServerIP.setSelection(addr.length());
         builder.setView(promptsView);

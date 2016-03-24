@@ -4,7 +4,7 @@
     <CheckBoxPreference
           android:title="@string/serverName"
           android:defaultValue="true"
-          android:summary="192.168.0.0"
+          android:summary="192.168.0.0:0"
           android:key="checkboxPrefManual" />
 
     

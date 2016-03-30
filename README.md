@@ -14,6 +14,7 @@
 * Google analytics 
 * Master Slider
 * Tablet view
+* Update cue with new fixture levels
 * Chase
 * Remote chase
 * Continue DMX when device is locked
@@ -23,10 +24,10 @@
 * Keystroke next cue
 * Large next cue button
 * Sub-masters
-* Edit cue
+* Export/share show
 
 # Done #
 * Artnet Universe
-* -Black options on some devices-
-* -Can't find ArtNet-
-* -Cue fade at 0-
+* Black options on some devices
+* Can't find ArtNet
+* Cue fade at 0

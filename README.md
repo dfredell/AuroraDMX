@@ -25,6 +25,7 @@
 * Large next cue button
 * Sub-masters
 * Export/share show
+* X/Y touch pad 8 & 16 bit
 
 # Done #
 * Artnet Universe

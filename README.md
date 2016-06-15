@@ -32,3 +32,11 @@
 * Black options on some devices
 * Can't find ArtNet
 * Cue fade at 0
+
+# Development Setup #
+
+* Download Android Studio and v23 SDKS
+* Open the AuroraDMX project
+* `git clone https://github.com/Furtchet/ArtNetStack` into a second directory
+* Use File -> New -> Import Module to import the ArtNetStack module
+* Then the project should build

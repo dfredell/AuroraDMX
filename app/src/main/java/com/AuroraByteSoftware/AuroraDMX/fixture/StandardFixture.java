@@ -44,6 +44,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private double stepIteram = 0;
     private final MainActivity context;
     private String chText = "";
+    private String chValuePresets = "";
     private TextView tvChNum;
     private static final String TAG = "AuroraDMX";
 
@@ -214,7 +215,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
      */
     @Override
     public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel);
+        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel, chValuePresets);
     }
 
 
@@ -280,6 +281,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
 
+    }
+
+    public void setValuePresets(String text) {
+        this.chValuePresets = text;
     }
 
     @Override

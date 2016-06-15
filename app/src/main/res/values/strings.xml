@@ -72,8 +72,11 @@
     <string name="edit_rgb_blue">Blue</string>
     <string name="edit_fixture_rgb">RGB Fixture</string>
     <string name="editName">Name</string>
+    <string name="textValuePresets">(ex: Auto Program 1=10;Auto Program 2=20)</string>
 
     <!-- dialog_cue -->
     <string name="FadeUp">Fade Up </string>
     <string name="FadeDown">Fade Down </string>
+
+    <string name="editValuePresets">Preset Values</string>
 </resources>

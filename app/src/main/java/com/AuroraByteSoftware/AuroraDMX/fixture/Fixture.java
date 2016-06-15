@@ -29,6 +29,8 @@ public abstract class Fixture {
 
     public abstract void setColumnText(String text);
 
+    public abstract void setValuePresets(String text);
+
     public abstract String getChText();
 
     public abstract boolean isRGB();

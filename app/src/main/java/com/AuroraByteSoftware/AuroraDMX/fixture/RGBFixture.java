@@ -31,6 +31,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
     private double stepIteram[] = new double[3];
     private final MainActivity context;
     private String chText = "";
+    private String chValuePresets = "";
     private TextView tvChNum;
     private List<Integer> rgbLevel = new ArrayList<>(Collections.nCopies(3, 0));
     private AmbilWarnaDialog ambilWarnaDialog = null;
@@ -129,7 +130,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, 0);
+        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, 0, chValuePresets);
     }
 
 
@@ -196,6 +197,10 @@ public class RGBFixture extends Fixture implements OnClickListener {
     public void setColumnText(String text) {
         this.chText = text;
         ambilWarnaDialog.setChannelName(text);
+    }
+
+    public void setValuePresets(String text) {
+        this.chValuePresets = text;
     }
 
     @Override

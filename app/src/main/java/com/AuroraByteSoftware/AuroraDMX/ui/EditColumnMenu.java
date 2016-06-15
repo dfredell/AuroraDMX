@@ -23,7 +23,8 @@ public class EditColumnMenu extends MainActivity {
 
     private static final String TAG = "AuroraDMX";
 
-    public static void createEditColumnMenu(View v, final MainActivity context, final Fixture fixture, String chText, int chLevel) {
+    public static void createEditColumnMenu(View v, final MainActivity context, final Fixture fixture,
+                                            String chText, int chLevel, String chValuePresets) {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -37,11 +38,16 @@ public class EditColumnMenu extends MainActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 EditText editColumnName = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnName);
+                EditText editValuePresets = (EditText) ((AlertDialog) dialog).findViewById(R.id.editValuePresets);
 
                 try {
                     String columnName = editColumnName.getText().toString();
                     Log.d(TAG, "Col name: " + columnName);
                     fixture.setColumnText(columnName);
+
+                    String valuePresets = editValuePresets.getText().toString();
+                    Log.d(TAG, "Value presets: " + valuePresets);
+                    fixture.setValuePresets(valuePresets);
 
                     List<Integer> specifiedLevel = new ArrayList<>();
                     if (fixture.isRGB()) {
@@ -98,6 +104,7 @@ public class EditColumnMenu extends MainActivity {
         }
         ((Switch) promptsView.findViewById(R.id.chanel_rgb)).setChecked(fixture.isRGB());
         ((EditText) promptsView.findViewById(R.id.editColumnName)).setText(chText);
+        ((EditText) promptsView.findViewById(R.id.editValuePresets)).setText(chValuePresets);
 
         builder.setView(promptsView);
         AlertDialog alert = builder.create();

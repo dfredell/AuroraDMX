@@ -140,6 +140,10 @@ public class DummyFixture extends Fixture {
         this.chValuePresets = text;
     }
 
+    public String getValuePresets() {
+        return chValuePresets;
+    }
+
     @Override
     public String getChText() {
         return chText;

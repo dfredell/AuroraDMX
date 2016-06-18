@@ -212,6 +212,10 @@ public class RGBFixture extends Fixture implements OnClickListener {
         tvVal.setText(chText);
     }
 
+    public String getValuePresets() {
+        return chValuePresets;
+    }
+
     @Override
     public boolean isRGB() {
         return true;

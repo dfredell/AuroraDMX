@@ -48,9 +48,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private TextView tvChNum;
     private static final String TAG = "AuroraDMX";
 
-    public StandardFixture(final MainActivity context, String channelName) {
+    public StandardFixture(final MainActivity context, String channelName, String valuePresets) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
+        this.chValuePresets = valuePresets;
         init();
     }
 
@@ -281,6 +282,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
 
+    }
+
+    public String getValuePresets() {
+        return chValuePresets;
     }
 
     public void setValuePresets(String text) {

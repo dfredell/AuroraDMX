@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         alCues = new ArrayList<>();
         alColumns = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
-        setNumberOfFixtures(number_channels, null, null);
+        setNumberOfFixtures(number_channels, null, null, null);
     }
 
     public static SharedPreferences getSharedPref() {
@@ -169,7 +169,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             clientSocket.close();
     }
 
-    void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB) {
+    void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB,
+                             String[] valuePresets) {
         // check for app purchace
         boolean paid = true;
         try {
@@ -208,7 +209,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                 if (isRGB != null && isRGB[x])
                     alColumns.add(new RGBFixture(this, channelNames == null ? null : channelNames[x]));
                 else
-                    alColumns.add(new StandardFixture(this, channelNames == null ? null : channelNames[x]));
+                    alColumns.add(new StandardFixture(
+                            this,
+                            channelNames == null ? null : channelNames[x],
+                            valuePresets == null ? null : valuePresets[x]
+                    ));
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
             for (Fixture fixture : alColumns) {
@@ -337,7 +342,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(TAG, "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
-            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null);
+            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null, null);
         }
     }
 
@@ -364,7 +369,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         } catch (Throwable t) {
             Log.w("ExternalStorage", "Error reading channel number", t);
         }
-        setNumberOfFixtures(number_channels, null, null);
+        setNumberOfFixtures(number_channels, null, null, null);
         setUpNetwork();
     }
 

@@ -76,6 +76,12 @@ public class ProjectManagement extends MainActivity {
             isRGB[i] = alColumns.get(i).isRGB();
         }
 
+        //Get the channel names as an array
+        String valuePresets[] = new String[alColumns.size()];
+        for (int i = 0; i < alColumns.size(); i++) {
+            valuePresets[i] = alColumns.get(i).getValuePresets();
+        }
+
         ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
         try {
             ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
@@ -87,6 +93,7 @@ public class ProjectManagement extends MainActivity {
             objectOutput.writeObject(currentChannelLevels);
             objectOutput.writeObject(channelNames);
             objectOutput.writeObject(isRGB);
+            objectOutput.writeObject(valuePresets);
             byte[] data = arrayOutputStream.toByteArray();
 
             objectOutput.close();
@@ -125,6 +132,7 @@ public class ProjectManagement extends MainActivity {
         List<Integer> chLvls = new ArrayList<>();
         String[] fixtureNames = null;
         boolean[] isRGB = null;
+        String[] valuePresets = null;
         int[][] patch = new int[0][0];
 
         try {
@@ -150,10 +158,13 @@ public class ProjectManagement extends MainActivity {
             Object readObject6ChAry = null;
             Object readObject7FixtureNames = null;
             Object readObject8isRGB = null;
+            Object readObject9valuePresets = null;
+
             try {
                 readObject6ChAry = in.readObject();
                 readObject7FixtureNames = in.readObject();
                 readObject8isRGB = in.readObject();
+                readObject9valuePresets = in.readObject();
             } catch (EOFException e) {
                 // Do nothing we hit the end of the stored data
             }
@@ -163,8 +174,10 @@ public class ProjectManagement extends MainActivity {
                     fixtureNames = (String[]) readObject7FixtureNames;
                 if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
                     isRGB = (boolean[]) readObject8isRGB;
+                if (readObject9valuePresets != null && readObject9valuePresets.getClass().equals(String[].class))
+                    valuePresets = (String[]) readObject9valuePresets;
 
-                mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB);
+                mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB, valuePresets);
                 getSharedPref().edit().putString(SettingsActivity.channels, readObject1FixtureCount + "").apply();
             }
             if (readObject2Cues.getClass().equals(alCues.getClass()))

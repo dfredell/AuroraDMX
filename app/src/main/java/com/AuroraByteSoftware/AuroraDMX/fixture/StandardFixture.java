@@ -1,7 +1,9 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
@@ -56,7 +58,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     public StandardFixture(final MainActivity context, String channelName, String valuePresets) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
-        this.chValuePresets = valuePresets;
+        this.setValuePresets(valuePresets);
         init();
     }
 
@@ -99,7 +101,26 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         Button editButton = new Button(context);
         editButton.setOnClickListener(this);
         editButton.setText(R.string.edit);
+
+        refreshValuePresetsHook();
         viewGroup.addView(editButton);
+    }
+
+    /**
+     * Set color to indicate that there are presets and bind listener
+     */
+    public void refreshValuePresetsHook()
+    {
+        if (tvVal == null) {
+            return;
+        }
+        if (getParsedValuePresets() != null) {
+            tvVal.setTextColor(Color.parseColor(MainActivity.getSharedPref().getString("has_presets_color", "#99ccff")));
+            tvVal.setOnClickListener(this);
+        } else {
+            tvVal.setTextColor(tvVal.getTextColors().getDefaultColor());
+            tvVal.setOnClickListener(null);
+        }
     }
 
     private VerticalSeekBar createSeekBar() {
@@ -216,12 +237,47 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         return Collections.singletonList((int) chLevel);
     }
 
+
+    public void openSelectPresetDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+// Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        final List<Pair<String, Integer>> presets = getParsedValuePresets();
+        String[] presetArray = new String[presets.size()];
+        int i = 0;
+        for(Pair<String, Integer> v: presets)
+        {
+            presetArray[i] = v.getLeft();
+            i++;
+        }
+
+        builder.setTitle(R.string.pick_preset)
+                .setItems(presetArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        setChLevel(presets.get(which).getRight());
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     /**
      * Toggle button
      */
     @Override
     public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel, chValuePresets);
+        if (v == tvVal) {
+            openSelectPresetDialog();
+        } else {
+            EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel, chValuePresets);
+        }
     }
 
 
@@ -347,6 +403,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     public void setValuePresets(String text) {
         this.chValuePresets = text;
+        refreshValuePresetsHook();
     }
 
     @Override

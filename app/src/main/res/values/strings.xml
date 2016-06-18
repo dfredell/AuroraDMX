@@ -79,4 +79,5 @@
     <string name="FadeDown">Fade Down </string>
 
     <string name="editValuePresets">Preset Values</string>
+    <string name="pick_preset">Pick preset value</string>
 </resources>

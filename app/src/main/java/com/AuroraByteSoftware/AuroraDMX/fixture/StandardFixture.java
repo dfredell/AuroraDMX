@@ -253,7 +253,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         int i = 0;
         for(Pair<String, Integer> v: presets)
         {
-            presetArray[i] = v.getLeft();
+            presetArray[i] = v.getLeft() + " (" + v.getRight() + ")";
             i++;
         }
 

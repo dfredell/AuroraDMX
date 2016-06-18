@@ -28,7 +28,12 @@ import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class StandardFixture extends Fixture implements OnSeekBarChangeListener, OnClickListener {
@@ -281,11 +286,63 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         seekBar.setProgress((int) chLevel);
 
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
-
     }
 
     public String getValuePresets() {
         return chValuePresets;
+    }
+
+    /**
+     * Get parsed list of preset values
+     *
+     * Input String format:
+     *
+     * Name1=10;Name2=20;Name3=200
+     *
+     * Returns null if there are no (valid) presets
+     * @return null|List
+     */
+    public List<Pair<String, Integer>> getParsedValuePresets() {
+        if (getValuePresets() == null || getValuePresets() == "") {
+            return null;
+        }
+        ArrayList<Pair<String, Integer>> presets = new ArrayList<Pair<String, Integer>>();
+        String[] split = getValuePresets().split(";");
+        for (int i = 0; i < split.length; i++) {
+            String[] row = split[i].split("=");
+            if (row.length == 0) {
+                continue; // error: entry does not contain anything
+            }
+            String name;
+            Integer value;
+            if (row.length == 1) {
+                name = row[0];
+                try {
+                    value = Integer.parseInt(row[0]);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+            } else {
+                name = row[0];
+                try {
+                    value = Integer.parseInt(row[1]);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+            }
+
+            if (value < 0 || value > 255) {
+                continue; // error: invalid value
+            }
+
+            presets.add(new ImmutablePair<String, Integer>(name, value));
+        }
+
+        if (presets.size() == 0) {
+            return null;
+        }
+
+        return presets;
     }
 
     public void setValuePresets(String text) {

@@ -2,54 +2,106 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.AuroraByteSoftware.AuroraDMX">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- for exporting -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- for exporting -->
+
 
     <!-- VERY IMPORTANT! Don't forget this permission, or in-app billing won't work. -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <provider
+        android:name=".ContentProvider"
+        android:authorities="com.AuroraByteSoftware.AuroraDMX" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name">
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.MainActivity"
-            android:label="@string/app_name" 
-            android:configChanges="orientation|keyboardHidden|screenSize" 
-            >
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name">
 
             <!-- android:screenOrientation="sensorLandscape" -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter
+                android:icon="@drawable/ic_launcher"
+                android:label="@string/app_name"
+                android:priority="50" >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter
+                android:icon="@drawable/ic_launcher"
+                android:label="@string/app_name"
+                android:priority="50" >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <intent-filter
+                android:icon="@drawable/ic_launcher"
+                android:label="@string/app_name"
+                android:priority="50" >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.AuroraDMX" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
         </activity>
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.ui.EditCueMenu"
-            android:label="@string/title_activity_EditCueMenu" >
-        </activity>
+            android:name=".ui.EditCueMenu"
+            android:label="@string/title_activity_EditCueMenu"></activity>
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity"
-            android:label="@string/title_activity_patch" >
-        </activity>
+            android:name=".ui.PatchActivity"
+            android:label="@string/title_activity_patch"></activity>
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu"
-            android:label="@string/title_activity_EditChannelMenu" >
-        </activity>
+            android:name=".ui.EditColumnMenu"
+            android:label="@string/title_activity_EditChannelMenu"></activity>
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.CueObj"
-            android:label="Cue" >
-        </activity>
+            android:name=".CueObj"
+            android:label="Cue"></activity>
         <activity
-            android:name="com.AuroraByteSoftware.AuroraDMX.ProjectManagement"
-            android:label="ProjectManagement" >
-        </activity>
+            android:name=".ProjectManagement"
+            android:label="ProjectManagement"></activity>
+
+        <provider
+            android:name=".DMXContentProvider"
+            android:authorities="com.AuroraByteSoftware.AuroraDMX"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
 
 </manifest>

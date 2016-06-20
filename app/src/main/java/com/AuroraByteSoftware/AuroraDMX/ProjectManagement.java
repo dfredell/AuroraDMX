@@ -1,10 +1,17 @@
 package com.AuroraByteSoftware.AuroraDMX;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
@@ -18,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
@@ -26,6 +34,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -54,8 +64,10 @@ public class ProjectManagement extends MainActivity {
     }
 
     void save(String key) {
+        Boolean share = true;
         if (key == null) {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
+            share = false;
         }
         HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
         listOfProjects.add(key);
@@ -103,6 +115,22 @@ public class ProjectManagement extends MainActivity {
             ed.putStringSet(PREF_SAVES, listOfProjects);
             ed.apply();
 
+            if (share) {
+                File dir = mainActivity.getCacheDir();//#
+                dir.mkdirs();
+                File file = new File(dir, key + ".AuroraDMX");
+                FileOutputStream fileStream = new FileOutputStream(file);
+                out.writeTo(fileStream);
+                fileStream.flush();
+                fileStream.close();
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "AuroraDMX Project");
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.AuroraByteSoftware.AuroraDMX/" + key + ".AuroraDMX"));
+                mainActivity.startActivity(Intent.createChooser(sendIntent, "Choose"));
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -365,5 +393,53 @@ public class ProjectManagement extends MainActivity {
 
         dialog.show();
 
+    }
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "granted", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    // Permission Denied
+                    Toast.makeText(this, "not granted", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }

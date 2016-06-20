@@ -146,7 +146,7 @@ public class ProjectManagement extends MainActivity {
         InputStream stream = mainActivity.getContentResolver().openInputStream(Uri.parse(uri));
         byte[] data = readBytes(stream);
         loadData(data);
-        mainActivity.setTitle(getString(R.string.openedFile));
+        mainActivity.setTitle(mainActivity.getString(R.string.openedFile));
     }
 
     /**

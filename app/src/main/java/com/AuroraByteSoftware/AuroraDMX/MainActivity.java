@@ -28,6 +28,7 @@ import com.AuroraByteSoftware.Billing.util.IabHelper;
 import com.AuroraByteSoftware.Billing.util.IabResult;
 import com.AuroraByteSoftware.Billing.util.Inventory;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,19 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         Log.v(TAG, "onCreate");
         startupIAB();
         startup();
-        pm.open(null);
+        Intent intent = getIntent();
+        if (intent.getAction() == "android.intent.action.VIEW") {
+            try {
+                pm.openFile(intent.getDataString());
+            } catch (IOException e)
+            {
+                Toast.makeText(MainActivity.this, R.string.cannotOpen, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        } else {
+            pm.open(null);
+        }
+
         setUpNetwork();
     }
 

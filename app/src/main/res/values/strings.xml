@@ -76,4 +76,6 @@
     <!-- dialog_cue -->
     <string name="FadeUp">Fade Up </string>
     <string name="FadeDown">Fade Down </string>
+    <string name="cannotOpen">Can not open data</string>
+    <string name="openedFile">Opened file (unsaved)</string>
 </resources>

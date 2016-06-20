@@ -35,8 +35,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -138,6 +140,39 @@ public class ProjectManagement extends MainActivity {
         Log.d(TAG, "save complete");
     }
 
+    void openFile(String uri) throws IOException {
+        Log.d(TAG, "open URI " + uri);
+
+        InputStream stream = mainActivity.getContentResolver().openInputStream(Uri.parse(uri));
+        byte[] data = readBytes(stream);
+        loadData(data);
+        mainActivity.setTitle(getString(R.string.openedFile));
+    }
+
+    /**
+     * @source http://stackoverflow.com/a/2436413/288568
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public byte[] readBytes(InputStream inputStream) throws IOException {
+        // this dynamically extends to take the bytes you read
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+
+        // this is storage overwritten on each iteration with bytes
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        // we need to know how may bytes were read to write them to the byteBuffer
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+
+        // and then we can return your byte array.
+        return byteBuffer.toByteArray();
+    }
+
     @SuppressWarnings("unchecked")
     void open(String key) {
         Log.d(TAG, "open " + key);
@@ -147,6 +182,22 @@ public class ProjectManagement extends MainActivity {
         // Read data back
         byte[] bytes = getSharedPref().getString(key, "{}").getBytes();
 
+        loadData(bytes);
+
+        // Save a new default
+        SharedPreferences.Editor ed = getSharedPref().edit();
+        ed.putString(PREF_DEF, key);
+        ed.apply();
+
+        // Set the title to the project
+        if (PREF_OLD_POINTER.equals(key))
+            key = PREF_OLD_POINTER_HUMAN;
+        mainActivity.setTitle(key);
+
+        mainActivity.setUpNetwork();
+    }
+
+    private void loadData(byte[] bytes) {
         ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
         Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
         ObjectInputStream in;
@@ -251,18 +302,6 @@ public class ProjectManagement extends MainActivity {
         for (int i = 0; fixtureNames != null && i < fixtureNames.length && i < alColumns.size(); i++) {
             alColumns.get(i).setColumnText(fixtureNames[i]);
         }
-
-        // Save a new default
-        SharedPreferences.Editor ed = getSharedPref().edit();
-        ed.putString(PREF_DEF, key);
-        ed.apply();
-
-        // Set the title to the project
-        if (PREF_OLD_POINTER.equals(key))
-            key = PREF_OLD_POINTER_HUMAN;
-        mainActivity.setTitle(key);
-
-        mainActivity.setUpNetwork();
     }
 
     /**

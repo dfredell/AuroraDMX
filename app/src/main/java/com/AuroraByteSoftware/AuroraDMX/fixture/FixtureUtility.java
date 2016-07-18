@@ -1,6 +1,7 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.ChPatch;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
@@ -23,6 +24,16 @@ public class FixtureUtility {
     public static void switchToRGB(Fixture fixture, MainActivity context) {
         List<Fixture> alColumns = MainActivity.getAlColumns();
         int indexOf = alColumns.indexOf(fixture);
+
+        //Make sure we aren't putting channels past 512
+        int currentDimCount = 0;
+        for (ChPatch patch : MainActivity.patchList) {
+            currentDimCount += patch.getDimmers().size();
+        }
+        if(currentDimCount>MainActivity.MAX_DIMMERS){
+            Toast.makeText(context, "Can not exceed 512 channels", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         MainActivity.setUpdatingFixtures(true);
 

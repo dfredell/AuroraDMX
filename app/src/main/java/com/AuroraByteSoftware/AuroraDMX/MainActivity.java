@@ -175,9 +175,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         try {
             if (null != mHelper) {
                 Inventory inv = mHelper.queryInventory(false, listOfSkus);
-//                paid = inv.hasPurchase(ITEM_SKU);
+                paid = inv.hasPurchase(ITEM_SKU);
             } else {
-//                paid = false;
+                paid = false;
             }
         } catch (IabException e) {
             e.printStackTrace();

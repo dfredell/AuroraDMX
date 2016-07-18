@@ -6,6 +6,8 @@
 
 2.2 ArtNet Port/Universe
 
+2.3 Raise max fixtures back to 512
+
 # Bugs #
 
 

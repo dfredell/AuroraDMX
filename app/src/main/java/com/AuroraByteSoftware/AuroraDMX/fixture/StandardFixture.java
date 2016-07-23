@@ -30,11 +30,8 @@ import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,6 +51,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private String chValuePresets = "";
     private TextView tvChNum;
     private static final String TAG = "AuroraDMX";
+    private int defaultLvlTextColor = 0;
+
+    private static final String PRESET_TEXT_COLOR = "#99ccff";
 
     public StandardFixture(final MainActivity context, String channelName, String valuePresets) {
         this.context = context;
@@ -90,9 +90,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         viewGroup.addView(tvChNum);
 
         tvVal = new TextView(context);
-        tvVal.setText(String.format(context.getString(R.string.ChPercent), 0));
+        tvVal.setText(String.format(context.getString(R.string.ChPercent), "0"));
         tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
+        defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
         viewGroup.addView(tvVal);
 
         seekBar = createSeekBar();
@@ -113,11 +114,13 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         if (tvVal == null) {
             return;
         }
-        if (getParsedValuePresets() != null) {
-            tvVal.setTextColor(Color.parseColor(MainActivity.getSharedPref().getString("has_presets_color", "#99ccff")));
+        final List<Pair<String, Integer>> presets = FixtureUtility.getParsedValuePresets(getValuePresets());
+        if (presets != null) {
+            tvVal.setTextColor(Color.parseColor(PRESET_TEXT_COLOR));
             tvVal.setOnClickListener(this);
         } else {
-            tvVal.setTextColor(tvVal.getTextColors().getDefaultColor());
+            tvVal.setTextColor(defaultLvlTextColor);
+            Log.d(TAG, "Default color " + tvVal.getTextColors().getDefaultColor());
             tvVal.setOnClickListener(null);
         }
     }
@@ -220,10 +223,12 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
             tvVal.setText(String.format("%1$s", (int) chLevel));
         } else {
-            if (chLevel >= MAX_LEVEL)
+            if (chLevel >= MAX_LEVEL) {
                 tvVal.setText(context.getString(R.string.ChFull));
-            else
-                tvVal.setText(String.format(context.getString(R.string.ChPercent), ((int) chLevel * 100 / MAX_LEVEL)));
+            } else {
+                final String percent = Integer.toString((int) chLevel * 100 / MAX_LEVEL);
+                tvVal.setText(String.format(context.getString(R.string.ChPercent), percent));
+            }
         }
     }
 
@@ -246,7 +251,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
             }
         });
 
-        final List<Pair<String, Integer>> presets = getParsedValuePresets();
+        final List<Pair<String, Integer>> presets = FixtureUtility.getParsedValuePresets(getValuePresets());
         String[] presetArray = new String[presets.size()];
         int i = 0;
         for (Pair<String, Integer> v : presets) {
@@ -344,60 +349,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     public String getValuePresets() {
         return chValuePresets;
-    }
-
-    /**
-     * Get parsed list of preset values
-     * <p>
-     * Input String format:
-     * <p>
-     * Name1=10;Name2=20;Name3=200
-     * <p>
-     * Returns null if there are no (valid) presets
-     *
-     * @return null|List
-     */
-    public List<Pair<String, Integer>> getParsedValuePresets() {
-        if (StringUtils.isEmpty(getValuePresets())) {
-            return null;
-        }
-        ArrayList<Pair<String, Integer>> presets = new ArrayList<Pair<String, Integer>>();
-        String[] split = getValuePresets().split(";");
-        for (int i = 0; i < split.length; i++) {
-            String[] row = split[i].split("=");
-            if (row.length == 0) {
-                continue; // error: entry does not contain anything
-            }
-            String name;
-            Integer value;
-            if (row.length == 1) {
-                name = row[0];
-                try {
-                    value = Integer.parseInt(row[0]);
-                } catch (NumberFormatException e) {
-                    continue;
-                }
-            } else {
-                name = row[0];
-                try {
-                    value = Integer.parseInt(row[1]);
-                } catch (NumberFormatException e) {
-                    continue;
-                }
-            }
-
-            if (value < 0 || value > 255) {
-                continue; // error: invalid value
-            }
-
-            presets.add(new ImmutablePair<String, Integer>(name, value));
-        }
-
-        if (presets.isEmpty()) {
-            return null;
-        }
-
-        return presets;
     }
 
     public void setValuePresets(String text) {

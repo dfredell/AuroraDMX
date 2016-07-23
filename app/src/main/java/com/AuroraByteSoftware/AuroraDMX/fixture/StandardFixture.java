@@ -30,12 +30,12 @@ import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class StandardFixture extends Fixture implements OnSeekBarChangeListener, OnClickListener {
@@ -109,8 +109,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     /**
      * Set color to indicate that there are presets and bind listener
      */
-    public void refreshValuePresetsHook()
-    {
+    public void refreshValuePresetsHook() {
         if (tvVal == null) {
             return;
         }
@@ -238,10 +237,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     }
 
 
-    public void openSelectPresetDialog()
-    {
+    public void openSelectPresetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-// Add the buttons
+        // Add the buttons
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
@@ -251,8 +249,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         final List<Pair<String, Integer>> presets = getParsedValuePresets();
         String[] presetArray = new String[presets.size()];
         int i = 0;
-        for(Pair<String, Integer> v: presets)
-        {
+        for (Pair<String, Integer> v : presets) {
             presetArray[i] = v.getLeft() + " (" + v.getRight() + ")";
             i++;
         }
@@ -288,8 +285,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     /**
      * Creates 255 steeps between current and endVal
+     *
      * @param endVal value when the fade is finished
-     * @param steps number of steps to take to get to the final falue
+     * @param steps  number of steps to take to get to the final falue
      */
     @Override
     public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
@@ -350,16 +348,17 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     /**
      * Get parsed list of preset values
-     *
+     * <p>
      * Input String format:
-     *
+     * <p>
      * Name1=10;Name2=20;Name3=200
-     *
+     * <p>
      * Returns null if there are no (valid) presets
+     *
      * @return null|List
      */
     public List<Pair<String, Integer>> getParsedValuePresets() {
-        if (getValuePresets() == null || getValuePresets() == "") {
+        if (StringUtils.isEmpty(getValuePresets())) {
             return null;
         }
         ArrayList<Pair<String, Integer>> presets = new ArrayList<Pair<String, Integer>>();
@@ -394,7 +393,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
             presets.add(new ImmutablePair<String, Integer>(name, value));
         }
 
-        if (presets.size() == 0) {
+        if (presets.isEmpty()) {
             return null;
         }
 

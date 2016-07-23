@@ -76,7 +76,7 @@ public class ProjectManagement extends MainActivity {
             isRGB[i] = alColumns.get(i).isRGB();
         }
 
-        //Get the channel names as an array
+        //Get the presets as an array
         String valuePresets[] = new String[alColumns.size()];
         for (int i = 0; i < alColumns.size(); i++) {
             valuePresets[i] = alColumns.get(i).getValuePresets();

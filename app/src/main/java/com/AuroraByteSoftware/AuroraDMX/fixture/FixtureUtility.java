@@ -106,37 +106,30 @@ public class FixtureUtility {
      *
      * @return null|List
      * @param presetValue string input to parse
+     * @param regex validation used for the value
      */
-    public static List<Pair<String, Integer>> getParsedValuePresets(String presetValue) {
+    static List<Pair<String, String>> getParsedValuePresets(String presetValue, String regex) {
         if (StringUtils.isEmpty(presetValue)) {
             return null;
         }
-        ArrayList<Pair<String, Integer>> presets = new ArrayList<>();
-        String[] split = presetValue.split(";");
-        for (int i = 0; i < split.length; i++) {
-            String[] row = split[i].split(":");
+        ArrayList<Pair<String, String>> presets = new ArrayList<>();
+        String[] pairsList = presetValue.split(";");
+        for (String aSplit : pairsList) {
+            String[] row = aSplit.split(":");
             if (row.length == 0) {
                 continue; // error: entry does not contain anything
             }
             String name;
-            Integer value;
+            String value;
             if (row.length == 1) {
-                name = row[0];
-                try {
-                    value = Integer.parseInt(row[0]);
-                } catch (NumberFormatException e) {
-                    continue;
-                }
+                name = row[0].trim();
+                value = row[0].trim();
             } else {
-                name = row[0];
-                try {
-                    value = Integer.parseInt(row[1]);
-                } catch (NumberFormatException e) {
-                    continue;
-                }
+                name = row[0].trim();
+                value = row[1].trim();
             }
 
-            if (value < 0 || value > 255) {
+            if (!value.matches(regex)) {
                 continue; // error: invalid value
             }
 

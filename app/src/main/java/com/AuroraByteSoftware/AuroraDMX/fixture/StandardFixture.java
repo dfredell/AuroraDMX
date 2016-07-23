@@ -50,10 +50,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private String chText = "";
     private String chValuePresets = "";
     private TextView tvChNum;
-    private static final String TAG = "AuroraDMX";
     private int defaultLvlTextColor = 0;
+    private final static String PRESET_VALUE_REGEX = "^" + REGEX_255 + "$";
 
-    private static final String PRESET_TEXT_COLOR = "#99ccff";
 
     public StandardFixture(final MainActivity context, String channelName, String valuePresets) {
         this.context = context;
@@ -62,7 +61,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         init();
     }
 
-    public StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
+    StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
         this.viewGroup = viewGroup;
@@ -110,11 +109,11 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     /**
      * Set color to indicate that there are presets and bind listener
      */
-    public void refreshValuePresetsHook() {
+    private void refreshValuePresetsHook() {
         if (tvVal == null) {
             return;
         }
-        final List<Pair<String, Integer>> presets = FixtureUtility.getParsedValuePresets(getValuePresets());
+        final List<Pair<String, String>> presets = FixtureUtility.getParsedValuePresets(getValuePresets(), PRESET_VALUE_REGEX);
         if (presets != null) {
             tvVal.setTextColor(Color.parseColor(PRESET_TEXT_COLOR));
             tvVal.setOnClickListener(this);
@@ -242,7 +241,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     }
 
 
-    public void openSelectPresetDialog() {
+    private void openSelectPresetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // Add the buttons
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -251,10 +250,12 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
             }
         });
 
-        final List<Pair<String, Integer>> presets = FixtureUtility.getParsedValuePresets(getValuePresets());
+        final List<Pair<String, String>> presets = FixtureUtility.getParsedValuePresets(getValuePresets(), PRESET_VALUE_REGEX);
+        if (presets == null)
+            return;
         String[] presetArray = new String[presets.size()];
         int i = 0;
-        for (Pair<String, Integer> v : presets) {
+        for (Pair<String, String> v : presets) {
             presetArray[i] = v.getLeft() + " (" + v.getRight() + ")";
             i++;
         }
@@ -262,7 +263,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         builder.setTitle(R.string.pick_preset)
                 .setItems(presetArray, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        setChLevel(presets.get(which).getRight());
+                        setChLevel(Integer.parseInt(presets.get(which).getRight()));
                     }
                 });
 

@@ -1,8 +1,9 @@
-package com.AuroraByteSoftware.AuroraDMX.test;
+package AuroraDMX;
 
 import com.AuroraByteSoftware.AuroraDMX.ChPatch;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
+import com.AuroraByteSoftware.AuroraDMX.test.DummyFixture;
 
 import junit.framework.TestCase;
 
@@ -14,11 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by furtchet on 12/6/15.
+ * Test methods on the MainActivity
+ * Created by Dan on 12/6/15.
  */
 public class MainActivityTest extends TestCase {
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     @Override
     public void setUp() throws Exception {

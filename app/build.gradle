@@ -4,7 +4,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 24
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15

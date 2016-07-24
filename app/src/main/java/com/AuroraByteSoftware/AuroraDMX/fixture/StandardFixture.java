@@ -122,6 +122,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
             Log.d(TAG, "Default color " + tvVal.getTextColors().getDefaultColor());
             tvVal.setOnClickListener(null);
         }
+        seekBar.setPresetTicks(presets);
     }
 
     private VerticalSeekBar createSeekBar() {

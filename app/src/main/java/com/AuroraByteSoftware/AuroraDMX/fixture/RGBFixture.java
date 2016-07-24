@@ -68,6 +68,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
         tvChNum = ((TextView) viewGroup.getChildAt(0));
         tvVal = ((TextView) viewGroup.getChildAt(1));
         tvVal.setText("R:0 G:0 B:0");
+        defaultLvlTextColor = new TextView(context).getTextColors().getDefaultColor();
+
+        refreshValuePresetsHook();
     }
 
     @Override

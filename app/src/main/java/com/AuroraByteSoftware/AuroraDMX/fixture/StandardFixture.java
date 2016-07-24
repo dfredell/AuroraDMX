@@ -73,7 +73,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
         tvChNum = ((TextView) viewGroup.getChildAt(0));
         tvVal = ((TextView) viewGroup.getChildAt(1));
+        defaultLvlTextColor = new TextView(context).getTextColors().getDefaultColor();
+
         setChLevel(0);
+        refreshValuePresetsHook();
     }
 
     @Override
@@ -119,7 +122,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
             tvVal.setOnClickListener(this);
         } else {
             tvVal.setTextColor(defaultLvlTextColor);
-            Log.d(TAG, "Default color " + tvVal.getTextColors().getDefaultColor());
             tvVal.setOnClickListener(null);
         }
         seekBar.setPresetTicks(presets);

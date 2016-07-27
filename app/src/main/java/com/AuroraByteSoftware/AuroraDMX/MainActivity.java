@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     //Static Variables
     public static final int ALLOWED_PATCHED_DIMMERS = 50;
     public static final int MAX_DIMMERS = 512;
-    public static final int MAX_CHANNEL = 200;
+    public static final int MAX_CHANNEL = 512;
     private final static String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj9upoasavmU51/j6g7vWchEf/g2SGuntcXPlzVu8vp3avDGMQp8E20iI+IO5vqB4wVKf9QRiAv0DFLw+XAGCpx7t6GDt4Sd/qMOkj49Eas1R1Uvghp4yy9Cc/8pL7QOvSW99pq9Pg2iqqbPXlAlLmByQy2p9qhDhl788dMZsUd2VxL5NHY2zQl7a1emWH/MUpvVHNSJkTSdQrLJ4cruTvEDldtD0jSNadK1NSruwa/BH6ieLVswek1cyE7hm0Od5pWw0XCpkR6L7ZkEkeTovSihA3h+rSy6kxZCqrDzMR++EOCxwS/kB3Ly6M5E6EwjZVbK18UQM8/Ecr7/buYxalQIDAQAB";
     public static final String ITEM_SKU = "unlock_channels";
     private static final String TAG = "AuroraDMX";
@@ -193,7 +193,6 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                 paid = false;
             }
         } catch (IabException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IllegalStateException | NullPointerException e) {
             // Do nothing we must not be connected yet
@@ -234,7 +233,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                 patchList.add(new ChPatch(i));
             }
         } else if (change < 0) {// Removing channels
-            for (int x = (numberFixtures - change); x > numberFixtures && x < 512; x--) {
+            for (int x = (numberFixtures - change); x > numberFixtures && x <= 512; x--) {
                 mainLayout.removeView(alColumns.get(x - 1).getViewGroup());
                 alColumns.remove(x - 1);
             }

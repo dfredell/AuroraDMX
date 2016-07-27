@@ -72,10 +72,13 @@
     <string name="edit_rgb_blue">Blue</string>
     <string name="edit_fixture_rgb">RGB Fixture</string>
     <string name="editName">Name</string>
+    <string name="textValuePresets">(Preset 1:10;Preset 2:20;30;40)</string>
+    <string name="textRgbValuePresets">(Preset 1:10,300,355;Preset 2:ff0034)</string>
 
     <!-- dialog_cue -->
     <string name="FadeUp">Fade Up </string>
     <string name="FadeDown">Fade Down </string>
+
     <string name="cannotOpen">Can not open data</string>
     <string name="openedFile">Opened file (unsaved)</string>
 </resources>

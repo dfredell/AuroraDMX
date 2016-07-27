@@ -7,6 +7,11 @@ import com.AuroraByteSoftware.AuroraDMX.ChPatch;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,4 +93,54 @@ public class FixtureUtility {
 
         MainActivity.setUpdatingFixtures(false);
     }
+
+
+    /**
+     * Get parsed list of preset values
+     * <p>
+     * Input String format:
+     * <p>
+     * Name 1:10;Name 2:20;200
+     * <p>
+     * Returns null if there are no (valid) presets
+     *
+     * @return null|List
+     * @param presetValue string input to parse
+     * @param regex validation used for the value
+     */
+    static List<Pair<String, String>> getParsedValuePresets(String presetValue, String regex) {
+        if (StringUtils.isEmpty(presetValue)) {
+            return null;
+        }
+        ArrayList<Pair<String, String>> presets = new ArrayList<>();
+        String[] pairsList = presetValue.split(";");
+        for (String aSplit : pairsList) {
+            String[] row = aSplit.split(":");
+            if (row.length == 0) {
+                continue; // error: entry does not contain anything
+            }
+            String name;
+            String value;
+            if (row.length == 1) {
+                name = row[0].trim();
+                value = row[0].trim();
+            } else {
+                name = row[0].trim();
+                value = row[1].trim();
+            }
+
+            if (!value.matches(regex)) {
+                continue; // error: invalid value
+            }
+
+            presets.add(new ImmutablePair<>(name, value));
+        }
+
+        if (presets.isEmpty()) {
+            return null;
+        }
+
+        return presets;
+    }
+
 }

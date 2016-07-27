@@ -48,11 +48,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public static ProgressDialog progressDialog = null;
 
     //Static Variables
-    public static final int ALLOWED_PATCHED_DIMMERS = 50;
+    static final int ALLOWED_PATCHED_DIMMERS = 50;
     public static final int MAX_DIMMERS = 512;
-    public static final int MAX_CHANNEL = 512;
+    private static final int MAX_CHANNEL = 512;
     private final static String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj9upoasavmU51/j6g7vWchEf/g2SGuntcXPlzVu8vp3avDGMQp8E20iI+IO5vqB4wVKf9QRiAv0DFLw+XAGCpx7t6GDt4Sd/qMOkj49Eas1R1Uvghp4yy9Cc/8pL7QOvSW99pq9Pg2iqqbPXlAlLmByQy2p9qhDhl788dMZsUd2VxL5NHY2zQl7a1emWH/MUpvVHNSJkTSdQrLJ4cruTvEDldtD0jSNadK1NSruwa/BH6ieLVswek1cyE7hm0Od5pWw0XCpkR6L7ZkEkeTovSihA3h+rSy6kxZCqrDzMR++EOCxwS/kB3Ly6M5E6EwjZVbK18UQM8/Ecr7/buYxalQIDAQAB";
-    public static final String ITEM_SKU = "unlock_channels";
+    static final String ITEM_SKU = "unlock_channels";
     private static final String TAG = "AuroraDMX";
 
     /**
@@ -139,7 +139,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         alCues = new ArrayList<>();
         alColumns = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
-        setNumberOfFixtures(number_channels, null, null);
+        setNumberOfFixtures(number_channels, null, null, null);
     }
 
     public static SharedPreferences getSharedPref() {
@@ -165,7 +165,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     }
 
-    public void stopNetwork() {
+    private void stopNetwork() {
         if (ArtNet != null) {
             ArtNet.cancel();
             ArtNet.purge();
@@ -182,7 +182,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             clientSocket.close();
     }
 
-    void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB) {
+    void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB,
+                             String[] valuePresets) {
         // check for app purchace
         boolean paid = true;
         try {
@@ -218,9 +219,16 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         if (change > 0) {// Adding channels
             for (int x = (numberFixtures - change); x < numberFixtures && x < 512; x++) {
                 if (isRGB != null && isRGB[x])
-                    alColumns.add(new RGBFixture(this, channelNames == null ? null : channelNames[x]));
+                    alColumns.add(new RGBFixture(
+                            this,
+                            channelNames == null ? null : channelNames[x],
+                            valuePresets == null ? null : valuePresets[x]));
                 else
-                    alColumns.add(new StandardFixture(this, channelNames == null ? null : channelNames[x]));
+                    alColumns.add(new StandardFixture(
+                            this,
+                            channelNames == null ? null : channelNames[x],
+                            valuePresets == null ? null : valuePresets[x]
+                    ));
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
             for (Fixture fixture : alColumns) {
@@ -349,7 +357,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(TAG, "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
-            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null);
+            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null, null);
         }
     }
 
@@ -376,7 +384,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         } catch (Throwable t) {
             Log.w("ExternalStorage", "Error reading channel number", t);
         }
-        setNumberOfFixtures(number_channels, null, null);
+        setNumberOfFixtures(number_channels, null, null, null);
         setUpNetwork();
     }
 
@@ -446,7 +454,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     /**
      * @return the mHelper
      */
-    public static IabHelper getmHelper() {
+    static IabHelper getmHelper() {
         return mHelper;
     }
 
@@ -481,7 +489,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         }
     }
 
-    public int calculateChannelCount() {
+    private int calculateChannelCount() {
         int currentFixtureNum = 1;
         for (Fixture fixture : alColumns) {
             currentFixtureNum += fixture.getChLevels().size();

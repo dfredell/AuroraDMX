@@ -9,7 +9,10 @@ import java.util.List;
  * Created by furtchet on 11/14/15.
  */
 public abstract class Fixture {
-    protected final int MAX_LEVEL = 255;
+    public static final int MAX_LEVEL = 255;
+    public static final String PRESET_TEXT_COLOR = "#99ccff";
+    protected static final String TAG = "AuroraDMX";
+    static final String REGEX_255 = "([0-9]|[0-9][0-9]|[01][0-9][0-9]|2[0-4][0-9]|25[0-5])";
 
     public abstract void init();
 
@@ -30,6 +33,10 @@ public abstract class Fixture {
     public abstract void setColumnText(String text);
 
     public abstract String getChText();
+
+    public abstract void setValuePresets(String text);
+
+    public abstract String getValuePresets();
 
     public abstract boolean isRGB();
 

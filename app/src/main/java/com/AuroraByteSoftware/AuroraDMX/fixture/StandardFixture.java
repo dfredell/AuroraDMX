@@ -1,7 +1,9 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
@@ -28,6 +30,8 @@ import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -44,16 +48,20 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private double stepIteram = 0;
     private final MainActivity context;
     private String chText = "";
+    private String chValuePresets = "";
     private TextView tvChNum;
-    private static final String TAG = "AuroraDMX";
+    private int defaultLvlTextColor = 0;
+    private final static String PRESET_VALUE_REGEX = "^" + REGEX_255 + "$";
 
-    public StandardFixture(final MainActivity context, String channelName) {
+
+    public StandardFixture(final MainActivity context, String channelName, String valuePresets) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
+        this.setValuePresets(valuePresets);
         init();
     }
 
-    public StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
+    StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
         this.viewGroup = viewGroup;
@@ -65,7 +73,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
         tvChNum = ((TextView) viewGroup.getChildAt(0));
         tvVal = ((TextView) viewGroup.getChildAt(1));
+        defaultLvlTextColor = new TextView(context).getTextColors().getDefaultColor();
+
         setChLevel(0);
+        refreshValuePresetsHook();
     }
 
     @Override
@@ -81,9 +92,10 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         viewGroup.addView(tvChNum);
 
         tvVal = new TextView(context);
-        tvVal.setText(String.format(context.getString(R.string.ChPercent), 0));
+        tvVal.setText(String.format(context.getString(R.string.ChPercent), "0"));
         tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
+        defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
         viewGroup.addView(tvVal);
 
         seekBar = createSeekBar();
@@ -92,7 +104,27 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         Button editButton = new Button(context);
         editButton.setOnClickListener(this);
         editButton.setText(R.string.edit);
+
+        refreshValuePresetsHook();
         viewGroup.addView(editButton);
+    }
+
+    /**
+     * Set color to indicate that there are presets and bind listener
+     */
+    private void refreshValuePresetsHook() {
+        if (tvVal == null) {
+            return;
+        }
+        final List<Pair<String, String>> presets = FixtureUtility.getParsedValuePresets(getValuePresets(), PRESET_VALUE_REGEX);
+        if (presets != null) {
+            tvVal.setTextColor(Color.parseColor(PRESET_TEXT_COLOR));
+            tvVal.setOnClickListener(this);
+        } else {
+            tvVal.setTextColor(defaultLvlTextColor);
+            tvVal.setOnClickListener(null);
+        }
+        seekBar.setPresetTicks(presets);
     }
 
     private VerticalSeekBar createSeekBar() {
@@ -193,10 +225,12 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
             tvVal.setText(String.format("%1$s", (int) chLevel));
         } else {
-            if (chLevel >= MAX_LEVEL)
+            if (chLevel >= MAX_LEVEL) {
                 tvVal.setText(context.getString(R.string.ChFull));
-            else
-                tvVal.setText(String.format(context.getString(R.string.ChPercent), ((int) chLevel * 100 / MAX_LEVEL)));
+            } else {
+                final String percent = Integer.toString((int) chLevel * 100 / MAX_LEVEL);
+                tvVal.setText(String.format(context.getString(R.string.ChPercent), percent));
+            }
         }
     }
 
@@ -209,12 +243,47 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         return Collections.singletonList((int) chLevel);
     }
 
+
+    private void openSelectPresetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        // Add the buttons
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        final List<Pair<String, String>> presets = FixtureUtility.getParsedValuePresets(getValuePresets(), PRESET_VALUE_REGEX);
+        if (presets == null)
+            return;
+        String[] presetArray = new String[presets.size()];
+        int i = 0;
+        for (Pair<String, String> v : presets) {
+            presetArray[i] = v.getLeft() + " (" + v.getRight() + ")";
+            i++;
+        }
+
+        builder.setTitle(R.string.pick_preset)
+                .setItems(presetArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        setChLevel(Integer.parseInt(presets.get(which).getRight()));
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     /**
      * Toggle button
      */
     @Override
     public void onClick(View v) {
-        EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel);
+        if (v == tvVal) {
+            openSelectPresetDialog();
+        } else {
+            EditColumnMenu.createEditColumnMenu(viewGroup, context, this, chText, (int) chLevel, chValuePresets);
+        }
     }
 
 
@@ -225,8 +294,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     /**
      * Creates 255 steeps between current and endVal
+     *
      * @param endVal value when the fade is finished
-     * @param steps number of steps to take to get to the final falue
+     * @param steps  number of steps to take to get to the final falue
      */
     @Override
     public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
@@ -279,7 +349,15 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         seekBar.setProgress((int) chLevel);
 
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
+    }
 
+    public String getValuePresets() {
+        return chValuePresets;
+    }
+
+    public void setValuePresets(String text) {
+        this.chValuePresets = text;
+        refreshValuePresetsHook();
     }
 
     @Override

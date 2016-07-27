@@ -4,13 +4,13 @@ android {
     signingConfigs {
     }
     compileSdkVersion 24
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 23
-        versionName '2.3'
+        versionCode 24
+        versionName '2.4'
     }
     buildTypes {
         release {
@@ -26,7 +26,8 @@ android {
 
 dependencies {
     compile files('libs/commons-lang3-3.3.2.jar')
-    compile 'com.android.support:support-v13:24.0.0'
+    compile 'com.android.support:support-v13:24.1.1'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile project(':ArtNetStack')
+    testCompile 'junit:junit:4.12'
 }

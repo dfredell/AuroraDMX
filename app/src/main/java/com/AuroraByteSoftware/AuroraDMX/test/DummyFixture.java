@@ -18,6 +18,7 @@ public class DummyFixture extends Fixture {
     private double step[] = new double[3];
     private double stepIteram[] = new double[3];
     private String chText = "";
+    private String chValuePresets = "";
     private List<Integer> rgbLevel = new ArrayList<>(Collections.nCopies(3, 0));
 
     public DummyFixture(final MainActivity context, String channelName) {
@@ -133,6 +134,14 @@ public class DummyFixture extends Fixture {
 
     public void setColumnText(String text) {
         this.chText = text;
+    }
+
+    public void setValuePresets(String text) {
+        this.chValuePresets = text;
+    }
+
+    public String getValuePresets() {
+        return chValuePresets;
     }
 
     @Override

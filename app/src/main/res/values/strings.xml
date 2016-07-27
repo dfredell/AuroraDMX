@@ -79,6 +79,9 @@
     <string name="FadeUp">Fade Up </string>
     <string name="FadeDown">Fade Down </string>
 
+    <string name="editValuePresets">Preset Values</string>
+    <string name="pick_preset">Pick preset value</string>
+
     <string name="cannotOpen">Can not open data</string>
     <string name="openedFile">Opened file (unsaved)</string>
 </resources>

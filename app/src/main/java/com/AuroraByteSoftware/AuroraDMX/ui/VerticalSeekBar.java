@@ -36,8 +36,8 @@ public class VerticalSeekBar extends SeekBar {
         c.rotate(-90);
         c.translate(-getHeight(), 0);
 
-        drawTicks(c);
         super.onDraw(c);
+        drawTicks(c);
     }
 
     private void drawTicks(Canvas canvas) {
@@ -48,13 +48,15 @@ public class VerticalSeekBar extends SeekBar {
         mPaint.setColor(Color.parseColor(Fixture.PRESET_TEXT_COLOR));
         mPaint.setStrokeWidth(5);
         mPaint.setAntiAlias(true);
-        int yStart = getPaddingRight();
-        int yEnd = getWidth() - getPaddingRight();
+
+        int left = getPaddingRight();
+        int right = getWidth() - getPaddingRight();
         final int scrollBarHeight = getHeight() - getPaddingRight() - getPaddingLeft();
+
         for (Double presetTick : presetTicks) {
             double percent = presetTick / Fixture.MAX_LEVEL;
-            int x = ((int) (percent * scrollBarHeight)) + getPaddingLeft();
-            canvas.drawLine(x + 2, yStart, x - 2, yEnd, mPaint);
+            int height = ((int) (percent * scrollBarHeight)) + getPaddingLeft();
+            canvas.drawLine(height + 2, left, height - 2, right, mPaint);
         }
     }
 

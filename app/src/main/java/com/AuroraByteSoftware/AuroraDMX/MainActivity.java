@@ -82,11 +82,12 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         startupIAB();
         startup();
         Intent intent = getIntent();
-        if (intent.getAction() == "android.intent.action.VIEW") {
+
+        //Open the file if the user clicked on a file in the file system
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             try {
                 pm.openFile(intent.getDataString());
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 Toast.makeText(MainActivity.this, R.string.cannotOpen, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
@@ -310,6 +311,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                     return true;
                 case R.id.menu_load:
                     pm.onLoadClick();
+                    return true;
+                case R.id.menu_share:
+                    pm.onShare();
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);

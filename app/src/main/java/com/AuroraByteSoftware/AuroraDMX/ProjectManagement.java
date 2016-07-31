@@ -4,13 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.Base64InputStream;
@@ -35,7 +35,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 public class ProjectManagement extends MainActivity {
 
@@ -57,23 +57,26 @@ public class ProjectManagement extends MainActivity {
     private static final String TAG = "AuroraDMX";
     private static boolean DeleteInProgress = false;
 
-    public ProjectManagement() {
-        mainActivity = null;
-    }
-
-    public ProjectManagement(MainActivity mainActivity) {
+    ProjectManagement(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
+    void onShare() {
+        save(null, true);
+    }
+
     void save(String key) {
-        Boolean share = true;
+        save(key, false);
+    }
+
+    private void save(String key, boolean share) {
+        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
         if (key == null) {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
-            share = false;
         }
-        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
-        listOfProjects.add(key);
-
+        if (!share) {
+            listOfProjects.add(key);
+        }
         //Get ch levels
         final List<Integer> currentChannelArray = getCurrentChannelArray();
         int[] currentChannelLevels = ArrayUtils.toPrimitive(currentChannelArray.toArray(new Integer[currentChannelArray.size()]));
@@ -125,9 +128,11 @@ public class ProjectManagement extends MainActivity {
             ed.apply();
 
             if (share) {
-                File dir = mainActivity.getCacheDir();//#
+                clearCache(mainActivity);
+                File dir = mainActivity.getCacheDir();
                 dir.mkdirs();
-                File file = new File(dir, key + ".AuroraDMX");
+                String fileName = key + ".AuroraDMX";
+                File file = new File(dir, fileName);
                 FileOutputStream fileStream = new FileOutputStream(file);
                 out.writeTo(fileStream);
                 fileStream.flush();
@@ -135,9 +140,9 @@ public class ProjectManagement extends MainActivity {
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.setType("text/plain");
+                sendIntent.setType("application/octet-stream");
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "AuroraDMX Project");
-                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.AuroraByteSoftware.AuroraDMX/" + key + ".AuroraDMX"));
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.AuroraByteSoftware.AuroraDMX/" + fileName));
                 mainActivity.startActivity(Intent.createChooser(sendIntent, "Choose"));
             }
         } catch (IOException e) {
@@ -145,6 +150,23 @@ public class ProjectManagement extends MainActivity {
             e.printStackTrace();
         }
         Log.d(TAG, "save complete");
+    }
+
+    /**
+     * Clear out any previous exported files
+     * http://stackoverflow.com/a/7600257/327011
+     *
+     * @param context used t ofind temp dir
+     */
+    private void clearCache(Context context) {
+        File cacheDir = context.getCacheDir();
+
+        File[] files = cacheDir.listFiles();
+
+        if (files != null) {
+            for (File file : files)
+                Log.d(TAG, "File delete success: " + file.delete());
+        }
     }
 
     void openFile(String uri) throws IOException {
@@ -157,12 +179,12 @@ public class ProjectManagement extends MainActivity {
     }
 
     /**
-     * @source http://stackoverflow.com/a/2436413/288568
-     * @param inputStream
-     * @return
+     * @see  http://stackoverflow.com/a/2436413/288568
+     * @param inputStream file to load
+     * @return convertered inputStream file
      * @throws IOException
      */
-    public byte[] readBytes(InputStream inputStream) throws IOException {
+    private byte[] readBytes(InputStream inputStream) throws IOException {
         // this dynamically extends to take the bytes you read
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
 
@@ -320,7 +342,7 @@ public class ProjectManagement extends MainActivity {
     /**
      * Migrating from 1.8 to 2.0 move Cue.levels -> Cue.levelsList
      *
-     * @param patch
+     * @param patch array to be converted to patchList
      */
     private void migrateData(int[][] patch) {
         for (CueObj cue : alCues) {
@@ -373,7 +395,7 @@ public class ProjectManagement extends MainActivity {
      * Dialog to load a saved project
      */
     public void onLoadClick() {
-        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
+        TreeSet<String> listOfProjects = new TreeSet<>(getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>()));
         if (listOfProjects.contains(PREF_OLD_POINTER)) {
             listOfProjects.remove(PREF_OLD_POINTER);
             listOfProjects.add(PREF_OLD_POINTER_HUMAN);
@@ -449,7 +471,7 @@ public class ProjectManagement extends MainActivity {
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
+    private static final String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -479,7 +501,7 @@ public class ProjectManagement extends MainActivity {
      *
      * If the app does not has permission then the user will be prompted to grant permissions
      *
-     * @param activity
+     * @param activity project used to ask for permissions
      */
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission

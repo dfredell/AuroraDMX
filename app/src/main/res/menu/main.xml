@@ -26,6 +26,11 @@
         android:icon="@drawable/collections_collection"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_load"/>
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/social_share"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_share" />
     <!-- item
         android:id="@+id/menu_about"
         android:icon="@drawable/action_about"

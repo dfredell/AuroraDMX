@@ -1,7 +1,5 @@
 package com.AuroraByteSoftware.AuroraDMX;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,9 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
@@ -25,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
@@ -132,9 +127,12 @@ public class ProjectManagement extends MainActivity {
             ed.apply();
 
             if (share) {
+                if (mainActivity == null) {
+                    return;
+                }
                 clearCache(mainActivity);
                 File dir = mainActivity.getCacheDir();
-                dir.mkdirs();
+                Log.d(TAG, "Mkdir response " + dir.mkdirs());
                 String fileName = key + ".AuroraDMX";
                 File file = new File(dir, fileName);
                 FileOutputStream fileStream = new FileOutputStream(file);
@@ -147,11 +145,11 @@ public class ProjectManagement extends MainActivity {
                 sendIntent.setType("application/octet-stream");
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "AuroraDMX Project");
                 sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.AuroraByteSoftware.AuroraDMX/" + fileName));
-                mainActivity.startActivity(Intent.createChooser(sendIntent, "Choose"));
+                mainActivity.startActivity(Intent.createChooser(sendIntent, "Share AuroraDMX Project"));
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            Log.w(TAG, "Unable to save project ", e);
         }
         Log.d(TAG, "save complete");
     }
@@ -183,7 +181,7 @@ public class ProjectManagement extends MainActivity {
     }
 
     /**
-     * @see  http://stackoverflow.com/a/2436413/288568
+     * @see  <a href="http://stackoverflow.com/a/2436413/288568">http://stackoverflow.com/a/2436413/288568</a>
      * @param inputStream file to load
      * @return convertered inputStream file
      * @throws IOException
@@ -471,53 +469,5 @@ public class ProjectManagement extends MainActivity {
 
         dialog.show();
 
-    }
-
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static final String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "granted", Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    // Permission Denied
-                    Toast.makeText(this, "not granted", Toast.LENGTH_SHORT)
-                            .show();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity project used to ask for permissions
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 }

@@ -57,6 +57,10 @@ public class ProjectManagement extends MainActivity {
     private static final String TAG = "AuroraDMX";
     private static boolean DeleteInProgress = false;
 
+    public ProjectManagement() {
+        this.mainActivity = null;
+    }
+
     ProjectManagement(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }

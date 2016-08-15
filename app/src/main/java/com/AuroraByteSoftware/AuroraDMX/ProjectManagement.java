@@ -133,7 +133,7 @@ public class ProjectManagement extends MainActivity {
                 clearCache(mainActivity);
                 File dir = mainActivity.getCacheDir();
                 Log.d(TAG, "Mkdir response " + dir.mkdirs());
-                String fileName = key + ".AuroraDMX";
+                String fileName = (key.equals(PREF_OLD_POINTER) ? PREF_OLD_POINTER_HUMAN : key) + ".AuroraDMX";
                 File file = new File(dir, fileName);
                 FileOutputStream fileStream = new FileOutputStream(file);
                 out.writeTo(fileStream);

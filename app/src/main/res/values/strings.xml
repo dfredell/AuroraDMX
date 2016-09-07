@@ -18,10 +18,8 @@
     <string name="errNumConv">Error Number Conversion</string>
     <string name="Error">Error</string>
     <string name="cueMustBePos">Cue numbers must be positive</string>
-    <string name="serverError">Server Error</string>
     <string name="dmxRangeError">Fixture Range 1 &#8211; 200</string>
     <string name="waitingOnFade">Waiting on Fade</string>
-    <string name="title_activity_CueObj">Cue Object</string>
     <string name="title_activity_EditCueMenu">Edit Cue Menu</string>
     <string name="title_activity_EditChannelMenu">Edit Channel Menu</string>
     <string name="dimmer">Dimmer</string>
@@ -42,6 +40,7 @@
     <string name="pref_header_sacn_unicast">sACN Unicast Server</string>
     <string name="menu_save">Save</string>
     <string name="menu_load">Load</string>
+    <string name="menu_share">Share</string>
     <string name="pref_sacn_unicast_ip_def">192.168.0.0</string>
     <string name="serverUnknown">Server %s Not Found</string>
     <string name="serverName">Server</string>
@@ -81,4 +80,7 @@
 
     <string name="editValuePresets">Preset Values</string>
     <string name="pick_preset">Pick preset value</string>
+
+    <string name="cannotOpen">Can not open data</string>
+    <string name="openedFile">Opened file (unsaved)</string>
 </resources>

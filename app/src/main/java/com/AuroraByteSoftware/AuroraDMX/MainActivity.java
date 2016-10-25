@@ -330,7 +330,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
         for (int ch = 1; ch <= chValues.size() && patchList.size() > ch; ch++) {
             for (Integer dim : patchList.get(ch).getDimmers()) {
-                if (dim <= 0)
+                if (dim <= 0 || dim > MAX_DIMMERS)
                     continue;
                 int oldLvl = out[dim - 1];
                 int newVal = chValues.get(ch - 1);

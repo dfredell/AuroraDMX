@@ -29,7 +29,7 @@ public class SendArtnetUpdate extends TimerTask {
         String[] splitServer = serverPref.split(":");
         if (splitServer.length == 2) {
             serverIp = splitServer[0];
-            artnetPort = Integer.parseInt(splitServer[1]);
+            artnetPort = Integer.parseInt(splitServer[1].trim());
         } else {
             serverIp = serverPref;
         }

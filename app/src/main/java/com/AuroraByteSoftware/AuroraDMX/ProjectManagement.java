@@ -2,9 +2,12 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
@@ -26,13 +29,17 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 public class ProjectManagement extends MainActivity {
 
@@ -46,20 +53,29 @@ public class ProjectManagement extends MainActivity {
     private static boolean DeleteInProgress = false;
 
     public ProjectManagement() {
-        mainActivity = null;
+        this.mainActivity = null;
     }
 
-    public ProjectManagement(MainActivity mainActivity) {
+    ProjectManagement(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
+    void onShare() {
+        save(null, true);
+    }
+
     void save(String key) {
+        save(key, false);
+    }
+
+    private void save(String key, boolean share) {
+        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
         if (key == null) {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
         }
-        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
-        listOfProjects.add(key);
-
+        if (!share) {
+            listOfProjects.add(key);
+        }
         //Get ch levels
         final List<Integer> currentChannelArray = getCurrentChannelArray();
         int[] currentChannelLevels = ArrayUtils.toPrimitive(currentChannelArray.toArray(new Integer[currentChannelArray.size()]));
@@ -110,11 +126,82 @@ public class ProjectManagement extends MainActivity {
             ed.putStringSet(PREF_SAVES, listOfProjects);
             ed.apply();
 
+            if (share) {
+                if (mainActivity == null) {
+                    return;
+                }
+                clearCache(mainActivity);
+                File dir = mainActivity.getCacheDir();
+                Log.d(TAG, "Mkdir response " + dir.mkdirs());
+                String fileName = (key.equals(PREF_OLD_POINTER) ? PREF_OLD_POINTER_HUMAN : key) + ".AuroraDMX";
+                File file = new File(dir, fileName);
+                FileOutputStream fileStream = new FileOutputStream(file);
+                out.writeTo(fileStream);
+                fileStream.flush();
+                fileStream.close();
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.setType("application/octet-stream");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "AuroraDMX Project");
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.AuroraByteSoftware.AuroraDMX/" + fileName));
+                mainActivity.startActivity(Intent.createChooser(sendIntent, "Share AuroraDMX Project"));
+            }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            Log.w(TAG, "Unable to save project ", e);
         }
         Log.d(TAG, "save complete");
+    }
+
+    /**
+     * Clear out any previous exported files
+     * http://stackoverflow.com/a/7600257/327011
+     *
+     * @param context used t ofind temp dir
+     */
+    private void clearCache(Context context) {
+        File cacheDir = context.getCacheDir();
+
+        File[] files = cacheDir.listFiles();
+
+        if (files != null) {
+            for (File file : files)
+                Log.d(TAG, "File delete success: " + file.delete());
+        }
+    }
+
+    void openFile(String uri) throws IOException {
+        Log.d(TAG, "open URI " + uri);
+
+        InputStream stream = mainActivity.getContentResolver().openInputStream(Uri.parse(uri));
+        byte[] data = readBytes(stream);
+        loadData(data);
+        mainActivity.setTitle(mainActivity.getString(R.string.openedFile));
+    }
+
+    /**
+     * @see  <a href="http://stackoverflow.com/a/2436413/288568">http://stackoverflow.com/a/2436413/288568</a>
+     * @param inputStream file to load
+     * @return convertered inputStream file
+     * @throws IOException
+     */
+    private byte[] readBytes(InputStream inputStream) throws IOException {
+        // this dynamically extends to take the bytes you read
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+
+        // this is storage overwritten on each iteration with bytes
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        // we need to know how may bytes were read to write them to the byteBuffer
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+
+        // and then we can return your byte array.
+        return byteBuffer.toByteArray();
     }
 
     @SuppressWarnings("unchecked")
@@ -126,6 +213,22 @@ public class ProjectManagement extends MainActivity {
         // Read data back
         byte[] bytes = getSharedPref().getString(key, "{}").getBytes();
 
+        loadData(bytes);
+
+        // Save a new default
+        SharedPreferences.Editor ed = getSharedPref().edit();
+        ed.putString(PREF_DEF, key);
+        ed.apply();
+
+        // Set the title to the project
+        if (PREF_OLD_POINTER.equals(key))
+            key = PREF_OLD_POINTER_HUMAN;
+        mainActivity.setTitle(key);
+
+        mainActivity.setUpNetwork();
+    }
+
+    private void loadData(byte[] bytes) {
         ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
         Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
         ObjectInputStream in;
@@ -236,24 +339,12 @@ public class ProjectManagement extends MainActivity {
         for (int i = 0; fixtureNames != null && i < fixtureNames.length && i < alColumns.size(); i++) {
             alColumns.get(i).setColumnText(fixtureNames[i]);
         }
-
-        // Save a new default
-        SharedPreferences.Editor ed = getSharedPref().edit();
-        ed.putString(PREF_DEF, key);
-        ed.apply();
-
-        // Set the title to the project
-        if (PREF_OLD_POINTER.equals(key))
-            key = PREF_OLD_POINTER_HUMAN;
-        mainActivity.setTitle(key);
-
-        mainActivity.setUpNetwork();
     }
 
     /**
      * Migrating from 1.8 to 2.0 move Cue.levels -> Cue.levelsList
      *
-     * @param patch
+     * @param patch array to be converted to patchList
      */
     private void migrateData(int[][] patch) {
         for (CueObj cue : alCues) {
@@ -306,7 +397,7 @@ public class ProjectManagement extends MainActivity {
      * Dialog to load a saved project
      */
     public void onLoadClick() {
-        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
+        TreeSet<String> listOfProjects = new TreeSet<>(getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>()));
         if (listOfProjects.contains(PREF_OLD_POINTER)) {
             listOfProjects.remove(PREF_OLD_POINTER);
             listOfProjects.add(PREF_OLD_POINTER_HUMAN);

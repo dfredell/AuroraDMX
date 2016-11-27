@@ -15,6 +15,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -81,7 +82,14 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     @Override
     public void init() {
-        viewGroup = new LinearLayout(context);
+        LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        viewGroup = (LinearLayout) inflater.inflate(R.layout.fixture_standard, null);
+
+//        RelativeLayout item = (RelativeLayout) view.findViewById(R.id.item);
+
+
+//        viewGroup = new LinearLayout(context);
+
         viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         viewGroup.setOrientation(LinearLayout.VERTICAL);
 

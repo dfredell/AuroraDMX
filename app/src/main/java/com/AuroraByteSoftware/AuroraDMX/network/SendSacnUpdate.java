@@ -36,8 +36,11 @@ public class SendSacnUpdate extends TimerTask {
         this.mainActivity = mainActivity;
         String univ = MainActivity.getSharedPref().getString("protocol_sacn_universe", "1").trim();
         String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
-        if ("SACNUNI".equals(protocol))
+        if ("SACNUNI".equals(protocol)) {
             server = MainActivity.getSharedPref().getString("protocol_sacn_unicast_ip", "239.255.0." + universe).trim();
+        } else {
+            server = null;
+        }
         Log.v(TAG, "unicast " + server);
         try {
             universe = Integer.parseInt(univ);
@@ -68,13 +71,17 @@ public class SendSacnUpdate extends TimerTask {
         InetAddress address;
         try {
             if (MainActivity.clientSocket == null || MainActivity.clientSocket.isClosed()) {
-                MainActivity.clientSocket = new DatagramSocket(6454);
+                MainActivity.clientSocket = new DatagramSocket();
                 MainActivity.clientSocket.setReuseAddress(true);
             }
-            if (server != null)
+            if (server != null) {
                 address = InetAddress.getByName(server);
-            else
+                MainActivity.clientSocket.setBroadcast(false);
+            } else {
                 address = InetAddress.getByName("239.255.0." + universe);
+                MainActivity.clientSocket.setBroadcast(true);
+            }
+            MainActivity.clientSocket.connect(address, 5568);
         } catch (Throwable e1) {
             e1.printStackTrace();
             mainActivity.runOnUiThread(new Runnable() {

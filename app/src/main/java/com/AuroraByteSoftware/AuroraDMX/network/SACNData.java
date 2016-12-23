@@ -1,7 +1,11 @@
 package com.AuroraByteSoftware.AuroraDMX.network;
 
+import android.os.Build;
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * @author Dan Fredell
@@ -58,17 +62,10 @@ class SACNData {
         message[20] = ((byte) 0x00);
         message[21] = ((byte) 0x04);
         // CID 22-37
-        //TODO generate this from the serial number
-        try {
-            Class<?> c = Class.forName("android.os.SystemProperties");
-            Method get = c.getMethod("get", String.class);
-            String serial = (String) get.invoke(c, "ro.serialno");
-            serial = serial.length() > 16 ? serial.substring(0, 16) : serial;
-            byte[] serialBytes = serial.getBytes("UTF-8");
-            System.arraycopy(serialBytes, 0, message, 22, serialBytes.length);
-        } catch (Throwable e) {
-            // TODO Auto-generated catch block
-        }
+        String serial = Build.SERIAL;
+        serial = serial.length() > 16 ? serial.substring(0, 16) : serial;
+        byte[] serialBytes = serial.getBytes();
+        System.arraycopy(serialBytes, 0, message, 22, serialBytes.length);
     }
 
     private void addFrameLayer() throws UnsupportedEncodingException {

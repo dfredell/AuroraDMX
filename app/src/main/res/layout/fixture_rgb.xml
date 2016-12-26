@@ -1,0 +1,42 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/fixture_rgb_standard">
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:text="XX"
+        android:textSize="18sp"
+        android:gravity="center_horizontal|center"
+        android:textColor="@android:color/white"
+        android:id="@+id/channel_rgb_number"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/r_0_g_0_b_0"
+        android:textSize="14sp"
+        android:gravity="center_horizontal|center"
+        android:textColor="@android:color/white"
+        android:id="@+id/channel_rgb_level"
+        android:layout_below="@id/channel_rgb_number"
+        android:layout_centerHorizontal="true"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_icon"
+        android:id="@+id/channel_rgb_edit"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <include layout="@layout/ambilwarna_dialog"/>
+</RelativeLayout>

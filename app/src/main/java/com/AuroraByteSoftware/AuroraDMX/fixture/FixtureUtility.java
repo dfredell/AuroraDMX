@@ -1,11 +1,13 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.ChPatch;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
+import com.AuroraByteSoftware.AuroraDMX.R;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -46,9 +48,13 @@ public class FixtureUtility {
         patchList.add(new ChPatch(patchList.size()));
         patchList.add(new ChPatch(patchList.size()));
 
-        LinearLayout viewGroup = fixture.getViewGroup();
-        fixture.removeSelector();
+        RelativeLayout viewGroup = fixture.getViewGroup();
         Fixture rgbFixture = new RGBFixture(context, fixture.getChText(), viewGroup);
+
+        //Remove and add the new view
+        LinearLayout fixtureView = (LinearLayout) context.findViewById(R.id.ChanelLayout);
+        fixtureView.addView(rgbFixture.getViewGroup(),fixtureView.indexOfChild(viewGroup));
+        fixtureView.removeView(viewGroup);
 
         alColumns.set(indexOf, rgbFixture);
 
@@ -74,9 +80,13 @@ public class FixtureUtility {
         int indexOf = alColumns.indexOf(fixture);
         MainActivity.setUpdatingFixtures(true);
 
-        LinearLayout viewGroup = fixture.getViewGroup();
-        fixture.removeSelector();
-        Fixture standardFixture = new StandardFixture(context, fixture.getChText(), viewGroup);
+        RelativeLayout viewGroup = fixture.getViewGroup();
+        Fixture standardFixture = new StandardFixture(context, fixture.getChText(), "");
+
+        //Remove and add the new view
+        LinearLayout fixtureView = (LinearLayout) context.findViewById(R.id.ChanelLayout);
+        fixtureView.addView(standardFixture.getViewGroup(),fixtureView.indexOfChild(viewGroup));
+        fixtureView.removeView(viewGroup);
 
         alColumns.set(indexOf, standardFixture);
 

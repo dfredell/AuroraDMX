@@ -2,19 +2,20 @@ package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.view.Gravity;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
+import com.AuroraByteSoftware.AuroraDMX.ui.FontManager;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,7 +28,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class RGBFixture extends Fixture implements OnClickListener {
 
 
-    private LinearLayout viewGroup = null;
+    private RelativeLayout viewGroup = null;
     private TextView tvVal = null;
     private int ChNum = 0;
     private View rgbSelectView;
@@ -48,59 +49,38 @@ public class RGBFixture extends Fixture implements OnClickListener {
     public RGBFixture(final MainActivity context, String channelName, String presets) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
-        this.viewGroup = new LinearLayout(context);
         this.chValuePresets = presets;
         init();
     }
 
-    RGBFixture(final MainActivity context, String channelName, LinearLayout viewGroup) {
+    RGBFixture(final MainActivity context, String channelName, RelativeLayout viewGroup) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
         this.viewGroup = viewGroup;
 
-        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this);
-        ambilWarnaDialog.setChannelName(chText);
-        rgbSelectView = ambilWarnaDialog.getView();
-        viewGroup.addView(rgbSelectView, 2);
-
-        viewGroup.getChildAt(3).setOnClickListener(this);
-
-        tvChNum = ((TextView) viewGroup.getChildAt(0));
-        tvVal = ((TextView) viewGroup.getChildAt(1));
-        tvVal.setText("R:0 G:0 B:0");
-        defaultLvlTextColor = new TextView(context).getTextColors().getDefaultColor();
-
-        refreshValuePresetsHook();
+        init();
     }
 
     @Override
     public void init() {
-        viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-        viewGroup.setOrientation(LinearLayout.VERTICAL);
+        LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_rgb, null);
 
-        tvChNum = new TextView(context);
-        tvChNum.setText(String.format("%1$s", ChNum));
-        tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
-        tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        viewGroup.addView(tvChNum);
+        tvChNum = (TextView) viewGroup.findViewById(R.id.channel_rgb_number);
 
-        tvVal = new TextView(context);
-        tvVal.setText("R:0 G:0 B:0");
-        tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
+        tvVal = (TextView) viewGroup.findViewById(R.id.channel_rgb_level);
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
-        viewGroup.addView(tvVal);
 
-        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this);
-        rgbSelectView = ambilWarnaDialog.getView();
-        viewGroup.addView(rgbSelectView);
+        View viewById = viewGroup.findViewById(R.id.ambilwarna_dialogView);
+        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this, viewById);
 
-        Button editButton = new Button(context);
+        TextView editButton = (TextView) viewGroup.findViewById(R.id.channel_rgb_edit);
         editButton.setOnClickListener(this);
-        editButton.setText(R.string.edit);
 
         refreshValuePresetsHook();
-        viewGroup.addView(editButton);
+
+        Typeface iconFont = FontManager.getTypeface(context);
+        FontManager.markAsIconContainer(viewGroup, iconFont);
     }
 
 
@@ -190,7 +170,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
      * @return the viewGroup
      */
     @Override
-    public LinearLayout getViewGroup() {
+    public RelativeLayout getViewGroup() {
         return viewGroup;
     }
 
@@ -324,22 +304,17 @@ public class RGBFixture extends Fixture implements OnClickListener {
     }
 
     @Override
-    public void removeSelector() {
-        viewGroup.removeView(rgbSelectView);
-    }
-
-    @Override
     public void setFixtureNumber(int currentFixtureNum) {
         tvChNum.setText(String.format("%1$s", currentFixtureNum));
     }
 
     public void refreshLayout() {
-        ambilWarnaDialog.getView().post(new Runnable() {
-            @Override
-            public void run() {
-                ambilWarnaDialog.getViewSatVal().invalidate();
-            }
-        });
+//        ambilWarnaDialog.getView().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                ambilWarnaDialog.getViewSatVal().invalidate();
+//            }
+//        });
     }
 
     public void setChLevelArray(List<Integer> chLevels) {

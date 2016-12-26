@@ -1,6 +1,7 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public abstract class Fixture {
 
     public abstract void init();
 
-    public abstract LinearLayout getViewGroup();
+    public abstract RelativeLayout getViewGroup();
 
     public abstract void setChLevels(List<Integer> a_chLevel);
 
@@ -39,8 +40,6 @@ public abstract class Fixture {
     public abstract String getValuePresets();
 
     public abstract boolean isRGB();
-
-    public abstract void removeSelector();
 
     public abstract void setFixtureNumber(int currentFixtureNum);
 

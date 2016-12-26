@@ -5,30 +5,27 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
-import com.AuroraByteSoftware.AuroraDMX.TextDrawable;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
+import com.AuroraByteSoftware.AuroraDMX.ui.FontManager;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +36,7 @@ import java.util.List;
 public class StandardFixture extends Fixture implements OnSeekBarChangeListener, OnClickListener {
 
 
-    private LinearLayout viewGroup = null;
+    private RelativeLayout viewGroup = null;
     private TextView tvVal = null;
     private int ChNum = 0;
     private VerticalSeekBar seekBar = null;
@@ -62,59 +59,28 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         init();
     }
 
-    StandardFixture(MainActivity context, String channelName, LinearLayout viewGroup) {
-        this.context = context;
-        this.chText = channelName == null ? this.chText : channelName;
-        this.viewGroup = viewGroup;
-
-        seekBar = createSeekBar();
-        viewGroup.addView(seekBar, 2);
-
-        viewGroup.getChildAt(3).setOnClickListener(this);
-
-        tvChNum = ((TextView) viewGroup.getChildAt(0));
-        tvVal = ((TextView) viewGroup.getChildAt(1));
-        defaultLvlTextColor = new TextView(context).getTextColors().getDefaultColor();
-
-        setChLevel(0);
-        refreshValuePresetsHook();
-    }
-
     @Override
     public void init() {
         LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        viewGroup = (LinearLayout) inflater.inflate(R.layout.fixture_standard, null);
+        viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_standard, null);
 
-//        RelativeLayout item = (RelativeLayout) view.findViewById(R.id.item);
+        tvChNum = (TextView) viewGroup.findViewById(R.id.channel_number);
 
-
-//        viewGroup = new LinearLayout(context);
-
-        viewGroup.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
-        viewGroup.setOrientation(LinearLayout.VERTICAL);
-
-        tvChNum = new TextView(context);
-        tvChNum.setText(String.format("%1$s", ChNum));
-        tvChNum.setTextSize((int) context.getResources().getDimension(R.dimen.font_size));
-        tvChNum.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        viewGroup.addView(tvChNum);
-
-        tvVal = new TextView(context);
-        tvVal.setText(String.format(context.getString(R.string.ChPercent), "0"));
-        tvVal.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        tvVal.setTextSize((int) context.getResources().getDimension(R.dimen.font_size_sm));
+        tvVal = (TextView) viewGroup.findViewById(R.id.channel_level);
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
-        viewGroup.addView(tvVal);
 
-        seekBar = createSeekBar();
-        viewGroup.addView(seekBar);
+        seekBar = (VerticalSeekBar) viewGroup.findViewById(R.id.channel_seek);
+        seekBar.setOnSeekBarChangeListener(this);
 
-        Button editButton = new Button(context);
+        TextView editButton = (TextView) viewGroup.findViewById(R.id.channel_edit);
         editButton.setOnClickListener(this);
-        editButton.setText(R.string.edit);
 
         refreshValuePresetsHook();
-        viewGroup.addView(editButton);
+
+        setColumnText(chText);
+
+        Typeface iconFont = FontManager.getTypeface(context);
+        FontManager.markAsIconContainer(viewGroup, iconFont);
     }
 
     /**
@@ -135,52 +101,25 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         seekBar.setPresetTicks(presets);
     }
 
-    private VerticalSeekBar createSeekBar() {
-        VerticalSeekBar verticalSeekBar = new VerticalSeekBar(context);// make
-
-        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
-        // Sets weight to 1
-        layoutParams2.setMargins(
-                (int) context.getResources().getDimension(R.dimen.column_padding_X),
-                (int) context.getResources().getDimension(R.dimen.column_padding_Y),
-                (int) context.getResources().getDimension(R.dimen.column_padding_X),
-                (int) context.getResources().getDimension(R.dimen.column_padding_Y));
-        verticalSeekBar.setLayoutParams(layoutParams2);
-
-        verticalSeekBar.setThumb(new ShapeDrawable());// No thumb
-
-        verticalSeekBar.setMax(MAX_LEVEL);
-        verticalSeekBar.setOnSeekBarChangeListener(this);
-
-        //Populate the text after the seekBar has rendered on the screen
-        verticalSeekBar.post(new Runnable() {
-            @Override
-            public void run() {
-                setColumnText(chText);
-            }
-        });
-        return verticalSeekBar;
-    }
-
     private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height) {
+
+        //Foreground column color
         GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
                 Color.rgb(0, 0, 0), scrollColor});
         shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
         ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
 
+        //Background column color
         GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
                 Color.rgb(10, 10, 10), Color.rgb(110, 110, 110)});
         shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
         InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
 
-        TextDrawable d = new TextDrawable(context);
-        d.setText(chText);
-        d.setTextAlign(Layout.Alignment.ALIGN_CENTER);
+        //Update the text view
+        TextView channelName = (TextView) viewGroup.findViewById(R.id.channel_name);
+        channelName.setText(chText);
 
-        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground, d});
-        layerDrawable.setLayerInset(2, 10, (height / 2) - 15, 0, 0);//set offset of the text layer
-        return layerDrawable;
+        return new LayerDrawable(new Drawable[]{background, foreground});
     }
 
     /**
@@ -190,7 +129,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
      * @return the viewGroup
      */
     @Override
-    public LinearLayout getViewGroup() {
+    public RelativeLayout getViewGroup() {
         return viewGroup;
     }
 
@@ -376,11 +315,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     @Override
     public boolean isRGB() {
         return false;
-    }
-
-    @Override
-    public void removeSelector() {
-        viewGroup.removeView(seekBar);
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.AuroraByteSoftware.AuroraDMX.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 
@@ -54,21 +56,26 @@ public class VerticalSeekBar extends SeekBar {
         mPaint.setStrokeWidth(5);
         mPaint.setAntiAlias(true);
 
-        int left = getPaddingRight();
-        int right = getWidth() - getPaddingRight();
+
+        Resources r = getResources();
+        int columnWidth = Float.floatToIntBits(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics()));
+
+        int left = getPaddingTop();
+        int right = columnWidth - getPaddingBottom();
         final int scrollBarHeight = getHeight() - getPaddingRight() - getPaddingLeft();
 
         for (Double presetTick : presetTicks) {
             double percent = presetTick / Fixture.MAX_LEVEL;
             int height = ((int) (percent * scrollBarHeight)) + getPaddingLeft();
-            canvas.drawLine(height + 2, left, height - 2, right, mPaint);
+            canvas.drawLine(height, left, height, right, mPaint);
         }
     }
 
     public void setPresetTicks(List<Pair<String, String>> presets) {
         presetTicks.clear();
-        if (presets == null)
+        if (presets == null) {
             return;
+        }
         for (Pair<String, String> preset : presets) {
             presetTicks.add(Double.parseDouble(preset.getRight()));
         }

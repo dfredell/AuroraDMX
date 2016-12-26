@@ -117,7 +117,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                     // we own.
                     Log.d(TAG, "Setup successful. Querying inventory.");
                     listOfSkus.add(ITEM_SKU);
-                    mHelper.queryInventoryAsync(true, listOfSkus, mQueryFinishedListener);
+                    try {
+                        mHelper.queryInventoryAsync(true, listOfSkus,null, mQueryFinishedListener);
+                    } catch (IabHelper.IabAsyncInProgressException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } catch (NullPointerException e) {
@@ -189,7 +193,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         boolean paid = true;
         try {
             if (null != mHelper) {
-                Inventory inv = mHelper.queryInventory(false, listOfSkus);
+                Inventory inv = mHelper.queryInventory(false, listOfSkus, null);
                 paid = inv.hasPurchase(ITEM_SKU);
             } else {
                 paid = false;
@@ -416,14 +420,18 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     // We're being destroyed. It's important to dispose of the helper here!
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
         // very important:
         Log.d(TAG, "Destroying helper.");
         if (mHelper != null) {
-            mHelper.dispose();
-            mHelper = null;
+            try {
+                mHelper.dispose();
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                e.printStackTrace();
+            }
         }
+        mHelper = null;
+
+        super.onDestroy();
     }
 
     private void restoreDefaults() {

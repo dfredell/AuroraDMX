@@ -2,7 +2,6 @@ package yuku.ambilwarna;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import java.util.List;
 
 public class AmbilWarnaDialog {
 
-    final View view;
     final View viewHue;
     final AmbilWarnaSquare viewSatVal;
     final ImageView viewCursor;
@@ -32,11 +30,12 @@ public class AmbilWarnaDialog {
 
     /**
      * Create an AmbilWarnaDialog.
-     *  @param context       activity context
+     * @param context       activity context
      * @param color         current color
      * @param fixture to add current value
+     * @param view
      */
-    public  AmbilWarnaDialog(final Context context, int color, RGBFixture fixture) {
+    public  AmbilWarnaDialog(final Context context, int color, RGBFixture fixture,final View view) {
 
         this.rgbFixture = fixture;
 
@@ -45,7 +44,6 @@ public class AmbilWarnaDialog {
 
         Color.colorToHSV(color, currentColorHsv);
 
-        view = LayoutInflater.from(context).inflate(R.layout.ambilwarna_dialog, null);
         viewHue = view.findViewById(R.id.ambilwarna_viewHue);
         viewChannelName = (TextView) view.findViewById(R.id.rgb_name);
         viewSatVal = (AmbilWarnaSquare) view.findViewById(R.id.ambilwarna_viewSatBri);
@@ -159,10 +157,6 @@ public class AmbilWarnaDialog {
 
     public void setChannelName(String name){
         viewChannelName.setText(name);
-    }
-
-    public View getView() {
-        return view;
     }
 
     public AmbilWarnaSquare getViewSatVal() {

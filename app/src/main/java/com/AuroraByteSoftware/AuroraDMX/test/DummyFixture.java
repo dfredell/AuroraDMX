@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX.test;
 
 
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
@@ -43,7 +44,7 @@ public class DummyFixture extends Fixture {
      * @return the viewGroup
      */
     @Override
-    public LinearLayout getViewGroup() {
+    public RelativeLayout getViewGroup() {
         return null;
     }
 
@@ -152,11 +153,6 @@ public class DummyFixture extends Fixture {
     @Override
     public boolean isRGB() {
         return true;
-    }
-
-    @Override
-    public void removeSelector() {
-
     }
 
     @Override

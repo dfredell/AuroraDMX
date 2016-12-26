@@ -58,6 +58,7 @@
     <string name="default_fadeUp">Default cue fade up time</string>
     <string name="default_fadeDown">Default cue fade down time</string>
     <string name="number_of_channels">Number of fixtures</string>
+    <string name="r_0_g_0_b_0">R:0 G:0 B:0</string>
 
     <!-- Defaults -->
     <string name="pref_default_fade_time">5</string>
@@ -83,4 +84,7 @@
 
     <string name="cannotOpen">Can not open data</string>
     <string name="openedFile">Opened file (unsaved)</string>
+    <string name="edit_icon"></string>
+    <string name="default_level">0</string>
+
 </resources>

@@ -5,8 +5,9 @@
     android:paddingLeft="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AuroraDMX" 
-    style="@style/TiledWallpaper">
+    tools:context=".MainActivity"
+    style="@style/TiledWallpaper"
+    android:id="@+id/main">
 
     <ImageView
         android:id="@+id/screen_wait"

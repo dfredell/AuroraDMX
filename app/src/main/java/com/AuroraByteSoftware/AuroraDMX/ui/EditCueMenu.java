@@ -18,6 +18,8 @@ import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.CueSorter;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,10 +40,14 @@ public class EditCueMenu extends MainActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
-        builder.setIcon(R.drawable.action_about);
+        builder.setIcon(
+                new IconDrawable(button.getContext().getApplicationContext(), FontAwesomeIcons.fa_info_circle)
+                        .colorRes(R.color.white)
+                        .alpha(204)
+                        .actionBarSize());
+
         builder.setTitle(String.format(context.getString(R.string.cue), alCues.get(currentCue).getCueNum()));
 
-        builder.setInverseBackgroundForced(true);
         // Create the Save button for the Edit Cue menu
         builder.setPositiveButton(R.string.Save, new DialogInterface.OnClickListener() {
             @Override

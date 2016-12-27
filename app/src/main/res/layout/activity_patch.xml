@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AuroraDMX" >
+    tools:context=".ui.PatchActivity" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:textColor="@android:color/white"
             android:text="@string/channel"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -27,6 +28,7 @@
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/dimmer"
@@ -48,8 +50,7 @@
             android:numColumns="auto_fit" 
             android:stretchMode="columnWidth"
             android:columnWidth="90dp"
-            android:paddingRight="10dp">
-        </GridView>
+            android:paddingRight="10dp"/>
 
         <GridView
             android:id="@+id/gridView2"
@@ -60,8 +61,7 @@
             android:numColumns="auto_fit"
             android:stretchMode="columnWidth" 
             android:columnWidth="90dp"
-            android:paddingLeft="10dp">
-        </GridView>
+            android:paddingLeft="10dp"/>
     </LinearLayout>
 
 </LinearLayout>

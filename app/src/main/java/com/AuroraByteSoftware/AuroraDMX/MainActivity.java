@@ -27,6 +27,10 @@ import com.AuroraByteSoftware.Billing.util.IabException;
 import com.AuroraByteSoftware.Billing.util.IabHelper;
 import com.AuroraByteSoftware.Billing.util.IabResult;
 import com.AuroraByteSoftware.Billing.util.Inventory;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -80,6 +84,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         pm = new ProjectManagement(this);
         Log.v(TAG, "onCreate");
         startupIAB();
+        Iconify.with(new FontAwesomeModule());
         startup();
         Intent intent = getIntent();
 
@@ -117,11 +122,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                     // we own.
                     Log.d(TAG, "Setup successful. Querying inventory.");
                     listOfSkus.add(ITEM_SKU);
-                    try {
-                        mHelper.queryInventoryAsync(true, listOfSkus,null, mQueryFinishedListener);
-                    } catch (IabHelper.IabAsyncInProgressException e) {
-                        e.printStackTrace();
-                    }
+                    mHelper.queryInventoryAsync(true, listOfSkus, mQueryFinishedListener);
                 }
             });
         } catch (NullPointerException e) {
@@ -191,17 +192,20 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                              String[] valuePresets) {
         // check for app purchace
         boolean paid = true;
-        try {
-            if (null != mHelper) {
-                Inventory inv = mHelper.queryInventory(false, listOfSkus, null);
-                paid = inv.hasPurchase(ITEM_SKU);
-            } else {
-                paid = false;
+        if (!BuildConfig.DEBUG) {
+            // Skip the paid check when developing
+            try {
+                if (null != mHelper) {
+                    Inventory inv = mHelper.queryInventory(false, listOfSkus);
+                    paid = inv.hasPurchase(ITEM_SKU);
+                } else {
+                    paid = false;
+                }
+            } catch (IabException e) {
+                e.printStackTrace();
+            } catch (IllegalStateException | NullPointerException e) {
+                // Do nothing we must not be connected yet
             }
-        } catch (IabException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException | NullPointerException e) {
-            // Do nothing we must not be connected yet
         }
 
         // Input cleansing
@@ -284,7 +288,20 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        return (super.onCreateOptionsMenu(menu));
+        addFAIcon(menu, R.id.menu_patch, FontAwesomeIcons.fa_th);
+        addFAIcon(menu, R.id.menu_settings, FontAwesomeIcons.fa_sliders);
+        addFAIcon(menu, R.id.menu_share, FontAwesomeIcons.fa_share_alt);
+        addFAIcon(menu, R.id.menu_save, FontAwesomeIcons.fa_save);
+        addFAIcon(menu, R.id.menu_load, FontAwesomeIcons.fa_folder_open);
+        return  super.onCreateOptionsMenu(menu);
+    }
+
+    private void addFAIcon(Menu menu, int menuId, FontAwesomeIcons faIcon) {
+        menu.findItem(menuId).setIcon(
+                new IconDrawable(this, faIcon)
+                        .colorRes(R.color.white)
+                        .alpha(204)
+                        .actionBarSize());
     }
 
     /**
@@ -420,18 +437,14 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     // We're being destroyed. It's important to dispose of the helper here!
     @Override
     public void onDestroy() {
+        super.onDestroy();
+
         // very important:
         Log.d(TAG, "Destroying helper.");
         if (mHelper != null) {
-            try {
-                mHelper.dispose();
-            } catch (IabHelper.IabAsyncInProgressException e) {
-                e.printStackTrace();
-            }
+            mHelper.dispose();
+            mHelper = null;
         }
-        mHelper = null;
-
-        super.onDestroy();
     }
 
     private void restoreDefaults() {

@@ -7,7 +7,6 @@
     <TextView
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:text="XX"
         android:textSize="24sp"
         android:gravity="center_horizontal|center"
         android:textColor="@android:color/white"
@@ -27,7 +26,7 @@
         android:layout_centerHorizontal="true"/>
 
 
-    <TextView
+    <com.joanzapata.iconify.widget.IconTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_icon"
@@ -48,8 +47,8 @@
         android:layout_above="@id/channel_edit"
         android:layout_below="@id/channel_level"
         android:thumb="@null"
-        android:minHeight="30dp"
-        android:maxHeight="30dp"
+        android:minHeight="40dp"
+        android:maxHeight="40dp"
         />
 
     <com.AuroraByteSoftware.AuroraDMX.ui.VerticalTextView

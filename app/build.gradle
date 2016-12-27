@@ -30,4 +30,5 @@ dependencies {
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile project(':ArtNetStack')
     testCompile 'junit:junit:4.12'
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
 }

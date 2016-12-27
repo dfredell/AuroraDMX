@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
-import com.AuroraByteSoftware.AuroraDMX.ui.FontManager;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -78,9 +76,6 @@ public class RGBFixture extends Fixture implements OnClickListener {
         editButton.setOnClickListener(this);
 
         refreshValuePresetsHook();
-
-        Typeface iconFont = FontManager.getTypeface(context);
-        FontManager.markAsIconContainer(viewGroup, iconFont);
     }
 
 

@@ -29,9 +29,7 @@ public class EditColumnMenu extends MainActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
-        builder.setIcon(R.drawable.action_about);
 
-        builder.setInverseBackgroundForced(true);
         // Create the Save button
         builder.setPositiveButton(R.string.Save, new DialogInterface.OnClickListener() {
             @Override

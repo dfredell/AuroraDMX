@@ -18,4 +18,6 @@
     <style name="AppTheme" parent="TiledWallpaper">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+
+    <color name="white">@android:color/white</color>
 </resources>

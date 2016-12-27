@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
-import com.AuroraByteSoftware.AuroraDMX.ui.FontManager;
 import com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -78,9 +76,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         refreshValuePresetsHook();
 
         setColumnText(chText);
-
-        Typeface iconFont = FontManager.getTypeface(context);
-        FontManager.markAsIconContainer(viewGroup, iconFont);
     }
 
     /**

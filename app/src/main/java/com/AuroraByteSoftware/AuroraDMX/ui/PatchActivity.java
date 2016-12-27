@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.AuroraByteSoftware.AuroraDMX.ChPatch;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 public class PatchActivity extends Activity {
     public static GridView dimGridView;
@@ -83,6 +85,18 @@ public class PatchActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.patch, menu);
+
+        menu.findItem(R.id.menu_patch_onetoone).setIcon(
+                new IconDrawable(this, FontAwesomeIcons.fa_arrows_h)
+                        .colorRes(R.color.white)
+                        .alpha(204)
+                        .actionBarSize());
+        menu.findItem(R.id.menu_patch_clear).setIcon(
+                new IconDrawable(this, FontAwesomeIcons.fa_eraser)
+                        .colorRes(R.color.white)
+                        .alpha(204)
+                        .actionBarSize());
+
         return (super.onCreateOptionsMenu(menu));
     }
 

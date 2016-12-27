@@ -25,6 +25,8 @@ import com.AuroraByteSoftware.AuroraDMX.ui.ManualServerIP;
 import com.AuroraByteSoftware.Billing.util.IabHelper;
 import com.AuroraByteSoftware.Billing.util.IabResult;
 import com.AuroraByteSoftware.Billing.util.Purchase;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,6 +228,11 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             inflater.inflate(R.menu.server, menu);
+            menu.findItem(R.id.menu_server_refresh).setIcon(
+                    new IconDrawable(this.getActivity(), FontAwesomeIcons.fa_refresh)
+                            .colorRes(R.color.white)
+                            .alpha(204)
+                            .actionBarSize());
         }
 
         /**

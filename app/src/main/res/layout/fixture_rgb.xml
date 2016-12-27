@@ -1,42 +1,105 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent"
+    android:id="@+id/fixture_rgb_standard"
     android:layout_width="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/fixture_rgb_standard">
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
     <TextView
+        android:id="@+id/channel_rgb_number"
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:text="XX"
-        android:textSize="18sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:gravity="center_horizontal|center"
         android:textColor="@android:color/white"
-        android:id="@+id/channel_rgb_number"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:textSize="24sp"/>
 
     <TextView
+        android:id="@+id/channel_rgb_level"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/r_0_g_0_b_0"
-        android:textSize="14sp"
-        android:gravity="center_horizontal|center"
-        android:textColor="@android:color/white"
-        android:id="@+id/channel_rgb_level"
         android:layout_below="@id/channel_rgb_number"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal|center"
+        android:text="@string/r_0_g_0_b_0"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"/>
 
 
-    <TextView
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/channel_rgb_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/edit_icon"
-        android:id="@+id/channel_rgb_edit"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/edit_icon"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"/>
 
-    <include layout="@layout/ambilwarna_dialog"/>
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ambilwarna_dialogView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_below="@id/channel_rgb_level"
+        android:layout_above="@id/channel_rgb_edit"
+        >
+
+
+        <RelativeLayout
+            android:id="@+id/ambilwarna_viewContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/ambilwarna_spacer"
+            android:paddingLeft="@dimen/ambilwarna_spacer"
+            android:paddingRight="@dimen/ambilwarna_spacer"
+            android:paddingTop="@dimen/ambilwarna_spacer">
+
+            <yuku.ambilwarna.AmbilWarnaSquare
+                android:id="@+id/ambilwarna_viewSatBri"
+                android:layout_width="@dimen/ambilwarna_hsvWidth"
+                android:layout_height="@dimen/ambilwarna_hsvHeight"
+                android:layerType="software"/>
+
+            <ImageView
+                android:id="@+id/ambilwarna_viewHue"
+                android:layout_width="@dimen/ambilwarna_hueWidth"
+                android:layout_height="@dimen/ambilwarna_hsvHeight"
+                android:layout_marginLeft="@dimen/ambilwarna_spacer"
+                android:layout_toRightOf="@id/ambilwarna_viewSatBri"
+                android:scaleType="fitXY"
+                android:src="@drawable/ambilwarna_hue"/>
+
+            <ImageView
+                android:id="@+id/ambilwarna_cursor"
+                android:layout_width="9dp"
+                android:layout_height="9dp"
+                android:scaleType="matrix"
+                android:src="@drawable/ambilwarna_cursor"/>
+
+            <ImageView
+                android:id="@+id/ambilwarna_target"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:scaleType="matrix"
+                android:src="@drawable/ambilwarna_target"/>
+
+            <TextView
+                android:id="@+id/rgb_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ambilwarna_viewSatBri"
+                android:layout_centerHorizontal="true"
+                android:text=""
+                android:textColor="#fff"/>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
 </RelativeLayout>

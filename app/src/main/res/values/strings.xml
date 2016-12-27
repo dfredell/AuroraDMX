@@ -7,7 +7,7 @@
     <string name="AddCue">Add Cue</string>
     <string name="ChFull">Full</string>
     <string name="ChPercent">%1$s%%</string>
-    <string name="cue">Cue %1$s</string>
+    <string name="cue">Cue %1$f</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="insert">Insert</string>
@@ -84,7 +84,7 @@
 
     <string name="cannotOpen">Can not open data</string>
     <string name="openedFile">Opened file (unsaved)</string>
-    <string name="edit_icon"></string>
+    <string name="edit_icon">{fa-pencil}</string>
     <string name="default_level">0</string>
 
 </resources>

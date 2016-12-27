@@ -1,4 +1,6 @@
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:src="@drawable/background" 
-    android:tileMode="repeat" />
+    android:tileMode="repeat"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"/>
 <!-- http://swanson.github.com/blog/2012/01/30/repeating-background-textures-in-android.html -->

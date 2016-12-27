@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -367,10 +369,12 @@ public class ProjectManagement extends MainActivity {
     }
 
     public void onSaveClick() {
-        // TODO Auto-generated method stub
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Save Project");
-        builder.setIcon(R.drawable.content_save);
+        builder.setIcon(
+                new IconDrawable(mainActivity, FontAwesomeIcons.fa_save)
+                        .alpha(204)
+                        .actionBarSize());
 
         final EditText editText = new EditText(mainActivity);
 
@@ -413,7 +417,10 @@ public class ProjectManagement extends MainActivity {
                 DeleteInProgress = true;
                 AlertDialog.Builder adb = new AlertDialog.Builder(mainActivity);
                 adb.setTitle("Delete");
-                adb.setIcon(R.drawable.alerts_and_states_warning);
+                adb.setIcon(new IconDrawable(mainActivity, FontAwesomeIcons.fa_exclamation_triangle)
+                                .colorRes(R.color.white)
+                                .alpha(204)
+                                .actionBarSize());
                 final String proj = listOfProjectsArray[position];
                 String proj_human = PREF_OLD_POINTER.equals(proj) ? PREF_OLD_POINTER_HUMAN : proj;
                 adb.setMessage("Are you sure you want to delete project '" + proj_human + "'?");
@@ -445,8 +452,11 @@ public class ProjectManagement extends MainActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Load Project");
-        builder.setIcon(R.drawable.collections_collection);
-        // builder.setAdapter(modeAdapter, listener);
+        builder.setIcon(
+                new IconDrawable(mainActivity, FontAwesomeIcons.fa_folder_open)
+                        .alpha(204)
+                        .actionBarSize());
+
         builder.setView(listView);
 
         final Dialog dialog = builder.create();

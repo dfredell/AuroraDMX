@@ -54,10 +54,6 @@ public class ProjectManagement extends MainActivity {
     private static final String TAG = "AuroraDMX";
     private static boolean DeleteInProgress = false;
 
-    public ProjectManagement() {
-        this.mainActivity = null;
-    }
-
     ProjectManagement(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -197,7 +193,7 @@ public class ProjectManagement extends MainActivity {
         byte[] buffer = new byte[bufferSize];
 
         // we need to know how may bytes were read to write them to the byteBuffer
-        int len = 0;
+        int len;
         while ((len = inputStream.read(buffer)) != -1) {
             byteBuffer.write(buffer, 0, len);
         }
@@ -286,10 +282,12 @@ public class ProjectManagement extends MainActivity {
                 getSharedPref().edit().putString(SettingsActivity.channels, readObject1FixtureCount + "").apply();
             }
             if (readObject2Cues.getClass().equals(alCues.getClass()))
+                //noinspection unchecked
                 alCues = (ArrayList<CueObj>) readObject2Cues;
             if (readObject3Patch.getClass().equals(patch.getClass()))
                 patch = (int[][]) readObject3Patch;
             if (readObject3Patch.getClass().equals(patchList.getClass()))
+                //noinspection unchecked
                 patchList = new ArrayList<>((List<ChPatch>) readObject3Patch);
             if (readObject4CueCount.getClass().equals(Double.class))
                 cueCount = (Double) readObject4CueCount;
@@ -391,7 +389,6 @@ public class ProjectManagement extends MainActivity {
         builder.setView(editText);
         editText.requestFocus();
         Dialog dialog = builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         dialog.show();
 

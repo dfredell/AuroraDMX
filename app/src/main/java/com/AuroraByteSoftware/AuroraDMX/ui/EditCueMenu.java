@@ -46,7 +46,7 @@ public class EditCueMenu extends MainActivity {
                         .alpha(204)
                         .actionBarSize());
 
-        builder.setTitle(String.format(context.getString(R.string.cue), alCues.get(currentCue).getCueNum()));
+        builder.setTitle(String.format(context.getString(R.string.cue), Double.toString(alCues.get(currentCue).getCueNum())));
 
         // Create the Save button for the Edit Cue menu
         builder.setPositiveButton(R.string.Save, new DialogInterface.OnClickListener() {
@@ -122,12 +122,12 @@ public class EditCueMenu extends MainActivity {
                 if (thisCueNum > 0) {
 
                     // setup button
-                    button.setText(String.format(context.getString(R.string.cue), thisCueNum));
+                    button.setText(String.format(context.getString(R.string.cue), Double.toString(thisCueNum)));
                     button.setLongClickable(true);
                     button.setOnLongClickListener(new CueClickListener());
                     layout.addView(button, currentCue);// add new button after
                     // currentCue
-                    String cueName = String.format(context.getString(R.string.cue), thisCueNum);
+                    String cueName = String.format(context.getString(R.string.cue), Double.toString(thisCueNum));
                     alCues.add(new CueObj(thisCueNum, cueName, fadeUpTime, fadeDownTime, getCurrentChannelArray(), button));
                     Collections.sort(alCues, new CueSorter());
 
@@ -187,7 +187,6 @@ public class EditCueMenu extends MainActivity {
         builder.setView(promptsView);
 
         AlertDialog alert = builder.create();
-        alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         alert.show();
     }

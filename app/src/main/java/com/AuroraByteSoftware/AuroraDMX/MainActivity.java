@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -411,17 +410,6 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         }
         setNumberOfFixtures(number_channels, null, null, null);
         setUpNetwork();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.v(TAG, "Screen rotate");
-        for (Fixture fixture : alColumns) {
-            if (fixture.isRGB()) {
-                ((RGBFixture) fixture).refreshLayout();
-            }
-        }
     }
 
     @Override

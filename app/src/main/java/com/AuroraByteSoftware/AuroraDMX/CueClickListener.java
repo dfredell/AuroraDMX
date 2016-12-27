@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class CueClickListener implements View.OnClickListener, View.OnLongClickListener {
     private static final String TAG = "AuroraDMX";
-    Context context;
-    Button button;
+    private Context context;
+    private Button button;
 
     /**
      * Cue Click handler
@@ -43,7 +43,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         }
 
         if (curCue == -1) {// Adding a new cue
-            createCue(button, MainActivity.getCurrentChannelArray(), -1, "", -1, -1);
+            createCue(button, MainActivity.getCurrentChannelArray(), -1, -1, -1);
         } else {
             // ======= Loading a cue ========
             int prevCueNum = -1;
@@ -83,13 +83,11 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
 
     /**
      * Adds a new cue with the current ch Levels
-     *
-     * @param button   of "Add Cue"
+     *  @param button   of "Add Cue"
      * @param chLevels level of channels
      * @param cueNum   cue number
-     * @param cueName  the cue name
      */
-    protected void createCue(Button button, List<Integer> chLevels, double cueNum, String cueName, int fadeUpTime, int fadeDownTime) {
+    private void createCue(Button button, List<Integer> chLevels, double cueNum, int fadeUpTime, int fadeDownTime) {
         // Rename the old button to Cue #
 
         try {
@@ -106,11 +104,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         } else {
             button.setText(String.format(context.getString(R.string.cue), cueNum));
             // Add cue name
-            if (cueName.equals("")) {
-                MainActivity.alCues.add(new CueObj(cueNum, String.format(context.getString(R.string.cue), cueNum), fadeUpTime, fadeDownTime, chLevels, button));
-            } else {
-                MainActivity.alCues.add(new CueObj(cueNum, cueName, fadeUpTime, fadeDownTime, chLevels, button));
-            }
+            MainActivity.alCues.add(new CueObj(cueNum, String.format(context.getString(R.string.cue), cueNum), fadeUpTime, fadeDownTime, chLevels, button));
         }
         MainActivity.cueCount++;
 

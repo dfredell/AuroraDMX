@@ -19,7 +19,7 @@ import java.util.List;
 
 public class VerticalSeekBar extends SeekBar {
 
-    private List<Double> presetTicks = new ArrayList<>();
+    private final List<Double> presetTicks = new ArrayList<>();
 
     public VerticalSeekBar(Context context) {
         super(context);

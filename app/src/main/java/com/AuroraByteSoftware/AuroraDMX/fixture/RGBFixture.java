@@ -28,11 +28,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     private RelativeLayout viewGroup = null;
     private TextView tvVal = null;
-    private int ChNum = 0;
-    private View rgbSelectView;
 
-    private double step[] = new double[3];
-    private double stepIteram[] = new double[3];
+    private final double[] step = new double[3];
+    private final double[] stepIteram = new double[3];
     private final MainActivity context;
     private String chText = "";
     private String chValuePresets = "";
@@ -51,16 +49,14 @@ public class RGBFixture extends Fixture implements OnClickListener {
         init();
     }
 
-    RGBFixture(final MainActivity context, String channelName, RelativeLayout viewGroup) {
+    RGBFixture(final MainActivity context, String channelName) {
         this.context = context;
         this.chText = channelName == null ? this.chText : channelName;
-        this.viewGroup = viewGroup;
 
         init();
     }
 
-    @Override
-    public void init() {
+    private void init() {
         LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_rgb, null);
 
@@ -183,8 +179,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
         updateFixtureLevelText();
     }
 
-    @Override
-    protected void updateFixtureLevelText() {
+    private void updateFixtureLevelText() {
         ambilWarnaDialog.setRGBLevel(rgbLevel);
     }
 
@@ -211,7 +206,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     @Override
     public String toString() {
-        return ("Ch: " + ChNum + "\tLvl: " + rgbLevel);
+        return ("Lvl: " + rgbLevel);
     }
 
     /**
@@ -301,15 +296,6 @@ public class RGBFixture extends Fixture implements OnClickListener {
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
         tvChNum.setText(String.format("%1$s", currentFixtureNum));
-    }
-
-    public void refreshLayout() {
-//        ambilWarnaDialog.getView().post(new Runnable() {
-//            @Override
-//            public void run() {
-//                ambilWarnaDialog.getViewSatVal().invalidate();
-//            }
-//        });
     }
 
     public void setChLevelArray(List<Integer> chLevels) {

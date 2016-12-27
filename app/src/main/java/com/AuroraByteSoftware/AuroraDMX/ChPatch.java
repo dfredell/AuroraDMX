@@ -27,10 +27,6 @@ public class ChPatch implements Serializable {
         return dimmers.contains(dimmer);
     }
 
-    public void setDimmers(List<Integer> dimmers) {
-        this.dimmers = dimmers;
-    }
-
     public void addDimmer(Integer dimmer) {
         if (!dimmers.contains(dimmer))
             dimmers.add(dimmer);

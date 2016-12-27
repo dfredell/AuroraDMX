@@ -12,7 +12,7 @@ import android.widget.TextView;
  */
 
 public class VerticalTextView extends TextView {
-    final boolean topDown;
+    private final boolean topDown;
 
     public VerticalTextView(Context context, AttributeSet attrs) {
         super(context, attrs);

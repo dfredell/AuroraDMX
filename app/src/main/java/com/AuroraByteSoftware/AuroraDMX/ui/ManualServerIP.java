@@ -31,8 +31,7 @@ public class ManualServerIP {
                 MainActivity.getSharedPref().edit().putString(
                         SettingsActivity.manualserver, editTextServerIP.getText().toString()).apply();
                 checkboxPrefManual.setSummary(editTextServerIP.getText().toString());
-                MainActivity.getSharedPref().edit().putString(SettingsActivity.serveraddress, editTextServerIP.getText().toString()).commit();
-
+                MainActivity.getSharedPref().edit().putString(SettingsActivity.serveraddress, editTextServerIP.getText().toString()).apply();
             }
         });
         // set prompts.xml to alertdialog builder

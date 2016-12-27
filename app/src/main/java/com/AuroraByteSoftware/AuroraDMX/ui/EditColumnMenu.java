@@ -106,7 +106,6 @@ public class EditColumnMenu extends MainActivity {
 
         builder.setView(promptsView);
         AlertDialog alert = builder.create();
-        alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         alert.show();
     }

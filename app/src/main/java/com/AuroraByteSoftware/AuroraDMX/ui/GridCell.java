@@ -1,6 +1,5 @@
 package com.AuroraByteSoftware.AuroraDMX.ui;
 
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.View;
@@ -12,12 +11,12 @@ import android.widget.Button;
 import com.AuroraByteSoftware.AuroraDMX.R;
 
 class GridCell extends BaseAdapter implements OnClickListener {
-    private final Context mContext;
+    private final PatchActivity mContext;
     private int count = 0;
     private final boolean isCh;
-    final int SELECTED_COLOR = 0xe03399ff;
+    private final int SELECTED_COLOR = 0xe03399ff;
 
-    public GridCell(Context c, int a_count, boolean a_isChs) {
+    public GridCell(PatchActivity c, int a_count, boolean a_isChs) {
         mContext = c;
         count = a_count;
         isCh = a_isChs;
@@ -63,12 +62,12 @@ class GridCell extends BaseAdapter implements OnClickListener {
                 // set current ch
                 PatchActivity.currentCh = Integer.parseInt(button.getText().toString());
 
-                final int numVisibleChildren = PatchActivity.chGridView.getChildCount();
-                int numVisibleChildrenOffset = PatchActivity.chGridView.getFirstVisiblePosition();
+                final int numVisibleChildren = mContext.chGridView.getChildCount();
+                int numVisibleChildrenOffset = mContext.chGridView.getFirstVisiblePosition();
 
                 // Set dimmers
                 for (int i = 0; i < numVisibleChildren; i++) {
-                    View view = PatchActivity.chGridView.getChildAt(i);
+                    View view = mContext.chGridView.getChildAt(i);
                     if (PatchActivity.currentCh == (i + numVisibleChildrenOffset + 1)) {
                         view.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
                     } else {
@@ -80,12 +79,12 @@ class GridCell extends BaseAdapter implements OnClickListener {
             }
             button.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
 
-            final int numVisibleChildren = PatchActivity.dimGridView.getChildCount();
-            int numVisibleChildrenOffset = PatchActivity.dimGridView.getFirstVisiblePosition();
+            final int numVisibleChildren = mContext.dimGridView.getChildCount();
+            int numVisibleChildrenOffset = mContext.dimGridView.getFirstVisiblePosition();
 
             // Set dimmers
             for (int i = 0; i < numVisibleChildren; i++) {
-                View view = PatchActivity.dimGridView.getChildAt(i);
+                View view = mContext.dimGridView.getChildAt(i);
                 if (PatchActivity.chContainsDimmer(i + numVisibleChildrenOffset)) {
                     view.getBackground().setColorFilter(SELECTED_COLOR, PorterDuff.Mode.SRC_ATOP);
                 } else {

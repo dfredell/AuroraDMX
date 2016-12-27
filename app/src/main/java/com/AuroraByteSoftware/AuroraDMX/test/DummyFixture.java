@@ -1,7 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.test;
 
 
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
@@ -14,26 +13,14 @@ import java.util.List;
 public class DummyFixture extends Fixture {
 
 
-    private int ChNum = 0;
-
-    private double step[] = new double[3];
-    private double stepIteram[] = new double[3];
+    private final double[] step = new double[3];
+    private final double[] stepIteram = new double[3];
     private String chText = "";
     private String chValuePresets = "";
     private List<Integer> rgbLevel = new ArrayList<>(Collections.nCopies(3, 0));
 
     public DummyFixture(final MainActivity context, String channelName) {
         this.chText = channelName == null ? this.chText : channelName;
-        init();
-    }
-
-    public DummyFixture(final MainActivity context, String channelName, LinearLayout viewGroup) {
-        this.chText = channelName == null ? this.chText : channelName;
-
-    }
-
-    @Override
-    public void init() {
     }
 
 
@@ -59,11 +46,6 @@ public class DummyFixture extends Fixture {
         for (int i = 0; i < a_chLevel.size(); i++) {
             rgbLevel.set(i, Math.min(MAX_LEVEL, a_chLevel.get(i)));
         }
-        updateFixtureLevelText();
-    }
-
-    @Override
-    protected void updateFixtureLevelText() {
     }
 
     /**
@@ -76,7 +58,7 @@ public class DummyFixture extends Fixture {
 
     @Override
     public String toString() {
-        return ("Ch: " + ChNum + "\tLvl: " + rgbLevel);
+        return ("Lvl: " + rgbLevel);
     }
 
     /**
@@ -157,9 +139,5 @@ public class DummyFixture extends Fixture {
 
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
-    }
-
-    public void setChLevelArray(List<Integer> chLevels) {
-        rgbLevel = chLevels;
     }
 }

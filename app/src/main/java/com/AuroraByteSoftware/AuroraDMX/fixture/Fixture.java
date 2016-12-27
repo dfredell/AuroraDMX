@@ -1,6 +1,5 @@
 package com.AuroraByteSoftware.AuroraDMX.fixture;
 
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.List;
@@ -12,10 +11,8 @@ import java.util.List;
 public abstract class Fixture {
     public static final int MAX_LEVEL = 255;
     public static final String PRESET_TEXT_COLOR = "#99ccff";
-    protected static final String TAG = "AuroraDMX";
+    static final String TAG = "AuroraDMX";
     static final String REGEX_255 = "([0-9]|[0-9][0-9]|[01][0-9][0-9]|2[0-4][0-9]|25[0-5])";
-
-    public abstract void init();
 
     public abstract RelativeLayout getViewGroup();
 
@@ -42,6 +39,4 @@ public abstract class Fixture {
     public abstract boolean isRGB();
 
     public abstract void setFixtureNumber(int currentFixtureNum);
-
-    protected abstract void updateFixtureLevelText();
 }

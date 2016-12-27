@@ -36,7 +36,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     private RelativeLayout viewGroup = null;
     private TextView tvVal = null;
-    private int ChNum = 0;
     private VerticalSeekBar seekBar = null;
 
     private double chLevel = 0;
@@ -57,8 +56,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         init();
     }
 
-    @Override
-    public void init() {
+    private void init() {
         LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_standard, null);
 
@@ -96,7 +94,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         seekBar.setPresetTicks(presets);
     }
 
-    private LayerDrawable generateLayerDrawable(Context context, int scrollColor, int height) {
+    private LayerDrawable generateLayerDrawable(Context context, int scrollColor) {
 
         //Foreground column color
         GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
@@ -162,7 +160,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     }
 
 
-    @Override
     protected void updateFixtureLevelText() {
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
             tvVal.setText(String.format("%1$s", (int) chLevel));
@@ -231,7 +228,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     @Override
     public String toString() {
-        return ("Ch: " + ChNum + "\tLvl: " + chLevel);
+        return ("Lvl: " + chLevel);
     }
 
     /**
@@ -273,8 +270,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     @Override
     public void setScrollColor(int scrollColor) {
         seekBar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int height = seekBar.getMeasuredHeight();
-        LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(), scrollColor, height);
+        LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(), scrollColor);
         seekBar.setProgressDrawable(mylayer);
         seekBar.updateThumb();
         mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
@@ -284,7 +280,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     public void setColumnText(String text) {
         chText = text;
 
-        LayerDrawable mylayer = generateLayerDrawable(this.context, Color.parseColor(MainActivity.getSharedPref().getString("channel_color", "#ffcc00")), seekBar.getMeasuredWidth());
+        LayerDrawable mylayer = generateLayerDrawable(this.context, Color.parseColor(MainActivity.getSharedPref().getString("channel_color", "#ffcc00")));
 
         seekBar.setProgressDrawable(mylayer);
         seekBar.updateThumb();

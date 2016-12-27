@@ -23,10 +23,6 @@ public class CueObj extends MainActivity implements Serializable {
     private int highlight = 0;
     private boolean fadeInProgress = false;
     private String name = "";
-    private static final String TAG = "AuroraDMX";
-
-    public CueObj() {
-    }
 
     /**
      * @return the button
@@ -107,8 +103,6 @@ public class CueObj extends MainActivity implements Serializable {
         if (highlight != 0) {
             button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
             button.postInvalidate();
-        } else if (highlight == 255) {
-            button.forceLayout();
         } else {
             button.getBackground().setColorFilter(null);
         }
@@ -151,10 +145,6 @@ public class CueObj extends MainActivity implements Serializable {
 
     public void setCueName(String name) {
         this.name = name;
-    }
-
-    public String getString() {
-        return getCueName();
     }
 
     public int[] getOriginalLevels() {

@@ -1,11 +1,8 @@
 package com.AuroraByteSoftware.AuroraDMX.network;
 
 import android.os.Build;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.util.UUID;
 
 /**
  * @author Dan Fredell

@@ -15,8 +15,8 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 public class PatchActivity extends Activity {
-    public static GridView dimGridView;
-    public static GridView chGridView;
+    public GridView dimGridView;
+    public GridView chGridView;
     public static int currentCh = 1;
 
     @Override

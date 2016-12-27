@@ -29,7 +29,7 @@ import fr.azelart.artnetstack.utils.ArtNetPacketEncoder;
 
 public class SendArtnetPoll extends Thread {
     private static final int ART_NET_PORT = 6454;
-    public static final int TIMEOUT = 1500;
+    private static final int TIMEOUT = 1500;
     private Context superContext = null;
     private static final String TAG = "AuroraDMX";
 

@@ -323,7 +323,7 @@ public class SettingsActivity extends PreferenceActivity {
                                 others.setChecked(false);// Uncheck the other boxes
                         }
                         if (preference instanceof CheckBoxPreference)//Set server IP
-                            MainActivity.getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) preference.getTitle()).commit();
+                            MainActivity.getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) preference.getTitle()).apply();
 
 
                         checkboxPrefManual = (CheckBoxPreference) findPreference("checkboxPrefManual");

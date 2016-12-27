@@ -49,7 +49,7 @@ public class FixtureUtility {
         patchList.add(new ChPatch(patchList.size()));
 
         RelativeLayout viewGroup = fixture.getViewGroup();
-        Fixture rgbFixture = new RGBFixture(context, fixture.getChText(), viewGroup);
+        Fixture rgbFixture = new RGBFixture(context, fixture.getChText());
 
         //Remove and add the new view
         LinearLayout fixtureView = (LinearLayout) context.findViewById(R.id.ChanelLayout);

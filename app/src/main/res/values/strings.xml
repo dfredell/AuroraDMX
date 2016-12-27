@@ -7,7 +7,7 @@
     <string name="AddCue">Add Cue</string>
     <string name="ChFull">Full</string>
     <string name="ChPercent">%1$s%%</string>
-    <string name="cue">Cue %1$f</string>
+    <string name="cue">Cue %1$s</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="insert">Insert</string>

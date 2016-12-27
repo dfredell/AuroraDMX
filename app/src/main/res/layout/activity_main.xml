@@ -31,7 +31,7 @@
             <include layout="@layout/fixture_standard"/>
             <include layout="@layout/fixture_standard"/>
             <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
+            <include layout="@layout/fixture_rgb"/>
             <include layout="@layout/fixture_standard"/>
             <include layout="@layout/fixture_standard"/>
             <include layout="@layout/fixture_standard"/>

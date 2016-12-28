@@ -26,9 +26,10 @@ android {
 
 dependencies {
     compile files('libs/commons-lang3-3.3.2.jar')
-    compile 'com.android.support:support-v13:25.0.1'
+    compile 'com.android.support:support-v13:25.1.0'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile project(':ArtNetStack')
     testCompile 'junit:junit:4.12'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
+    compile 'com.jmedeisis:draglinearlayout:1.1.0'
 }

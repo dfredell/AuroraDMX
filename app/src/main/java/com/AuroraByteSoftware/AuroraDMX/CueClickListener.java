@@ -43,15 +43,17 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         }
 
         if (curCue == -1) {// Adding a new cue
-            createCue(button, MainActivity.getCurrentChannelArray(), -1, -1, -1);
+            createCue(button, MainActivity.getCurrentChannelArray(), -1, -1);
         } else {
             // ======= Loading a cue ========
             int prevCueNum = -1;
             for (int x = 0; x < MainActivity.alCues.size(); x++) {
-                if (MainActivity.alCues.get(x).getHighlight() > 1 && x != curCue)
+                if (MainActivity.alCues.get(x).getHighlight() > 1 && x != curCue) {
                     prevCueNum = x;
-                if (MainActivity.alCues.get(x).isFadeInProgress())
+                }
+                if (MainActivity.alCues.get(x).isFadeInProgress()) {
                     otherCueFading = true;
+                }
             }
             // Alert if anyone else is fading
             if (otherCueFading) {
@@ -75,19 +77,20 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
                 buttonIsAddCue = false;
             }
         }
-        if (!buttonIsAddCue)
+        if (!buttonIsAddCue) {
             EditCueMenu.createEditCueMenu(MainActivity.alCues, (Button) buttonView);
+        }
         return true;
     }
 
 
     /**
      * Adds a new cue with the current ch Levels
-     *  @param button   of "Add Cue"
+     *
+     * @param button   of "Add Cue"
      * @param chLevels level of channels
-     * @param cueNum   cue number
      */
-    private void createCue(Button button, List<Integer> chLevels, double cueNum, int fadeUpTime, int fadeDownTime) {
+    private void createCue(Button button, List<Integer> chLevels, int fadeUpTime, int fadeDownTime) {
         // Rename the old button to Cue #
 
         try {
@@ -97,15 +100,11 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
             t.printStackTrace();
             Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
         }
-        if (cueNum == -1) {
-            String name = String.format(context.getString(R.string.cue), MainActivity.cueCount);
-            button.setText(name);
-            MainActivity.alCues.add(new CueObj(MainActivity.cueCount, name, fadeUpTime, fadeDownTime, chLevels, button));
-        } else {
-            button.setText(String.format(context.getString(R.string.cue), cueNum));
-            // Add cue name
-            MainActivity.alCues.add(new CueObj(cueNum, String.format(context.getString(R.string.cue), cueNum), fadeUpTime, fadeDownTime, chLevels, button));
-        }
+        String name = String.format(context.getString(R.string.cue), Integer.toString(MainActivity.alCues.size() + 1));
+
+        button.setText(name);
+        // Add cue name
+        MainActivity.alCues.add(new CueObj(name, fadeUpTime, fadeDownTime, chLevels, button));
         MainActivity.cueCount++;
 
         // create a new "Add Cue" button

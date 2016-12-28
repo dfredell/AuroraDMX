@@ -3,21 +3,21 @@ package com.AuroraByteSoftware.AuroraDMX.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.CueClickListener;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
-import com.AuroraByteSoftware.AuroraDMX.CueSorter;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.jmedeisis.draglinearlayout.DragLinearLayout;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -26,36 +26,46 @@ import java.util.Collections;
 
 public class EditCueMenu extends MainActivity {
     private static int currentCue = -1;// used to and from cue edit
-    private static final String TAG = "AuroraDMX";
 
     @SuppressLint("SetTextI18n")
-    public static void createEditCueMenu(final ArrayList<CueObj> alCues, Button button) {
+    public static void createEditCueMenu(final ArrayList<CueObj> alCues, final Button button) {
         // Find what Cue we are in
         for (int x = 0; x < alCues.size(); x++) {
             if (alCues.get(x).getButton() == button) {
                 currentCue = x;
+                break;
             }
         }
+
         final Context context = button.getContext();
 
+        // set prompts.xml to alert dialog builder
+        LayoutInflater li = LayoutInflater.from(context);
+        final View view = li.inflate(R.layout.dialog_cue, (ViewGroup) button.getParent(), false);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(view);
+
+        final AlertDialog alert = builder.create();
+
         builder.setCancelable(true);
         builder.setIcon(
-                new IconDrawable(button.getContext().getApplicationContext(), FontAwesomeIcons.fa_info_circle)
+                new IconDrawable(context.getApplicationContext(), FontAwesomeIcons.fa_info_circle)
                         .colorRes(R.color.white)
                         .alpha(204)
                         .actionBarSize());
 
-        builder.setTitle(String.format(context.getString(R.string.cue), Double.toString(alCues.get(currentCue).getCueNum())));
+        builder.setTitle(String.format(context.getString(R.string.cue), alCues.get(currentCue).getCueName()));
 
-        // Create the Save button for the Edit Cue menu
-        builder.setPositiveButton(R.string.Save, new DialogInterface.OnClickListener() {
+
+        ///////////////// SAVE /////////////////
+        view.findViewById(R.id.cue_save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View view) {
 
-                EditText editCueName = (EditText) ((AlertDialog) dialog).findViewById(R.id.editCueName);
-                EditText editTextFadeUp = (EditText) ((AlertDialog) dialog).findViewById(R.id.editTextFadeUp);
-                EditText editTextFadeDown = (EditText) ((AlertDialog) dialog).findViewById(R.id.editTextFadeDown);
+                EditText editCueName = (EditText) view.findViewById(R.id.editCueName);
+                EditText editTextFadeUp = (EditText) view.findViewById(R.id.editTextFadeUp);
+                EditText editTextFadeDown = (EditText) view.findViewById(R.id.editTextFadeDown);
 
                 try {
                     String cueName = editCueName.getText().toString();
@@ -72,14 +82,15 @@ public class EditCueMenu extends MainActivity {
                 } catch (Throwable t) {
                     Toast.makeText(context, R.string.Error, Toast.LENGTH_SHORT).show();
                 }
-
-                dialog.dismiss();
+                alert.dismiss();
             }
         });
-        // Create the Insert button for the Edit Cue menu
-        builder.setNegativeButton(R.string.insert, new DialogInterface.OnClickListener() {
+
+        ///////////////// INSERT /////////////////
+        view.findViewById(R.id.cue_insert).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View view) {
+
                 ViewGroup layout = (ViewGroup) alCues.get(currentCue).getButton().getParent();
 
                 // Read global settings
@@ -96,97 +107,108 @@ public class EditCueMenu extends MainActivity {
                 button.setOnClickListener(new CueClickListener());
 
                 // Create a sub cue number
-                double thisCueNum;
-                if (currentCue == 0)
-                    thisCueNum = alCues.get(currentCue).getCueNum() - 0.1;
-                else {
-                    thisCueNum = alCues.get(currentCue - 1).getCueNum();
-                    // mods check what level should be incremented
-                    double nextCueNum = alCues.get(currentCue).getCueNum();
-                    int diff = (int) ((nextCueNum * 100) - (thisCueNum * 100));
-                    if (diff <= 1) {
-                        Toast.makeText(context, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
-                        thisCueNum = -1;
-                    } else if (diff <= 10)
-                        thisCueNum += 0.01;
-                    else if (diff <= 100) {
-                        thisCueNum += 0.1;
-                    } else {
-                        Toast.makeText(context, R.string.onlyTwoDec, Toast.LENGTH_SHORT).show();
-                        thisCueNum = -1;
-                    }
-                    Log.v(TAG, "this: " + thisCueNum + " diff " + diff);
-                }
-                thisCueNum = Math.round(thisCueNum * 100.0) / 100.0;
+                String thisCueNum = alCues.get(currentCue).getCueName();
 
-                if (thisCueNum > 0) {
-
-                    // setup button
-                    button.setText(String.format(context.getString(R.string.cue), Double.toString(thisCueNum)));
-                    button.setLongClickable(true);
-                    button.setOnLongClickListener(new CueClickListener());
-                    layout.addView(button, currentCue);// add new button after
-                    // currentCue
-                    String cueName = String.format(context.getString(R.string.cue), Double.toString(thisCueNum));
-                    alCues.add(new CueObj(thisCueNum, cueName, fadeUpTime, fadeDownTime, getCurrentChannelArray(), button));
-                    Collections.sort(alCues, new CueSorter());
-
-                    // Toast.makeText(context, "Inserted " + thisCueNum,
-                    // Toast.LENGTH_SHORT).show();
-                    // dialog.dismiss();
-
-                } else {// Cue can not be below 0
-                    Toast.makeText(context, R.string.cueMustBePos, Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }
+                // setup button
+                button.setText(thisCueNum);
+                button.setLongClickable(true);
+                button.setOnLongClickListener(new CueClickListener());
+                layout.addView(button, currentCue);// add new button after
+                // currentCue
+                CueObj newCue = new CueObj(thisCueNum, fadeUpTime, fadeDownTime, getCurrentChannelArray(), button);
+                alCues.add(currentCue, newCue);
+                alert.dismiss();
             }
         });
-        // Create the Delete button for the Edit Cue menu
-        builder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
+
+        ///////////////// DELETE /////////////////
+        view.findViewById(R.id.cue_delete).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View view) {
+
                 // Check if any cues are fading
                 boolean fadeInProgress = false;
                 for (CueObj cue : alCues) {
-                    if (cue.isFadeInProgress())
+                    if (cue.isFadeInProgress()) {
                         fadeInProgress = true;
+                    }
                 }
                 // Don't delete if fading
                 if (!fadeInProgress) {
                     Toast.makeText(
                             context,
                             context.getString(R.string.deletedCue)
-                                    + alCues.get(currentCue).getCueNum(), Toast.LENGTH_SHORT)
+                                    + alCues.get(currentCue).getCueName(), Toast.LENGTH_SHORT)
                             .show();
                     ViewGroup layout = (ViewGroup) alCues.get(currentCue).getButton().getParent();
-                    if (null != layout) // for safety only as you are doing
-                        // onClick
+                    if (null != layout) {// for safety only as you are doing
                         layout.removeView(alCues.get(currentCue).getButton());
+                    }
                     alCues.remove(currentCue);
-                    dialog.dismiss();
                 } else {
                     Toast.makeText(context, R.string.canNotDeleteWhileFading, Toast.LENGTH_SHORT).show();
                 }
+                alert.dismiss();
             }
         });
 
-        // set prompts.xml to alert dialog builder
-        LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_cue, (ViewGroup) button.getParent(), false);
+        ///////////////// UPDATE /////////////////
+        view.findViewById(R.id.cue_update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        EditText editCueName = (EditText) promptsView.findViewById(R.id.editCueName);
+                CueObj cue = alCues.get(currentCue);
+                cue.setLevelsList(MainActivity.getCurrentChannelArray());
+                alert.dismiss();
+            }
+        });
+
+        ///////////////// REORDER /////////////////
+        view.findViewById(R.id.cue_reorder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View clickView) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                LayoutInflater li = LayoutInflater.from(context);
+                final View reorderView = li.inflate(R.layout.dialog_cue_reorder, null, false);
+                builder.setView(reorderView);
+                final AlertDialog reorderAlert = builder.create();
+
+                DragLinearLayout dragLinearLayout = (DragLinearLayout) reorderView.findViewById(R.id.cue_reorder_view);
+                for (CueObj alCue : alCues) {
+                    TextView textView = new TextView(context);
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                    textView.setText(alCue.getCueName());
+                    dragLinearLayout.addView(textView);
+                }
+                for (int i = 0; i < dragLinearLayout.getChildCount(); i++) {
+                    View child = dragLinearLayout.getChildAt(i);
+                    dragLinearLayout.setViewDraggable(child, child);
+                }
+                //When items drag reorder them in their array
+                dragLinearLayout.setOnViewSwapListener(new DragLinearLayout.OnViewSwapListener() {
+                    @Override
+                    public void onSwap(View firstView, int firstPosition,
+                                       View secondView, int secondPosition) {
+                        LinearLayout parent = (LinearLayout) button.getParent();
+                        View childAt = parent.getChildAt(firstPosition);
+                        parent.removeView(childAt);
+                        parent.addView(childAt,secondPosition);
+                        Collections.swap(alCues,firstPosition,secondPosition);
+                    }
+                });
+                alert.dismiss();
+                reorderAlert.show();
+            }
+        });
+
+        EditText editCueName = (EditText) view.findViewById(R.id.editCueName);
         editCueName.setText(alCues.get(currentCue).getCueName());
-        editCueName.selectAll();
 
-        EditText editTextFadeUp = (EditText) promptsView.findViewById(R.id.editTextFadeUp);
+        EditText editTextFadeUp = (EditText) view.findViewById(R.id.editTextFadeUp);
         editTextFadeUp.setText(String.format("%1$s", alCues.get(currentCue).getFadeUpTime()));
 
-        EditText editTextFadeDown = (EditText) promptsView.findViewById(R.id.editTextFadeDown);
+        EditText editTextFadeDown = (EditText) view.findViewById(R.id.editTextFadeDown);
         editTextFadeDown.setText(String.format("%1$s", alCues.get(currentCue).getFadeDownTime()));
-
-        builder.setView(promptsView);
-
-        AlertDialog alert = builder.create();
 
         alert.show();
     }

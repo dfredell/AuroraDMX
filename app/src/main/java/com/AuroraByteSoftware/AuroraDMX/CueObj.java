@@ -16,7 +16,6 @@ public class CueObj extends MainActivity implements Serializable {
     private static final long serialVersionUID = -6835651116806619514L;
     private int fadeUpTime = 5;
     private int fadeDownTime = 5;
-    private double cueNum = 0;
     private ArrayList<Integer> levelsList;
     private int[] levels = new int[0];
     private transient Button button;
@@ -38,19 +37,13 @@ public class CueObj extends MainActivity implements Serializable {
         this.button = button;
     }
 
-    public CueObj(double a_cueNum, String cueName, int a_fadeUpTime, int a_fadeDownTime,
-                  List<Integer> a_levels, Button a_button) {
-        if (a_cueNum > 0) {
-            fadeUpTime = a_fadeUpTime;
-            fadeDownTime = a_fadeDownTime;
-            cueNum = a_cueNum;
-            levelsList = new ArrayList<>(a_levels);
-            button = a_button;
-            name = cueName;
-        } else {// Cue can not be below 0
-            Toast.makeText(button.getContext(), getString(R.string.cueMustBePos), Toast.LENGTH_SHORT)
-                    .show();
-        }
+    public CueObj(String cueName, int a_fadeUpTime, int a_fadeDownTime, List<Integer> a_levels, Button a_button) {
+        fadeUpTime = a_fadeUpTime;
+        fadeDownTime = a_fadeDownTime;
+        levelsList = new ArrayList<>(a_levels);
+        button = a_button;
+        name = cueName;
+
     }
 
     /**
@@ -79,13 +72,6 @@ public class CueObj extends MainActivity implements Serializable {
      */
     public void setFadeDownTime(int fadeDownTime2) {
         this.fadeDownTime = fadeDownTime2;
-    }
-
-    /**
-     * @return the cueNum
-     */
-    public double getCueNum() {
-        return cueNum;
     }
 
     /**
@@ -137,9 +123,6 @@ public class CueObj extends MainActivity implements Serializable {
     }
 
     public String getCueName() {
-        if (name.equals("")) {
-            return Double.toString(cueNum);
-        }
         return name;
     }
 

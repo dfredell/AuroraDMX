@@ -11,7 +11,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="insert">Insert</string>
-    <string name="deletedCue">Deleted Cue</string>
+    <string name="deletedCue">Deleted </string>
     <string name="Refresh">Refresh</string>
     <string name="canNotDeleteWhileFading">Can not delete while fading</string>
     <string name="onlyTwoDec">Only 2 decimal places allowed</string>
@@ -78,13 +78,18 @@
     <!-- dialog_cue -->
     <string name="FadeUp">Fade Up </string>
     <string name="FadeDown">Fade Down </string>
-
-    <string name="editValuePresets">Preset Values</string>
-    <string name="pick_preset">Pick preset value</string>
+    <string name="default_level">0</string>
+    <string name="cue_save">Save</string>
+    <string name="cue_delete">Delete</string>
+    <string name="cue_insert">Insert</string>
+    <string name="cue_update">Update Levels</string>
+    <string name="cue_reorder">Reorder</string>
 
     <string name="cannotOpen">Can not open data</string>
     <string name="openedFile">Opened file (unsaved)</string>
     <string name="edit_icon">{fa-pencil}</string>
-    <string name="default_level">0</string>
+
+    <string name="editValuePresets">Preset Values</string>
+    <string name="pick_preset">Pick preset value</string>
 
 </resources>

@@ -10,7 +10,6 @@
     android:id="@+id/main">
         
     <com.AuroraByteSoftware.AuroraDMX.ui.MyHorizontalScrollView
-        android:id="@+id/horizontalScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/horizontalScrollView2"

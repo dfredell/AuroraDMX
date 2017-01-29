@@ -34,7 +34,6 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         }
         context = button.getContext();
         int curCue = -1;// Current cue number on alCues scale
-        boolean otherCueFading = false;
         for (int x = 0; x < MainActivity.alCues.size(); x++) {
             if (button == MainActivity.alCues.get(x).getButton()) {
                 curCue = x;
@@ -46,23 +45,9 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
             createCue(button, MainActivity.getCurrentChannelArray(), -1, -1);
         } else {
             // ======= Loading a cue ========
-            int prevCueNum = -1;
-            for (int x = 0; x < MainActivity.alCues.size(); x++) {
-                if (MainActivity.alCues.get(x).getHighlight() > 1 && x != curCue) {
-                    prevCueNum = x;
-                }
-                if (MainActivity.alCues.get(x).isFadeInProgress()) {
-                    otherCueFading = true;
-                }
-            }
-            // Alert if anyone else is fading
-            if (otherCueFading) {
-                Toast.makeText(context, R.string.waitingOnFade, Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d(TAG, "oldChLevels " + MainActivity.getCurrentChannelArray());
-                CueFade cueFade = new CueFade();
-                cueFade.startCueFade(MainActivity.alCues.get(curCue), prevCueNum < 0 ? null : MainActivity.alCues.get(prevCueNum));
-            }
+            Log.d(TAG, "oldChLevels " + MainActivity.getCurrentChannelArray());
+            CueFade cueFade = new CueFade();
+            cueFade.startCueFade(MainActivity.alCues.get(curCue));
         }
     }
 

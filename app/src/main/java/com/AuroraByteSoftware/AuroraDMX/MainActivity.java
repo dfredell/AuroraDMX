@@ -65,6 +65,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     private final List<String> listOfSkus = new ArrayList<>();
     public static List<Fixture> alColumns = null;
     public static ArrayList<CueObj> alCues = null;
+    static int upwardCue = -1;
+    static int downwardCue = -1;
 
     private ProjectManagement pm = null;
 
@@ -134,10 +136,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     private void startup() {
         // load the layout
         setContentView(R.layout.activity_main);
-        // Get the MainLayout from the XML
-        Button button = (Button) findViewById(R.id.AddCueButton);
-        button.setOnClickListener(new CueClickListener());
-        button.setOnLongClickListener(new CueClickListener());
+        setupButtons();
+
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
@@ -145,6 +145,19 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         alColumns = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
         setNumberOfFixtures(number_channels, null, null, null);
+    }
+
+    private void setupButtons() {
+        // Add Cue
+        Button button = (Button) findViewById(R.id.AddCueButton);
+        CueClickListener addCueListener = new CueClickListener();
+        button.setOnClickListener(addCueListener);
+        button.setOnLongClickListener(addCueListener);
+        // Next Cue
+        button = (Button) findViewById(R.id.go_button);
+        NextCueListener goListener = new NextCueListener();
+        button.setOnClickListener(goListener);
+        button.setOnLongClickListener(goListener);
     }
 
     public static SharedPreferences getSharedPref() {

@@ -10,9 +10,12 @@
     android:id="@+id/main">
         
     <com.AuroraByteSoftware.AuroraDMX.ui.MyHorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/horizontalScrollView2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
@@ -45,13 +48,24 @@
 
     </com.AuroraByteSoftware.AuroraDMX.ui.MyHorizontalScrollView>
 
+    <Button
+        android:text="Next Cue"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/go_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/horizontalScrollView1"
+        android:background="@drawable/button_style_go"/>
+
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_toLeftOf="@id/go_button">
 
         <LinearLayout
             android:id="@+id/CueLine"
@@ -67,5 +81,6 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
 
 </RelativeLayout>

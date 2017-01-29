@@ -8,8 +8,9 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
-public class CueObj extends MainActivity implements Serializable {
+public class CueObj implements Serializable {
     /**
      * s
      */
@@ -22,6 +23,7 @@ public class CueObj extends MainActivity implements Serializable {
     private int highlight = 0;
     private boolean fadeInProgress = false;
     private String name = "";
+    private Timer fadeTimer = null;
 
     /**
      * @return the button
@@ -43,7 +45,6 @@ public class CueObj extends MainActivity implements Serializable {
         levelsList = new ArrayList<>(a_levels);
         button = a_button;
         name = cueName;
-
     }
 
     /**
@@ -140,5 +141,13 @@ public class CueObj extends MainActivity implements Serializable {
 
     public void setLevelsList(List<Integer> levelsList) {
         this.levelsList = new ArrayList<>(levelsList);
+    }
+
+    public Timer getFadeTimer() {
+        return fadeTimer;
+    }
+
+    public void setFadeTimer(Timer fadeTimer) {
+        this.fadeTimer = fadeTimer;
     }
 }

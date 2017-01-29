@@ -79,11 +79,11 @@
     <string name="FadeUp">Fade Up </string>
     <string name="FadeDown">Fade Down </string>
     <string name="default_level">0</string>
-    <string name="cue_save">Save</string>
-    <string name="cue_delete">Delete</string>
-    <string name="cue_insert">Insert</string>
-    <string name="cue_update">Update Levels</string>
-    <string name="cue_reorder">Reorder</string>
+    <string name="cue_save">{fa-save}</string>
+    <string name="cue_delete">{fa-trash}</string>
+    <string name="cue_insert">{fa-plus-circle}</string>
+    <string name="cue_update">{fa-retweet}</string>
+    <string name="cue_reorder">{fa-list-ol}</string>
 
     <string name="cannotOpen">Can not open data</string>
     <string name="openedFile">Opened file (unsaved)</string>

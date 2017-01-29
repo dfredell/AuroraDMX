@@ -77,39 +77,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
+        <com.joanzapata.iconify.widget.IconButton
             android:text="@string/cue_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cue_delete"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="26sp"
+            />
 
-        <Button
+        <com.joanzapata.iconify.widget.IconButton
             android:text="@string/cue_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cue_insert"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="26sp"
+            />
 
-        <Button
+        <com.joanzapata.iconify.widget.IconButton
             android:text="@string/cue_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cue_save"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="26sp"
+            />
 
-        <Button
+        <com.joanzapata.iconify.widget.IconButton
             android:text="@string/cue_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cue_update"
-            android:layout_weight="1"/>
-        <Button
+            android:layout_weight="1"
+            android:textSize="26sp"
+            />
+
+        <com.joanzapata.iconify.widget.IconButton
             android:text="@string/cue_reorder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cue_reorder"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="26sp"
+            />
     </LinearLayout>
 
 </LinearLayout>

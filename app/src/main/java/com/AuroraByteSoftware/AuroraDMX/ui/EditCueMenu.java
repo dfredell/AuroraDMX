@@ -61,7 +61,8 @@ public class EditCueMenu extends MainActivity {
         ///////////////// SAVE /////////////////
         view.findViewById(R.id.cue_save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View button) {
+
 
                 EditText editCueName = (EditText) view.findViewById(R.id.editCueName);
                 EditText editTextFadeUp = (EditText) view.findViewById(R.id.editTextFadeUp);

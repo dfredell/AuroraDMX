@@ -27,10 +27,10 @@ class NextCueListener implements View.OnClickListener, View.OnLongClickListener 
         }
 
         int nextCue;
-        if (MainActivity.upwardCue > 0) {
+        if (MainActivity.upwardCue >= 0) {
             nextCue = MainActivity.upwardCue;
         } else if (!MainActivity.alCues.isEmpty()) {
-            nextCue = 0;
+            nextCue = -1;
         } else {
             return;
         }

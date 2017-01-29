@@ -3,7 +3,6 @@ package com.AuroraByteSoftware.AuroraDMX;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.ArrayList;

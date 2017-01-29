@@ -91,5 +91,6 @@
 
     <string name="editValuePresets">Preset Values</string>
     <string name="pick_preset">Pick preset value</string>
+    <string name="nextCue">{fa-step-forward}</string>
 
 </resources>

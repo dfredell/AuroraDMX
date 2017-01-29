@@ -82,7 +82,7 @@
     <string name="cue_save">{fa-save}</string>
     <string name="cue_delete">{fa-trash}</string>
     <string name="cue_insert">{fa-plus-circle}</string>
-    <string name="cue_update">{fa-retweet}</string>
+    <string name="cue_update">{fa-bar-chart}</string>
     <string name="cue_reorder">{fa-list-ol}</string>
 
     <string name="cannotOpen">Can not open data</string>

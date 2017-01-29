@@ -161,6 +161,7 @@ public class EditCueMenu extends MainActivity {
                 CueObj cue = alCues.get(currentCue);
                 cue.setLevelsList(MainActivity.getCurrentChannelArray());
                 alert.dismiss();
+                Toast.makeText(context, "Updated channel levels", Toast.LENGTH_SHORT).show();
             }
         });
 

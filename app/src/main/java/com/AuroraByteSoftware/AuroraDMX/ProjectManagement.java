@@ -53,6 +53,13 @@ public class ProjectManagement extends MainActivity {
     private static final String TAG = "AuroraDMX";
     private static boolean DeleteInProgress = false;
 
+    /**
+     * makes android compiler happier
+     */
+    public ProjectManagement() {
+        mainActivity=null;
+    }
+
     ProjectManagement(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }

@@ -25,6 +25,12 @@ public class CueObj implements Serializable {
     private Timer fadeTimer = null;
 
     /**
+     * makes android compiler happier
+     */
+    public CueObj() {
+    }
+
+    /**
      * @return the button
      */
     public Button getButton() {

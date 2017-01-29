@@ -50,15 +50,15 @@
 
     <com.joanzapata.iconify.widget.IconButton
         android:text="@string/nextCue"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/go_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/horizontalScrollView1"
         android:background="@drawable/button_style_go"
-        android:textSize="26sp"/>
+        android:textSize="40sp"/>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView2"

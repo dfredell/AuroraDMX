@@ -9,7 +9,7 @@ android {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 31
+        versionCode 33
         versionName '3.0'
     }
     buildTypes {

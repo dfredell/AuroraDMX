@@ -134,6 +134,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     }
 
     private void startup() {
+        updatingFixtures = true;
         // load the layout
         setContentView(R.layout.activity_main);
         setupButtons();
@@ -145,6 +146,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         alColumns = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
         setNumberOfFixtures(number_channels, null, null, null);
+        updatingFixtures = false;
     }
 
     private void setupButtons() {
@@ -202,6 +204,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB,
                              String[] valuePresets) {
+        updatingFixtures = true;
         // check for app purchace
         boolean paid = true;
         if (!BuildConfig.DEBUG) {
@@ -285,6 +288,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         recalculateFixtureNumbers();
 
         getSharedPref().edit().putString(SettingsActivity.channels, String.format("%1$s", numberFixtures)).apply();
+        updatingFixtures = false;
     }
 
     private void oneToOnePatch() {

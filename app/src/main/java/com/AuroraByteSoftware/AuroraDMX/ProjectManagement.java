@@ -233,6 +233,7 @@ public class ProjectManagement extends MainActivity {
     }
 
     private void loadData(byte[] bytes) {
+        setUpdatingFixtures(true);
         ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
         Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
         ObjectInputStream in;
@@ -345,6 +346,7 @@ public class ProjectManagement extends MainActivity {
         for (int i = 0; fixtureNames != null && i < fixtureNames.length && i < alColumns.size(); i++) {
             alColumns.get(i).setColumnText(fixtureNames[i]);
         }
+        setUpdatingFixtures(false);
     }
 
     /**

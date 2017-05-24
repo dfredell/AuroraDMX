@@ -28,7 +28,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         if (arg0 instanceof Button) {
             button = (Button) arg0;
         }
-        if (button != null && button.getContext() == null) {
+        if (button == null || button.getContext() == null) {
             Log.e(TAG, "Cue button onclick had a null context");
             return;
         }

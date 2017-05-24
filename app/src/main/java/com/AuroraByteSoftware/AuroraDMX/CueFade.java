@@ -22,7 +22,12 @@ public class CueFade extends MainActivity implements Serializable {
     public void startCueFade(final CueObj nextCue) {
 
         int prevCueNum = MainActivity.downwardCue;
-        final CueObj prevCue = prevCueNum < 0 ? null : MainActivity.alCues.get(prevCueNum);
+        final CueObj prevCue;
+        if (alCues.size() <= prevCueNum || prevCueNum < 0) {
+            prevCue = null;
+        } else {
+            prevCue = alCues.get(prevCueNum);
+        }
 
         Log.d(TAG, "startCueFade next " + nextCue + "\tprev " + prevCue);
         List<Integer> newChLevels = nextCue.getLevels();
@@ -85,7 +90,7 @@ public class CueFade extends MainActivity implements Serializable {
                         @Override
                         public void run() {
                             if (progress < steps) {
-                                nextCue.setHighlight(0, nextCue.getHighlight() + (265 / steps), 0);
+                                nextCue.setHighlight(0, nextCue.getHighlight() + (256 / steps), 0);
                                 for (Fixture col : alColumns) {
                                     col.incrementLevelUp();
                                     if (prevCue == null) {
@@ -94,7 +99,7 @@ public class CueFade extends MainActivity implements Serializable {
                                 }
                                 progress++;
                             } else {
-                                nextCue.setHighlight(0, 265, 0);
+                                nextCue.setHighlight(0, 171, 102);
                                 nextCue.setFadeInProgress(false);
                                 T.cancel();
                                 T.purge();

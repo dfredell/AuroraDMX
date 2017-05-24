@@ -11,7 +11,7 @@
 # Bugs #
 
 
-# Features #
+# Feature Requests #
 
 * Google analytics 
 * Master Slider
@@ -24,16 +24,17 @@
 * Unit tests
 * Multi user
 * Keystroke next cue
-* Large next cue button
 * Sub-masters
-* Export/share show
 * X/Y touch pad 8 & 16 bit
+* Que screen
 
 # Done #
 * Artnet Universe
 * Black options on some devices
 * Can't find ArtNet
 * Cue fade at 0
+* Large next cue button
+* Export/share show
 
 # Development Setup #
 

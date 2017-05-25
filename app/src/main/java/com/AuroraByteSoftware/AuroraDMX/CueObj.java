@@ -22,7 +22,10 @@ public class CueObj implements Serializable {
     private int highlight = 0;
     private boolean fadeInProgress = false;
     private String name = "";
-    private Timer fadeTimer = null;
+    private transient Timer fadeTimer = null;
+    private transient int r = 0;
+    private transient int g = 0;
+    private transient int b = 0;
 
     /**
      * makes android compiler happier
@@ -92,6 +95,18 @@ public class CueObj implements Serializable {
      */
     public void setHighlight(int r, int g, int b) {
         highlight = r + g + b;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        if (highlight != 0) {
+            button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
+            button.postInvalidate();
+        } else {
+            button.getBackground().setColorFilter(null);
+        }
+    }
+
+    public void refreshHighlight() {
         if (highlight != 0) {
             button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
             button.postInvalidate();

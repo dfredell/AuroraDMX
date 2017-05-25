@@ -229,7 +229,7 @@ public class ProjectManagement extends MainActivity {
             key = PREF_OLD_POINTER_HUMAN;
         mainActivity.setTitle(key);
 
-        mainActivity.setUpNetwork();
+        AuroraNetwork.setUpNetwork(mainActivity);
     }
 
     private void loadData(byte[] bytes) {
@@ -245,8 +245,7 @@ public class ProjectManagement extends MainActivity {
 
         try {
             // Stop ArtNet
-            if (null != clientSocket && !clientSocket.isClosed())
-                clientSocket.close();
+            AuroraNetwork.stopNetwork();
 
             //Clear current screen
             alCues.clear();
@@ -313,19 +312,8 @@ public class ProjectManagement extends MainActivity {
             e.printStackTrace();
         }
 
-        // Refresh views
-        LinearLayout cueLine = ((LinearLayout) mainActivity.findViewById(R.id.CueLine));
-        cueLine.removeAllViews();
-        for (CueObj cue : alCues) {
-            // create a new "Add Cue" button
-            cue.setButton(CueClickListener.makeButton(cue.getCueName(), mainActivity));
-            cueLine.addView(cue.getButton());
-            cue.setHighlight(0, 0, 0);
-            cue.setFadeInProgress(false);
-        }
+        refreshCueView();
 
-        // create a new "Add Cue" button
-        ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(CueClickListener.makeButton(mainActivity.getString(R.string.AddCue), mainActivity));
 
         migrateData(patch);
 
@@ -347,6 +335,22 @@ public class ProjectManagement extends MainActivity {
             alColumns.get(i).setColumnText(fixtureNames[i]);
         }
         setUpdatingFixtures(false);
+    }
+
+    void refreshCueView() {
+        // Refresh views
+        LinearLayout cueLine = ((LinearLayout) mainActivity.findViewById(R.id.CueLine));
+        cueLine.removeAllViews();
+        for (CueObj cue : alCues) {
+            // create a new "Add Cue" button
+            cue.setButton(CueClickListener.makeButton(cue.getCueName(), mainActivity));
+            cueLine.addView(cue.getButton());
+            cue.refreshHighlight();
+            cue.setFadeInProgress(false);
+        }
+
+        // create a new "Add Cue" button
+        ((LinearLayout) mainActivity.findViewById(R.id.CueLine)).addView(CueClickListener.makeButton(mainActivity.getString(R.string.AddCue), mainActivity));
     }
 
     /**

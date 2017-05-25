@@ -11,6 +11,10 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_patch"/>
     <item
+        android:id="@+id/menu_cues"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_cues"/>
+    <item
         android:id="@+id/menu_settings"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_settings"/>
@@ -26,10 +30,5 @@
         android:id="@+id/menu_share"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_share" />
-    <!-- item
-        android:id="@+id/menu_about"
-        android:icon="@drawable/action_about"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_about"/-->
 
 </menu>

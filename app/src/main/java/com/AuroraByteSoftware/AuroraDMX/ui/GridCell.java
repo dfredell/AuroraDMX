@@ -22,20 +22,24 @@ class GridCell extends BaseAdapter implements OnClickListener {
         isCh = a_isChs;
     }
 
+    @Override
     public int getCount() {
         return count;
     }
 
+    @Override
     public Object getItem(int position) {
         return this;
     }
 
+    @Override
     public long getItemId(int position) {
         return 0;
     }
 
     // create a new ImageView for each item referenced by the Adapter
     //Called when scrolling
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Button button;
         button = new Button(mContext);

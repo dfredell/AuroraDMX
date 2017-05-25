@@ -1,5 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.network;
 
+import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,13 +28,15 @@ public class SendSacnUpdate extends TimerTask {
     private final byte[] sacnMessage = new byte[638];
     private int universe = 1;
     private String server = null;
-    private final MainActivity mainActivity;
+    private final Activity activity;
     private static final String TAG = "AuroraDMX";
     private int previousMessageSentAgo = 0;
     private int[] previousMessage = new int[0];
+    private DatagramSocket clientSocket;
 
-    public SendSacnUpdate(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public SendSacnUpdate(Activity activity, DatagramSocket clientSocket) {
+        this.activity = activity;
+        this.clientSocket = clientSocket;
         String univ = MainActivity.getSharedPref().getString("protocol_sacn_universe", "1").trim();
         String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
         if ("SACNUNI".equals(protocol)) {
@@ -70,23 +73,23 @@ public class SendSacnUpdate extends TimerTask {
         sacnPacket.addDMXData(levels);
         InetAddress address;
         try {
-            if (MainActivity.clientSocket == null || MainActivity.clientSocket.isClosed()) {
-                MainActivity.clientSocket = new DatagramSocket();
-                MainActivity.clientSocket.setReuseAddress(true);
+            if (clientSocket == null || clientSocket.isClosed()) {
+                clientSocket = new DatagramSocket();
+                clientSocket.setReuseAddress(true);
             }
             if (server != null) {
                 address = InetAddress.getByName(server);
-                MainActivity.clientSocket.setBroadcast(false);
+                clientSocket.setBroadcast(false);
             } else {
                 address = InetAddress.getByName("239.255.0." + universe);
-                MainActivity.clientSocket.setBroadcast(true);
+                clientSocket.setBroadcast(true);
             }
-            MainActivity.clientSocket.connect(address, 5568);
+            clientSocket.connect(address, 5568);
         } catch (Throwable e1) {
             e1.printStackTrace();
-            mainActivity.runOnUiThread(new Runnable() {
+            activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(mainActivity, String.format(mainActivity.getString(R.string.serverUnknown), server), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, String.format(activity.getString(R.string.serverUnknown), server), Toast.LENGTH_LONG).show();
                 }
             });
             this.cancel();
@@ -95,8 +98,8 @@ public class SendSacnUpdate extends TimerTask {
 
         DatagramPacket sendPacket = new DatagramPacket(sacnMessage, sacnMessage.length, address, 5568);
         try {
-            if (!MainActivity.clientSocket.isClosed()) {
-                MainActivity.clientSocket.send(sendPacket);
+            if (!clientSocket.isClosed()) {
+                clientSocket.send(sendPacket);
             }
         } catch (IOException e) {
             e.printStackTrace();

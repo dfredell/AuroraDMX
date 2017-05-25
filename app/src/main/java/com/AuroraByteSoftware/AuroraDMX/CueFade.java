@@ -34,7 +34,7 @@ public class CueFade extends MainActivity implements Serializable {
 
         Log.d(TAG, String.format("newChLevels %1$s", newChLevels));
         MainActivity.upwardCue = alCues.indexOf(nextCue);
-        MainActivity.downwardCue = alCues.indexOf(prevCue);
+//        MainActivity.downwardCue = alCues.indexOf(prevCue);
         MainActivity.downwardCue = MainActivity.upwardCue;
 
         //Cancel any previous fades

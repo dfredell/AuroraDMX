@@ -8,6 +8,10 @@
 
 2.3 Raise max fixtures back to 512
 
+3.0 Redesign layout. Use icons instead of names. Added a Next Cue button. Update and Reorder existing Cues. Interrupting a fading Cue.
+
+3.1 Cue Sheet
+
 # Bugs #
 
 
@@ -15,7 +19,6 @@
 
 * Google analytics 
 * Master Slider
-* Tablet view
 * Update cue with new fixture levels
 * Chase
 * Remote chase
@@ -26,7 +29,6 @@
 * Keystroke next cue
 * Sub-masters
 * X/Y touch pad 8 & 16 bit
-* Que screen
 
 # Done #
 * Artnet Universe
@@ -35,6 +37,8 @@
 * Cue fade at 0
 * Large next cue button
 * Export/share show
+* Tablet view
+* Que screen
 
 # Development Setup #
 

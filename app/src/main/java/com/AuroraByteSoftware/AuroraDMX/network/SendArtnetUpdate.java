@@ -1,7 +1,9 @@
 package com.AuroraByteSoftware.AuroraDMX.network;
 
+import android.app.Activity;
 import android.widget.Toast;
 
+import com.AuroraByteSoftware.AuroraDMX.AuroraNetwork;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.SettingsActivity;
@@ -17,14 +19,16 @@ import fr.azelart.artnetstack.utils.ArtNetPacketEncoder;
 
 public class SendArtnetUpdate extends TimerTask {
 
-    private final MainActivity mainActivity;
+    private final Activity activity;
     private String serverIp = "";
     private int artnetPort = 0;
     private int[] previousMessage = new int[0];
     private int previousMessageSentAgo = 0;
+    private DatagramSocket clientSocket;
 
-    public SendArtnetUpdate(MainActivity a_mainActivity) {
-        this.mainActivity = a_mainActivity;
+    public SendArtnetUpdate(Activity activity, DatagramSocket datagramSocket) {
+        this.activity = activity;
+        this.clientSocket = datagramSocket;
         String serverPref = MainActivity.getSharedPref().getString(SettingsActivity.serveraddress.trim(), "");
         String[] splitServer = serverPref.split(":");
         if (splitServer.length == 2) {
@@ -40,15 +44,12 @@ public class SendArtnetUpdate extends TimerTask {
 
         InetAddress IPAddress;
         try {
-            if (MainActivity.clientSocket == null || MainActivity.clientSocket.isClosed()) {
-                MainActivity.clientSocket = new DatagramSocket(6454);
-                MainActivity.clientSocket.setReuseAddress(true);
-            }
+            clientSocket = AuroraNetwork.getArtnetSocket();
             IPAddress = InetAddress.getByName(serverIp);
         } catch (Throwable t) {
-            mainActivity.runOnUiThread(new Runnable() {
+            activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(mainActivity, String.format(mainActivity.getString(R.string.serverUnknown), serverIp + ":" + artnetPort), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, String.format(activity.getString(R.string.serverUnknown), serverIp + ":" + artnetPort), Toast.LENGTH_LONG).show();
                 }
             });
             t.printStackTrace();
@@ -72,10 +73,10 @@ public class SendArtnetUpdate extends TimerTask {
             e1.printStackTrace();
         }
 
-        DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, 6454);
+        DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, AuroraNetwork.ART_NET_PORT);
         try {
-            if (!MainActivity.clientSocket.isClosed()) {
-                MainActivity.clientSocket.send(sendPacket);
+            if (!clientSocket.isClosed()) {
+                clientSocket.send(sendPacket);
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block

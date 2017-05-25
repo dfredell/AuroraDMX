@@ -46,11 +46,11 @@
             android:name=".ui.PatchActivity"
             android:label="@string/title_activity_patch" />
         <activity
+            android:name=".ui.CueActivity"
+            android:label="@string/title_activity_cue" />
+        <activity
             android:name=".ui.EditColumnMenu"
             android:label="@string/title_activity_EditChannelMenu" />
-        <activity
-            android:name=".CueObj"
-            android:label="Cue" />
         <activity
             android:name=".ProjectManagement"
             android:label="ProjectManagement" />

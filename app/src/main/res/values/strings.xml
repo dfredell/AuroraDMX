@@ -27,8 +27,11 @@
     <string name="menu_clearPatch">Clear Patch</string>
     <string name="menu_oneToOne">One To One</string>
     <string name="menu_patch">Patch</string>
+    <string name="menu_cues">Cues</string>
+
     <string name="restore_defaults">Restore Defaults</string>
     <string name="title_activity_patch">Patch</string>
+    <string name="title_activity_cue">Cue Sheet</string>
     <string name="unlock_channels_title">Purchase App</string>
     <string name="unlock_channels_sum">Allow more than 5 fixtures</string>
     <string name="dmxRangePurchaseLimit">Free version limited to 5 fixtures</string>

@@ -19,8 +19,7 @@ import android.widget.Toast;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.StandardFixture;
-import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetUpdate;
-import com.AuroraByteSoftware.AuroraDMX.network.SendSacnUpdate;
+import com.AuroraByteSoftware.AuroraDMX.ui.CueActivity;
 import com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity;
 import com.AuroraByteSoftware.Billing.util.IabException;
 import com.AuroraByteSoftware.Billing.util.IabHelper;
@@ -32,10 +31,8 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
 
@@ -65,16 +62,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     private final List<String> listOfSkus = new ArrayList<>();
     public static List<Fixture> alColumns = null;
     public static ArrayList<CueObj> alCues = null;
-    static int upwardCue = -1;
-    static int downwardCue = -1;
+    public static int upwardCue = -1;
+    public static int downwardCue = -1;
 
     private ProjectManagement pm = null;
 
-    //Network timers
-    private Timer ArtNet;
-    private Timer SACN;
-    private Timer SACNUnicast;
-    public static DatagramSocket clientSocket = null;
 
     /**
      * Called when the activity is first created.
@@ -101,7 +93,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             pm.open(null);
         }
 
-        setUpNetwork();
+        AuroraNetwork.setUpNetwork(this);
     }
 
     private void startupIAB() {
@@ -166,46 +158,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         return sharedPref;
     }
 
-    void setUpNetwork() {
-        Log.d(TAG, "SetupNetwork ServerAddress: " + sharedPref.getString(SettingsActivity.serveraddress, ""));
-        String protocol = getSharedPref().getString("select_protocol", "");
-
-        stopNetwork();
-
-        if ("SACNUNI".equals(protocol)) {
-            SACNUnicast = new Timer();
-            SACNUnicast.scheduleAtFixedRate(new SendSacnUpdate(this), 200, 100);
-        } else if ("SACN".equals(protocol)) {
-            SACN = new Timer();
-            SACN.scheduleAtFixedRate(new SendSacnUpdate(this), 200, 100);
-        } else {
-            ArtNet = new Timer();
-            ArtNet.scheduleAtFixedRate(new SendArtnetUpdate(this), 200, 100);
-        }
-
-    }
-
-    private void stopNetwork() {
-        if (ArtNet != null) {
-            ArtNet.cancel();
-            ArtNet.purge();
-        }
-        if (SACN != null) {
-            SACN.cancel();
-            SACN.purge();
-        }
-        if (SACNUnicast != null) {
-            SACNUnicast.cancel();
-            SACNUnicast.purge();
-        }
-        if (clientSocket != null)
-            clientSocket.close();
-    }
 
     void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB,
                              String[] valuePresets) {
         updatingFixtures = true;
-        // check for app purchace
+        // check for app purchase
         boolean paid = true;
         if (!BuildConfig.DEBUG) {
             // Skip the paid check when developing
@@ -305,6 +262,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
         addFAIcon(menu, R.id.menu_patch, FontAwesomeIcons.fa_th);
+        addFAIcon(menu, R.id.menu_cues, FontAwesomeIcons.fa_caret_square_o_right);
         addFAIcon(menu, R.id.menu_settings, FontAwesomeIcons.fa_sliders);
         addFAIcon(menu, R.id.menu_share, FontAwesomeIcons.fa_share_alt);
         addFAIcon(menu, R.id.menu_save, FontAwesomeIcons.fa_save);
@@ -331,12 +289,15 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             if (cue.isFadeInProgress())
                 fadingInProgress = true;
         }
-        if (!fadingInProgress) {
+        if (!fadingInProgress || item.getItemId() == R.id.menu_cues) {
             Intent intent;
             switch (item.getItemId()) {
                 case R.id.menu_patch:
-                    //Toast.makeText(MainActivity.this, "Patch", Toast.LENGTH_SHORT).show();
                     intent = new Intent(this, PatchActivity.class);
+                    startActivity(intent);
+                    return true;
+                case R.id.menu_cues:
+                    intent = new Intent(this, CueActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.menu_settings:
@@ -411,7 +372,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             restoreDefaults();
             getSharedPref().edit().putBoolean(SettingsActivity.restoredefaults, false).apply();
         }
-        // Change the color
+        // Change the column color
         int color = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
         if (color != orgColor) {// update the channel color
             for (Fixture col : alColumns) {
@@ -426,12 +387,16 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             Log.w("ExternalStorage", "Error reading channel number", t);
         }
         setNumberOfFixtures(number_channels, null, null, null);
-        setUpNetwork();
+
+        //setup cues, the button inside the cue obj may be from the Cue Sheet
+        pm.refreshCueView();
+
+        AuroraNetwork.setUpNetwork(this);
     }
 
     @Override
     protected void onPause() {
-        stopNetwork();
+        AuroraNetwork.stopNetwork();
         Log.v(TAG, "onPause");
         pm.save(null);
         if (getSharedPref() != null)
@@ -457,7 +422,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         // Remove all the preferences
         getSharedPref().edit().clear().apply();
         // Stop ArtNet
-        clientSocket.close();
+        AuroraNetwork.stopNetwork();
         alCues.clear();
         cueCount = 1.0;
         for (Fixture columns : alColumns) {
@@ -478,7 +443,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
         // create a new "Add Cue" button
         ((LinearLayout) findViewById(R.id.CueLine)).addView(CueClickListener.makeButton(getString(R.string.AddCue), this));
-        setUpNetwork();
+        AuroraNetwork.setUpNetwork(this);
     }
 
     /**

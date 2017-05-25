@@ -12,6 +12,33 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/furtchet/.android/build-cache/3c35e5469bf1e228bf7e1ec91f3fd8f153e4430e/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3effa1c0fa4fa07ae571a1a0a65cfa1bc6b8e279">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e25da8ee8e0c6714f467380d9f6353fc3596d5f9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_dc310b24e8be9b0af1971e48e8c2e8925dd90884/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="17876cdf7ffafd5a92522bd0356e4fc8d6ac6584">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_43fefc0666d341ef262ecb08f0c8f9c7da1369d4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/furtchet/.android/build-cache/b18a27adba03e667fc388e4d1401e7d1d53407c6/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -27,6 +54,24 @@
         revision="25.0.2"
         sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
         <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_4e4681ebb972625cc01981d8d3757b60482fed42/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/libs/commons-lang3-3.3.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="659861b4acde07a0527211e40d256119face1d15">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-lang3-3.3.2_042214310495db7eead7789aa6d1b570c99beaab/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/.android/build-cache/002e55e9f4409040af468cd41128d0fe21fde6f4/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_dbe87732e5e38423e2709d03232cf5183dfe9fe5/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -57,96 +102,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/furtchet/.android/build-cache/def2b5257eabe6394c23fd332155722b88ea6e35/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="8531f2d46b35de75e6130f25830e0c2c0d6bb98c">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_96a8b90bda43b5dc6833f4132a9aae9e8c2f7caa/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/libs/commons-lang3-3.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="659861b4acde07a0527211e40d256119face1d15">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-lang3-3.3.2_042214310495db7eead7789aa6d1b570c99beaab/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/.android/build-cache/b18a27adba03e667fc388e4d1401e7d1d53407c6/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="970b2eadc8805e4e04a9008f97368c7b8cc78651">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d68b646eaee0224e78820839b8de6f64f78be6f8/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_dc310b24e8be9b0af1971e48e8c2e8925dd90884/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/.android/build-cache/64791ad92ab1f92b531b6a8857741206781b1980/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_bb5e0efa43201f82e13ee03a90639142f61c6711/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/.android/build-cache/3c35e5469bf1e228bf7e1ec91f3fd8f153e4430e/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="3effa1c0fa4fa07ae571a1a0a65cfa1bc6b8e279">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_e25da8ee8e0c6714f467380d9f6353fc3596d5f9/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_dc310b24e8be9b0af1971e48e8c2e8925dd90884/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="17876cdf7ffafd5a92522bd0356e4fc8d6ac6584">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_43fefc0666d341ef262ecb08f0c8f9c7da1369d4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/libs/commons-lang3-3.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="659861b4acde07a0527211e40d256119face1d15">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-lang3-3.3.2_042214310495db7eead7789aa6d1b570c99beaab/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/furtchet/.android/build-cache/002e55e9f4409040af468cd41128d0fe21fde6f4/output/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
-        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_dbe87732e5e38423e2709d03232cf5183dfe9fe5/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/furtchet/.android/build-cache/5638b45be3f9f8a05e4688db4deca84de5f9e8ed/output/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -169,8 +124,26 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="4e80ed6a1ff12d2f8097cfffad37424dc286e1a6">
+        sha1="0734d018e9de019bfaa391780a71c2d3d93e2d2e">
         <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_43fefc0666d341ef262ecb08f0c8f9c7da1369d4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/.android/build-cache/def2b5257eabe6394c23fd332155722b88ea6e35/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8531f2d46b35de75e6130f25830e0c2c0d6bb98c">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_96a8b90bda43b5dc6833f4132a9aae9e8c2f7caa/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/libs/commons-lang3-3.3.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="659861b4acde07a0527211e40d256119face1d15">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-lang3-3.3.2_042214310495db7eead7789aa6d1b570c99beaab/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -183,12 +156,39 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/furtchet/.android/build-cache/b18a27adba03e667fc388e4d1401e7d1d53407c6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="970b2eadc8805e4e04a9008f97368c7b8cc78651">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_d68b646eaee0224e78820839b8de6f64f78be6f8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_dc310b24e8be9b0af1971e48e8c2e8925dd90884/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/furtchet/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.3.1/support-annotations-25.3.1.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
         <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-25.3.1_d0e342487dabacb4c3558cab46ad971101aaad2e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/furtchet/.android/build-cache/64791ad92ab1f92b531b6a8857741206781b1980/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="/Users/furtchet/AndroidstudioProjects/AuroraDMX/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_bb5e0efa43201f82e13ee03a90639142f61c6711/classes.dex" />
     </item>
     <item
         is-multidex="true"

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +28,7 @@ public class EditCueMenu extends MainActivity {
     private static int currentCue = -1;// used to and from cue edit
 
     @SuppressLint("SetTextI18n")
-    public static void createEditCueMenu(final ArrayList<CueObj> alCues, final Button button) {
+    public static void createEditCueMenu(final ArrayList<CueObj> alCues, final Button button, final boolean inCueSheet) {
         // Find what Cue we are in
         for (int x = 0; x < alCues.size(); x++) {
             if (alCues.get(x).getButton() == button) {
@@ -114,7 +114,12 @@ public class EditCueMenu extends MainActivity {
                 button.setText(thisCueNum);
                 button.setLongClickable(true);
                 button.setOnLongClickListener(new CueClickListener());
-                layout.addView(button, currentCue);// add new button after
+                if (!inCueSheet) {
+                    layout.addView(button, currentCue);// add new button after
+                } else {
+                    //Refresh the cue sheet screen
+                    ((GridView) layout).invalidateViews();
+                }
                 // currentCue
                 CueObj newCue = new CueObj(thisCueNum, fadeUpTime, fadeDownTime, getCurrentChannelArray(), button);
                 alCues.add(currentCue, newCue);
@@ -138,14 +143,19 @@ public class EditCueMenu extends MainActivity {
                 if (!fadeInProgress) {
                     Toast.makeText(
                             context,
-                            context.getString(R.string.deletedCue)
+                            context.getString(R.string.deletedCue) + " "
                                     + alCues.get(currentCue).getCueName(), Toast.LENGTH_SHORT)
                             .show();
-                    ViewGroup layout = (ViewGroup) alCues.get(currentCue).getButton().getParent();
-                    if (null != layout) {// for safety only as you are doing
-                        layout.removeView(alCues.get(currentCue).getButton());
-                    }
+                    Button cueButton = alCues.get(currentCue).getButton();
+                    ViewGroup layout = (ViewGroup) cueButton.getParent();
                     alCues.remove(currentCue);
+                    if (null != layout && !inCueSheet) {
+                        // LinearLayout can remove view, used on home screen, not cue grid screen
+                        layout.removeView(cueButton);
+                    } else if (null != layout && inCueSheet) {
+                        //Refresh the cue sheet screen
+                        ((GridView) layout).invalidateViews();
+                    }
                 } else {
                     Toast.makeText(context, R.string.canNotDeleteWhileFading, Toast.LENGTH_SHORT).show();
                 }
@@ -178,7 +188,7 @@ public class EditCueMenu extends MainActivity {
                 DragLinearLayout dragLinearLayout = (DragLinearLayout) reorderView.findViewById(R.id.cue_reorder_view);
                 for (CueObj alCue : alCues) {
                     TextView textView = new TextView(context);
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     textView.setText(alCue.getCueName());
                     dragLinearLayout.addView(textView);
                 }
@@ -191,11 +201,16 @@ public class EditCueMenu extends MainActivity {
                     @Override
                     public void onSwap(View firstView, int firstPosition,
                                        View secondView, int secondPosition) {
-                        LinearLayout parent = (LinearLayout) button.getParent();
-                        View childAt = parent.getChildAt(firstPosition);
-                        parent.removeView(childAt);
-                        parent.addView(childAt,secondPosition);
-                        Collections.swap(alCues,firstPosition,secondPosition);
+                        Collections.swap(alCues, firstPosition, secondPosition);
+                        ViewGroup parent = (ViewGroup) button.getParent();
+                        if (!inCueSheet) {
+                            View childAt = parent.getChildAt(firstPosition);
+                            parent.removeView(childAt);
+                            parent.addView(childAt, secondPosition);
+                        } else {
+                            //Refresh the cue sheet screen
+                            ((GridView) alCues.get(0).getButton().getParent()).invalidateViews();
+                        }
                     }
                 });
                 alert.dismiss();

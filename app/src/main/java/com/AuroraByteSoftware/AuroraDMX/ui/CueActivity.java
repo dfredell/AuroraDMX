@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.GridView;
 
 import com.AuroraByteSoftware.AuroraDMX.AuroraNetwork;
-import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 
 /**
@@ -20,7 +19,7 @@ public class CueActivity extends Activity {
         setContentView(R.layout.activity_cue);
 
         gridView = (GridView) findViewById(R.id.cue_grid);
-        gridView.setAdapter(new CueGridCell(this, MainActivity.alCues.size()));
+        gridView.setAdapter(new CueGridCell(this));
 
         AuroraNetwork.setUpNetwork(this);
     }

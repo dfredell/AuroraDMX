@@ -19,17 +19,15 @@ import java.util.Random;
  */
 class CueGridCell extends BaseAdapter {
     private final CueActivity mContext;
-    private int count = 0;
     private static final String TAG = "AuroraDMX";
 
-    public CueGridCell(CueActivity c, int a_count) {
+    CueGridCell(CueActivity c) {
         mContext = c;
-        count = a_count;
     }
 
     @Override
     public int getCount() {
-        return count;
+        return MainActivity.alCues.size();
     }
 
     @Override
@@ -60,12 +58,11 @@ class CueGridCell extends BaseAdapter {
 
         Button button = CueClickListener.makeButton(cue.getCueName(), mContext);
         button.setOnClickListener(new CueSheetClickListener());
+        button.setOnLongClickListener(new CueSheetClickListener());
         button.setId(new Random().nextInt());
         cue.setButton(button);
         cue.refreshHighlight();
         return button;
     }
-
-
 
 }

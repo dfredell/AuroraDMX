@@ -63,7 +63,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
             }
         }
         if (!buttonIsAddCue) {
-            EditCueMenu.createEditCueMenu(MainActivity.alCues, (Button) buttonView);
+            EditCueMenu.createEditCueMenu(MainActivity.alCues, (Button) buttonView, false);
         }
         return true;
     }

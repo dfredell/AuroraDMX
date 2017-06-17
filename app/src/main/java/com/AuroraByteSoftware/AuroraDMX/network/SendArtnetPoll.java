@@ -119,8 +119,10 @@ public class SendArtnetPoll extends Thread {
                 Log.w(TAG,"Unable to parse art poll replies ", e);
             }
         }
-        clientSocket.disconnect();
-        clientSocket.close();
+        if (clientSocket != null) {
+            clientSocket.disconnect();
+            clientSocket.close();
+        }
         //Sort the ArtNet servers by ip
         Collections.sort(MainActivity.foundServers, new Comparator<ArtPollReply>() {
             @Override

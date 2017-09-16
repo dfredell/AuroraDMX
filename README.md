@@ -17,18 +17,16 @@
 
 # Feature Requests #
 
+* Chase
 * Google analytics 
 * Master Slider
-* Update cue with new fixture levels
-* Chase
 * Remote chase
 * Continue DMX when device is locked
-* Moving head
 * Unit tests
 * Multi user
 * Keystroke next cue
 * Sub-masters
-* X/Y touch pad 8 & 16 bit
+* Moving head, X/Y touch pad 8 & 16 bit
 
 # Done #
 * Artnet Universe
@@ -39,6 +37,7 @@
 * Export/share show
 * Tablet view
 * Que screen
+* Update cue with new fixture levels
 
 # Development Setup #
 

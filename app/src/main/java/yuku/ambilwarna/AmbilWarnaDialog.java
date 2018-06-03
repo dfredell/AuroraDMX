@@ -2,6 +2,7 @@ package yuku.ambilwarna;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,10 +138,17 @@ public class AmbilWarnaDialog {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewCursor.getLayoutParams();
         layoutParams.leftMargin = (int) (viewHue.getLeft() - Math.floor(viewCursor.getMeasuredWidth() / 2) - viewContainer.getPaddingLeft());
         layoutParams.topMargin = (int) (viewHue.getTop() + y - Math.floor(viewCursor.getMeasuredHeight() / 2) - viewContainer.getPaddingTop());
+//        if (Looper.getMainLooper().getThread() != Thread.currentThread()){
+//            viewCursor.invalidate();
+//            return;
+//        }
         viewCursor.setLayoutParams(layoutParams);
     }
 
     protected void moveTarget() {
+//        if (Looper.getMainLooper().getThread() != Thread.currentThread()){
+//            return;
+//        }
         float x = getSat() * viewSatVal.getMeasuredWidth();
         float y = (1.f - getVal()) * viewSatVal.getMeasuredHeight();
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewTarget.getLayoutParams();

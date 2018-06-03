@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -16,15 +17,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.AuroraByteSoftware.AuroraDMX.billing.Billing;
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.StandardFixture;
 import com.AuroraByteSoftware.AuroraDMX.ui.CueActivity;
 import com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity;
-import com.AuroraByteSoftware.Billing.util.IabException;
-import com.AuroraByteSoftware.Billing.util.IabHelper;
-import com.AuroraByteSoftware.Billing.util.IabResult;
-import com.AuroraByteSoftware.Billing.util.Inventory;
+import com.AuroraByteSoftware.AuroraDMX.ui.chase.ChaseActivity;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     static Double cueCount = 1.0;// cueCount++ = new cue num
     private static boolean updatingFixtures = false;
     private int orgColor = 0;
-    private static IabHelper mHelper;
+    public static Billing billing = new Billing();
 
     public static final ArrayList<ArtPollReply> foundServers = new ArrayList<>();
     public static ProgressDialog progressDialog = null;
@@ -51,21 +51,24 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     static final int ALLOWED_PATCHED_DIMMERS = 50;
     public static final int MAX_DIMMERS = 512;
     private static final int MAX_CHANNEL = 512;
-    private final static String BASE_64_ENCODED_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj9upoasavmU51/j6g7vWchEf/g2SGuntcXPlzVu8vp3avDGMQp8E20iI+IO5vqB4wVKf9QRiAv0DFLw+XAGCpx7t6GDt4Sd/qMOkj49Eas1R1Uvghp4yy9Cc/8pL7QOvSW99pq9Pg2iqqbPXlAlLmByQy2p9qhDhl788dMZsUd2VxL5NHY2zQl7a1emWH/MUpvVHNSJkTSdQrLJ4cruTvEDldtD0jSNadK1NSruwa/BH6ieLVswek1cyE7hm0Od5pWw0XCpkR6L7ZkEkeTovSihA3h+rSy6kxZCqrDzMR++EOCxwS/kB3Ly6M5E6EwjZVbK18UQM8/Ecr7/buYxalQIDAQAB";
-    static final String ITEM_SKU = "unlock_channels";
-    private static final String TAG = "AuroraDMX";
 
     /**
      * patchList[0] is ignored. All numbers are in human format (start at 1) not computer.
      */
     public static List<ChPatch> patchList = new ArrayList<>();
-    private final List<String> listOfSkus = new ArrayList<>();
     public static List<Fixture> alColumns = null;
     public static ArrayList<CueObj> alCues = null;
-    public static int upwardCue = -1;
-    public static int downwardCue = -1;
+    public static ArrayList<ChaseObj> alChases = null;
+    public static CueFade cueFade = null;
 
-    private ProjectManagement pm = null;
+    public static ProjectManagement pm = null;
+
+    public static CueFade getCueFade() {
+        if (cueFade == null) {
+            cueFade = new CueFade();
+        }
+        return cueFade;
+    }
 
 
     /**
@@ -75,8 +78,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pm = new ProjectManagement(this);
-        Log.v(TAG, "onCreate");
-        startupIAB();
+        Log.v(getClass().getSimpleName(), "onCreate");
+        billing.setup(this);
         Iconify.with(new FontAwesomeModule());
         startup();
         Intent intent = getIntent();
@@ -85,7 +88,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             try {
                 pm.openFile(intent.getDataString());
-            } catch (IOException e) {
+            } catch (IOException | SecurityException e) {
                 Toast.makeText(MainActivity.this, R.string.cannotOpen, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
@@ -96,34 +99,35 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         AuroraNetwork.setUpNetwork(this);
     }
 
-    private void startupIAB() {
-        mHelper = new IabHelper(this, BASE_64_ENCODED_PUBLIC_KEY);
-        mHelper.enableDebugLogging(true, "IabHelper");
-        try {
-            mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                public void onIabSetupFinished(IabResult result) {
-                    Log.d(TAG, "Setup finished.");
-                    if (!result.isSuccess()) {
-                        // Oh noes, there was a problem.
-                        Log.v(TAG, "Problem setting up in-app billing: " + result);
-                        return;
-                    }
-                    // Have we been disposed of in the meantime? If so, quit.
-                    if (mHelper == null)
-                        return;
-                    // IAB is fully set up. Now, let's get an inventory of stuff
-                    // we own.
-                    Log.d(TAG, "Setup successful. Querying inventory.");
-                    listOfSkus.add(ITEM_SKU);
-                    mHelper.queryInventoryAsync(true, listOfSkus, mQueryFinishedListener);
-                }
-            });
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            mHelper = null;
-            Toast.makeText(MainActivity.this, R.string.errorProcessPurchases, Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void startupIAB() {
+//        mHelper = new IabHelper(this, BASE_64_ENCODED_PUBLIC_KEY);
+//        mHelper.enableDebugLogging(true, "IabHelper");
+//        try {
+//            mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+//                public void onIabSetupFinished(IabResult result) {
+//                    Log.d(getClass().getSimpleName(), "Setup finished.");
+//                    if (!result.isSuccess()) {
+//                        // Oh noes, there was a problem.
+//                        Log.v(getClass().getSimpleName(), "Problem setting up in-app billing: " + result);
+//                        return;
+//                    }
+//                    // Have we been disposed of in the meantime? If so, quit.
+//                    if (mHelper == null) {
+//                        return;
+//                    }
+//                    // IAB is fully set up. Now, let's get an inventory of stuff
+//                    // we own.
+//                    Log.d(getClass().getSimpleName(), "Setup successful. Querying inventory.");
+//                    listOfSkus.add(ITEM_SKU);
+//                    mHelper.queryInventoryAsync(true, listOfSkus, mQueryFinishedListener);
+//                }
+//            });
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            mHelper = null;
+//            Toast.makeText(MainActivity.this, R.string.errorProcessPurchases, Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void startup() {
         updatingFixtures = true;
@@ -136,6 +140,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         sharedPref.registerOnSharedPreferenceChangeListener(this);
         alCues = new ArrayList<>();
         alColumns = new ArrayList<>();
+        alChases = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
         setNumberOfFixtures(number_channels, null, null, null);
         updatingFixtures = false;
@@ -143,12 +148,12 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     private void setupButtons() {
         // Add Cue
-        Button button = (Button) findViewById(R.id.AddCueButton);
+        Button button = findViewById(R.id.AddCueButton);
         CueClickListener addCueListener = new CueClickListener();
         button.setOnClickListener(addCueListener);
         button.setOnLongClickListener(addCueListener);
         // Next Cue
-        button = (Button) findViewById(R.id.go_button);
+        button = findViewById(R.id.go_button);
         NextCueListener goListener = new NextCueListener();
         button.setOnClickListener(goListener);
         button.setOnLongClickListener(goListener);
@@ -164,21 +169,15 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         updatingFixtures = true;
         // check for app purchase
         boolean paid = true;
-        if (!BuildConfig.DEBUG) {
+//        if (!BuildConfig.DEBUG) {
             // Skip the paid check when developing
             try {
-                if (null != mHelper) {
-                    Inventory inv = mHelper.queryInventory(false, listOfSkus);
-                    paid = inv.hasPurchase(ITEM_SKU);
-                } else {
-                    paid = false;
-                }
-            } catch (IabException e) {
-                e.printStackTrace();
+                paid = billing.check();
             } catch (IllegalStateException | NullPointerException e) {
                 // Do nothing we must not be connected yet
+                e.printStackTrace();
             }
-        }
+//        }
 
         // Input cleansing
         if (numberFixtures > MAX_CHANNEL) {
@@ -199,17 +198,18 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
         if (change > 0) {// Adding channels
             for (int x = (numberFixtures - change); x < numberFixtures && x < 512; x++) {
-                if (isRGB != null && isRGB[x])
+                if (isRGB != null && isRGB[x]) {
                     alColumns.add(new RGBFixture(
                             this,
                             channelNames == null ? null : channelNames[x],
                             valuePresets == null ? null : valuePresets[x]));
-                else
+                } else {
                     alColumns.add(new StandardFixture(
                             this,
                             channelNames == null ? null : channelNames[x],
                             valuePresets == null ? null : valuePresets[x]
                     ));
+                }
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
             for (Fixture fixture : alColumns) {
@@ -261,18 +261,19 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        addFAIcon(menu, R.id.menu_patch, FontAwesomeIcons.fa_th);
-        addFAIcon(menu, R.id.menu_cues, FontAwesomeIcons.fa_caret_square_o_right);
-        addFAIcon(menu, R.id.menu_settings, FontAwesomeIcons.fa_sliders);
-        addFAIcon(menu, R.id.menu_share, FontAwesomeIcons.fa_share_alt);
-        addFAIcon(menu, R.id.menu_save, FontAwesomeIcons.fa_save);
-        addFAIcon(menu, R.id.menu_load, FontAwesomeIcons.fa_folder_open);
-        return  super.onCreateOptionsMenu(menu);
+        addFAIcon(menu, R.id.menu_patch, FontAwesomeIcons.fa_th, this);
+        addFAIcon(menu, R.id.menu_cues, FontAwesomeIcons.fa_caret_square_o_right, this);
+        addFAIcon(menu, R.id.menu_chase, FontAwesomeIcons.fa_fast_forward, this);
+        addFAIcon(menu, R.id.menu_settings, FontAwesomeIcons.fa_cog, this);
+        addFAIcon(menu, R.id.menu_share, FontAwesomeIcons.fa_share_alt, this);
+        addFAIcon(menu, R.id.menu_save, FontAwesomeIcons.fa_save, this);
+        addFAIcon(menu, R.id.menu_load, FontAwesomeIcons.fa_folder_open, this);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    private void addFAIcon(Menu menu, int menuId, FontAwesomeIcons faIcon) {
+    public static void addFAIcon(Menu menu, int menuId, FontAwesomeIcons faIcon, Context context) {
         menu.findItem(menuId).setIcon(
-                new IconDrawable(this, faIcon)
+                new IconDrawable(context, faIcon)
                         .colorRes(R.color.white)
                         .alpha(204)
                         .actionBarSize());
@@ -286,8 +287,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean fadingInProgress = false;
         for (CueObj cue : alCues) {
-            if (cue.isFadeInProgress())
+            if (cue.isFadeInProgress()) {
                 fadingInProgress = true;
+            }
         }
         if (!fadingInProgress || item.getItemId() == R.id.menu_cues) {
             Intent intent;
@@ -298,6 +300,10 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                     return true;
                 case R.id.menu_cues:
                     intent = new Intent(this, CueActivity.class);
+                    startActivity(intent);
+                    return true;
+                case R.id.menu_chase:
+                    intent = new Intent(this, ChaseActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.menu_settings:
@@ -345,19 +351,21 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
         for (int ch = 1; ch <= chValues.size() && patchList.size() > ch; ch++) {
             for (Integer dim : patchList.get(ch).getDimmers()) {
-                if (dim <= 0 || dim > MAX_DIMMERS)
+                if (dim <= 0 || dim > MAX_DIMMERS) {
                     continue;
+                }
                 int oldLvl = out[dim - 1];
                 int newVal = chValues.get(ch - 1);
-                if (oldLvl < newVal)
+                if (oldLvl < newVal) {
                     out[dim - 1] = newVal;
+                }
             }
         }
         return out;
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.v(TAG, "Pref Change");
+        Log.v(getClass().getSimpleName(), "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
             setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null, null);
         }
@@ -365,7 +373,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        Log.v(getClass().getSimpleName(), "onResume");
         getSharedPref().registerOnSharedPreferenceChangeListener(this);
 
         if (getSharedPref().getBoolean(SettingsActivity.restoredefaults, false)) {
@@ -397,10 +405,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     @Override
     protected void onPause() {
         AuroraNetwork.stopNetwork();
-        Log.v(TAG, "onPause");
+        Log.v(getClass().getSimpleName(), "onPause");
         pm.save(null);
-        if (getSharedPref() != null)
+        if (getSharedPref() != null) {
             getSharedPref().unregisterOnSharedPreferenceChangeListener(this);
+        }
         super.onPause();
     }
 
@@ -410,15 +419,11 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         super.onDestroy();
 
         // very important:
-        Log.d(TAG, "Destroying helper.");
-        if (mHelper != null) {
-            mHelper.dispose();
-            mHelper = null;
-        }
+        Log.d(getClass().getSimpleName(), "Destroying helper.");
     }
 
     private void restoreDefaults() {
-        Log.v(TAG, "Restoring Defaults");
+        Log.v(getClass().getSimpleName(), "Restoring Defaults");
         // Remove all the preferences
         getSharedPref().edit().clear().apply();
         // Stop ArtNet
@@ -446,35 +451,28 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         AuroraNetwork.setUpNetwork(this);
     }
 
-    /**
-     * @return the mHelper
-     */
-    static IabHelper getmHelper() {
-        return mHelper;
-    }
-
-    // Listener that's called when we finish querying the items and
-    // subscriptions we own
-    private static final IabHelper.QueryInventoryFinishedListener mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
-        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-            if (result.isFailure()) {
-                // handle error
-                System.err.print(result.getMessage());
-            }
-        }
-    };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
-
-        // Pass on the activity result to the helper for handling
-        if (mHelper != null && !mHelper.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
-        } else {
-            Log.i(TAG, "onActivityResult handled by IABUtil.");
-        }
-    }
+//    // Listener that's called when we finish querying the items and
+//    // subscriptions we own
+//    private static final IabHelper.QueryInventoryFinishedListener mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
+//        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+//            if (result.isFailure()) {
+//                // handle error
+//                System.err.print(result.getMessage());
+//            }
+//        }
+//    };
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Log.i(getClass().getSimpleName(), "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+//
+//        // Pass on the activity result to the helper for handling
+//        if (mHelper != null && !mHelper.handleActivityResult(requestCode, resultCode, data)) {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        } else {
+//            Log.i(getClass().getSimpleName(), "onActivityResult handled by IABUtil.");
+//        }
+//    }
 
     public void recalculateFixtureNumbers() {
         int currentFixtureNum = 1;

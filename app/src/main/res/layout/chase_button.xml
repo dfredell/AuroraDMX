@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:id="@+id/chase_button_layout"
+    >
+
+    <ProgressBar
+        android:id="@+id/chase_button_progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignEnd="@+id/chase_button"
+        android:layout_alignRight="@+id/chase_button"
+        android:layout_alignTop="@+id/chase_button"
+        android:layout_alignBottom="@+id/chase_button"
+        android:layout_gravity="right"
+        android:progress="25"/>
+
+    <Button
+        android:id="@+id/chase_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Connect"/>
+</RelativeLayout>

@@ -1,3 +1,4 @@
+
 package com.AuroraByteSoftware.AuroraDMX;
 
 import android.app.AlertDialog;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -50,14 +52,13 @@ public class ProjectManagement extends MainActivity {
     private static final String PREF_OLD_POINTER_HUMAN = "Default Project";
     private static final String PREF_SAVES = "LIST_OF_SAVED_PROJECTS";
     private static final String PREF_DEF = "DEFAULT_PROJECT_TO_LOAD";
-    private static final String TAG = "AuroraDMX";
     private static boolean DeleteInProgress = false;
 
     /**
      * makes android compiler happier
      */
     public ProjectManagement() {
-        mainActivity=null;
+        mainActivity = null;
     }
 
     ProjectManagement(MainActivity mainActivity) {
@@ -68,7 +69,7 @@ public class ProjectManagement extends MainActivity {
         save(null, true);
     }
 
-    void save(String key) {
+    public void save(String key) {
         save(key, false);
     }
 
@@ -114,6 +115,7 @@ public class ProjectManagement extends MainActivity {
             objectOutput.writeObject(channelNames);
             objectOutput.writeObject(isRGB);
             objectOutput.writeObject(valuePresets);
+            objectOutput.writeObject(alChases);
             byte[] data = arrayOutputStream.toByteArray();
 
             objectOutput.close();
@@ -136,7 +138,7 @@ public class ProjectManagement extends MainActivity {
                 }
                 clearCache(mainActivity);
                 File dir = mainActivity.getCacheDir();
-                Log.d(TAG, "Mkdir response " + dir.mkdirs());
+                Log.d(getClass().getSimpleName(), "Mkdir response " + dir.mkdirs());
                 String fileName = (key.equals(PREF_OLD_POINTER) ? PREF_OLD_POINTER_HUMAN : key) + ".AuroraDMX";
                 File file = new File(dir, fileName);
                 FileOutputStream fileStream = new FileOutputStream(file);
@@ -153,9 +155,9 @@ public class ProjectManagement extends MainActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.w(TAG, "Unable to save project ", e);
+            Log.w(getClass().getSimpleName(), "Unable to save project ", e);
         }
-        Log.d(TAG, "save complete");
+        Log.d(getClass().getSimpleName(), "save complete");
     }
 
     /**
@@ -170,13 +172,14 @@ public class ProjectManagement extends MainActivity {
         File[] files = cacheDir.listFiles();
 
         if (files != null) {
-            for (File file : files)
-                Log.d(TAG, "File delete success: " + file.delete());
+            for (File file : files) {
+                Log.d(getClass().getSimpleName(), "File delete success: " + file.delete());
+            }
         }
     }
 
-    void openFile(String uri) throws IOException {
-        Log.d(TAG, "open URI " + uri);
+    void openFile(String uri) throws IOException, SecurityException {
+        Log.d(getClass().getSimpleName(), "open URI " + uri);
 
         InputStream stream = mainActivity.getContentResolver().openInputStream(Uri.parse(uri));
         byte[] data = readBytes(stream);
@@ -185,10 +188,10 @@ public class ProjectManagement extends MainActivity {
     }
 
     /**
-     * @see  <a href="http://stackoverflow.com/a/2436413/288568">http://stackoverflow.com/a/2436413/288568</a>
      * @param inputStream file to load
      * @return convertered inputStream file
      * @throws IOException
+     * @see <a href="http://stackoverflow.com/a/2436413/288568">http://stackoverflow.com/a/2436413/288568</a>
      */
     private byte[] readBytes(InputStream inputStream) throws IOException {
         // this dynamically extends to take the bytes you read
@@ -210,7 +213,7 @@ public class ProjectManagement extends MainActivity {
 
     @SuppressWarnings("unchecked")
     void open(String key) {
-        Log.d(TAG, "open " + key);
+        Log.d(getClass().getSimpleName(), "open " + key);
         if (key == null) {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
         }
@@ -225,8 +228,9 @@ public class ProjectManagement extends MainActivity {
         ed.apply();
 
         // Set the title to the project
-        if (PREF_OLD_POINTER.equals(key))
+        if (PREF_OLD_POINTER.equals(key)) {
             key = PREF_OLD_POINTER_HUMAN;
+        }
         mainActivity.setTitle(key);
 
         AuroraNetwork.setUpNetwork(mainActivity);
@@ -266,41 +270,59 @@ public class ProjectManagement extends MainActivity {
             Object readObject7FixtureNames = null;
             Object readObject8isRGB = null;
             Object readObject9valuePresets = null;
+            Object readObject10Chase = null;
 
             try {
                 readObject6ChAry = in.readObject();
                 readObject7FixtureNames = in.readObject();
                 readObject8isRGB = in.readObject();
                 readObject9valuePresets = in.readObject();
+                readObject10Chase = in.readObject();
             } catch (EOFException e) {
                 // Do nothing we hit the end of the stored data
             }
 
             if (readObject1FixtureCount.getClass().equals(Integer.class)) {
-                if (readObject7FixtureNames != null && readObject7FixtureNames.getClass().equals(String[].class))
+                if (readObject7FixtureNames != null && readObject7FixtureNames.getClass().equals(String[].class)) {
                     fixtureNames = (String[]) readObject7FixtureNames;
-                if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class))
+                }
+                if (readObject8isRGB != null && readObject8isRGB.getClass().equals(boolean[].class)) {
                     isRGB = (boolean[]) readObject8isRGB;
-                if (readObject9valuePresets != null && readObject9valuePresets.getClass().equals(String[].class))
+                }
+                if (readObject9valuePresets != null && readObject9valuePresets.getClass().equals(String[].class)) {
                     valuePresets = (String[]) readObject9valuePresets;
+                }
 
                 mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB, valuePresets);
                 getSharedPref().edit().putString(SettingsActivity.channels, readObject1FixtureCount + "").apply();
             }
-            if (readObject2Cues.getClass().equals(alCues.getClass()))
-                //noinspection unchecked
+            if (readObject2Cues.getClass().equals(alCues.getClass()) && readObject2Cues instanceof ArrayList<?>)
+            //noinspection unchecked
+            {
                 alCues = (ArrayList<CueObj>) readObject2Cues;
-            if (readObject3Patch.getClass().equals(patch.getClass()))
+            }
+            if (readObject3Patch.getClass().equals(patch.getClass())) {
                 patch = (int[][]) readObject3Patch;
+            }
             if (readObject3Patch.getClass().equals(patchList.getClass()))
-                //noinspection unchecked
+            //noinspection unchecked
+            {
                 patchList = new ArrayList<>((List<ChPatch>) readObject3Patch);
-            if (readObject4CueCount.getClass().equals(Double.class))
+            }
+            if (readObject4CueCount.getClass().equals(Double.class)) {
                 cueCount = (Double) readObject4CueCount;
-            if (readObject5IPAdr.getClass().equals(String.class))
+            }
+            if (readObject5IPAdr.getClass().equals(String.class)) {
                 getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
-            if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class))
+            }
+            if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class)) {
                 chLvls = Arrays.asList(ArrayUtils.toObject((int[]) readObject6ChAry));
+            }
+            if (readObject10Chase != null && readObject10Chase.getClass().equals(alChases.getClass()))
+            //noinspection unchecked
+            {
+                alChases = (ArrayList<ChaseObj>) readObject10Chase;
+            }
 
 
         } catch (Throwable t) {
@@ -323,7 +345,7 @@ public class ProjectManagement extends MainActivity {
             Fixture fixture = alColumns.get(i);
             int fixtureUses = fixture.getChLevels().size();
             if (chIndex + fixtureUses > chLvls.size()) {
-                Log.e(TAG, "Channel levels are out of sync with fixtures");
+                Log.e(getClass().getSimpleName(), "Channel levels are out of sync with fixtures");
                 break;
             }
             fixture.setChLevels(new ArrayList<>(chLvls.subList(chIndex, chIndex + fixtureUses)));
@@ -339,7 +361,7 @@ public class ProjectManagement extends MainActivity {
 
     void refreshCueView() {
         // Refresh views
-        LinearLayout cueLine = ((LinearLayout) mainActivity.findViewById(R.id.CueLine));
+        LinearLayout cueLine = mainActivity.findViewById(R.id.CueLine);
         cueLine.removeAllViews();
         for (CueObj cue : alCues) {
             // create a new "Add Cue" button
@@ -391,9 +413,10 @@ public class ProjectManagement extends MainActivity {
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                Log.v(TAG, "entered " + editText.getText());
-                if (!"".equals(editText.getText().toString()))
+                Log.v(getClass().getSimpleName(), "entered " + editText.getText());
+                if (!"".equals(editText.getText().toString())) {
                     save(editText.getText().toString());
+                }
             }
         };
 
@@ -427,9 +450,9 @@ public class ProjectManagement extends MainActivity {
                 AlertDialog.Builder adb = new AlertDialog.Builder(mainActivity);
                 adb.setTitle("Delete");
                 adb.setIcon(new IconDrawable(mainActivity, FontAwesomeIcons.fa_exclamation_triangle)
-                                .colorRes(R.color.white)
-                                .alpha(204)
-                                .actionBarSize());
+                        .colorRes(R.color.white)
+                        .alpha(204)
+                        .actionBarSize());
                 final String proj = listOfProjectsArray[position];
                 String proj_human = PREF_OLD_POINTER.equals(proj) ? PREF_OLD_POINTER_HUMAN : proj;
                 adb.setMessage("Are you sure you want to delete project '" + proj_human + "'?");
@@ -477,10 +500,12 @@ public class ProjectManagement extends MainActivity {
                 //Save the current proj before opening another
                 save(null);
                 String proj = listOfProjectsArray[position];
-                if (PREF_OLD_POINTER_HUMAN.equals(proj))
+                if (PREF_OLD_POINTER_HUMAN.equals(proj)) {
                     proj = PREF_OLD_POINTER;
-                if (!DeleteInProgress)
+                }
+                if (!DeleteInProgress) {
                     open(proj);
+                }
                 dialog.dismiss();
             }
         };

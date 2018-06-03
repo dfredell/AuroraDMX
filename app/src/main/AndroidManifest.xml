@@ -13,10 +13,11 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation"
             android:label="@string/app_name">
 
             <!-- android:screenOrientation="sensorLandscape" -->
@@ -40,6 +41,9 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
+            android:name=".CueFade"
+            android:label="@string/title_activity_cue_fade" />
+        <activity
             android:name=".ui.EditCueMenu"
             android:label="@string/title_activity_EditCueMenu" />
         <activity
@@ -48,6 +52,13 @@
         <activity
             android:name=".ui.CueActivity"
             android:label="@string/title_activity_cue" />
+        <activity
+            android:name=".ui.chase.ChaseActivity"
+            android:label="@string/title_activity_chase"
+            android:configChanges="orientation" />
+        <activity
+            android:name=".ui.chase.EditChaseActivity"
+            android:label="@string/title_activity_edit_chase" />
         <activity
             android:name=".ui.EditColumnMenu"
             android:label="@string/title_activity_EditChannelMenu" />
@@ -59,7 +70,8 @@
             android:name=".DMXContentProvider"
             android:authorities="com.AuroraByteSoftware.AuroraDMX"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:protectionLevel="signature" />
     </application>
 
 </manifest>

@@ -74,10 +74,11 @@ public class PatchActivity extends Activity {
 
     public static void toggleDimToCh(int ch, int dim) {
         final ChPatch chPatch = MainActivity.patchList.get(ch);
-        if (chPatch.contains(dim))
+        if (chPatch.contains(dim)) {
             chPatch.getDimmers().remove((Integer) dim);
-        else
+        } else {
             chPatch.addDimmer(dim);
+        }
     }
 
     // Initiating Menu XML file (patch.xml)

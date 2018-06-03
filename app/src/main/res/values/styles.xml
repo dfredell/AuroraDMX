@@ -5,7 +5,7 @@
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="TiledWallpaper" parent="android:Theme.Holo">
-            <item name="android:background">@layout/tiled_wallpaper</item>
+            <!--<item name="android:background">@layout/tiled_wallpaper</item>-->
    
         <!--
             Theme customizations available in newer API levels can go in
@@ -15,9 +15,10 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="TiledWallpaper">
+    <style name="AppTheme" parent="android:Theme.Holo">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
     <color name="white">@android:color/white</color>
+
 </resources>

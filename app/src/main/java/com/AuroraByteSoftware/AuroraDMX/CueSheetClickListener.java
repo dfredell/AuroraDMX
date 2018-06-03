@@ -4,19 +4,14 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.ui.EditCueMenu;
-
-import java.util.List;
 
 /**
  * Listen to click events on the cue list
  * Created by furtchet on 12/6/15.
  */
 public class CueSheetClickListener implements View.OnClickListener, View.OnLongClickListener {
-    private static final String TAG = "AuroraDMX";
     private Context context;
     private Button button;
 
@@ -29,7 +24,7 @@ public class CueSheetClickListener implements View.OnClickListener, View.OnLongC
             button = (Button) arg0;
         }
         if (button == null || button.getContext() == null) {
-            Log.e(TAG, "Cue button onclick had a null context");
+            Log.e(getClass().getSimpleName(), "Cue button onclick had a null context");
             return;
         }
         context = button.getContext();
@@ -45,9 +40,8 @@ public class CueSheetClickListener implements View.OnClickListener, View.OnLongC
             return;
         } else {
             // ======= Loading a cue ========
-            Log.d(TAG, "oldChLevels " + MainActivity.getCurrentChannelArray());
-            CueFade cueFade = new CueFade();
-            cueFade.startCueFade(MainActivity.alCues.get(curCue));
+            Log.d(getClass().getSimpleName(), "oldChLevels " + MainActivity.getCurrentChannelArray());
+            MainActivity.getCueFade().startCueFade(MainActivity.alCues.get(curCue));
         }
     }
 

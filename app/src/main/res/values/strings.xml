@@ -13,6 +13,8 @@
     <string name="insert">Insert</string>
     <string name="deletedCue">Deleted </string>
     <string name="Refresh">Refresh</string>
+
+    <!--Error messages-->
     <string name="canNotDeleteWhileFading">Can not delete while fading</string>
     <string name="onlyTwoDec">Only 2 decimal places allowed</string>
     <string name="errNumConv">Error Number Conversion</string>
@@ -20,6 +22,9 @@
     <string name="cueMustBePos">Cue numbers must be positive</string>
     <string name="dmxRangeError">Fixture Range 1 &#8211; 200</string>
     <string name="waitingOnFade">Waiting on Fade</string>
+    <string name="noCuesInChase">No cues in chase, hold to edit</string>
+    <string name="errorZeroFade">Fade and wait can not be 0</string>
+
     <string name="title_activity_EditCueMenu">Edit Cue Menu</string>
     <string name="title_activity_EditChannelMenu">Edit Channel Menu</string>
     <string name="dimmer">Dimmer</string>
@@ -28,10 +33,15 @@
     <string name="menu_oneToOne">One To One</string>
     <string name="menu_patch">Patch</string>
     <string name="menu_cues">Cues</string>
+    <string name="menu_chase">Chase</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_delete">Delete</string>
 
     <string name="restore_defaults">Restore Defaults</string>
     <string name="title_activity_patch">Patch</string>
     <string name="title_activity_cue">Cue Sheet</string>
+    <string name="title_activity_chase">Chase Sheet</string>
+    <string name="title_activity_edit_chase">Edit Chase</string>
     <string name="unlock_channels_title">Purchase App</string>
     <string name="unlock_channels_sum">Allow more than 5 fixtures</string>
     <string name="dmxRangePurchaseLimit">Free version limited to 5 fixtures</string>
@@ -56,11 +66,13 @@
 
     <!-- Preferences -->
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_cue_fade">CueFade</string>
     <string name="pref_header_general">General</string>
     <string name="channel_color_title">Channel Color</string>
-    <string name="default_fadeUp">Default cue fade up time</string>
-    <string name="default_fadeDown">Default cue fade down time</string>
+    <string name="default_fade">Default cue fade time (sec)</string>
     <string name="number_of_channels">Number of fixtures</string>
+    <string name="default_chaseFade">Default fade time on a chase</string>
+    <string name="default_chaseWait">Default time for a cue to stay on in a chase</string>
     <string name="r_0_g_0_b_0">R:0 G:0 B:0</string>
 
     <!-- Defaults -->
@@ -79,8 +91,7 @@
     <string name="textRgbValuePresets">(Preset 1:10,300,355;Preset 2:ff0034)</string>
 
     <!-- dialog_cue -->
-    <string name="FadeUp">Fade Up </string>
-    <string name="FadeDown">Fade Down </string>
+    <string name="Fade">Fade (sec) </string>
     <string name="default_level">0</string>
     <string name="cue_save">{fa-save}</string>
     <string name="cue_delete">{fa-trash}</string>
@@ -96,4 +107,7 @@
     <string name="pick_preset">Pick preset value</string>
     <string name="nextCue">{fa-step-forward}</string>
 
+    <!-- dialog_edit_chase_details -->
+    <string name="edit_chase_fade_time">Fade Time </string>
+    <string name="edit_chase_wait_time">Wait Time </string>
 </resources>

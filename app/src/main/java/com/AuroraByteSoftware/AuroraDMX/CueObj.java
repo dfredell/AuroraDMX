@@ -55,6 +55,10 @@ public class CueObj implements Serializable {
         name = cueName;
     }
 
+    public CueObj(String cueName, int a_fadeTime, List<Integer> a_levels, Button a_button) {
+        this(cueName,a_fadeTime,a_fadeTime,a_levels,a_button);
+    }
+
     /**
      * @return the fadeUpTime
      */

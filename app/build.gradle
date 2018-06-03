@@ -3,14 +3,13 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 39
-        versionName '3.1.1'
+        targetSdkVersion 27
+        versionCode 45
+        versionName '4.0.0'
     }
     buildTypes {
         release {
@@ -25,11 +24,14 @@ android {
 }
 
 dependencies {
-    compile files('libs/commons-lang3-3.3.2.jar')
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.larswerkman:HoloColorPicker:1.4'
-    compile project(':ArtNetStack')
-    testCompile 'junit:junit:4.12'
-    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
-    compile 'com.jmedeisis:draglinearlayout:1.1.0'
+    implementation 'org.apache.commons:commons-lang3:3.7'
+//  from  https://dl.google.com/dl/android/maven2/index.html
+    implementation 'com.android.billingclient:billing:1.1'
+    implementation 'com.android.support:support-v13:27.1.1'
+    implementation 'com.larswerkman:HoloColorPicker:1.5'
+    implementation project(':ArtNetStack')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // Font awesome v4.5
+    implementation 'com.jmedeisis:draglinearlayout:1.1.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
 }

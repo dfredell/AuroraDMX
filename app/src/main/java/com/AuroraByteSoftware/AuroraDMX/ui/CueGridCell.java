@@ -19,7 +19,6 @@ import java.util.Random;
  */
 class CueGridCell extends BaseAdapter {
     private final CueActivity mContext;
-    private static final String TAG = "AuroraDMX";
 
     CueGridCell(CueActivity c) {
         mContext = c;
@@ -46,15 +45,15 @@ class CueGridCell extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         CueObj cue = MainActivity.alCues.get(position);
 
-        if(convertView!=null && cue!=null && cue.getButton() != null && cue.getButton().equals(convertView)){
+        if (convertView != null && cue != null && cue.getButton() != null && cue.getButton().equals(convertView)) {
             return convertView;
         }
 
         //reuse the button to save memory
-        if (cue.getButton() !=null && cue.getButton().getParent() instanceof GridView){
+        if (cue.getButton() != null && cue.getButton().getParent() instanceof GridView) {
             return cue.getButton();
         }
-        Log.v(TAG,"Adding cue button " + cue.getCueName() + " was " + (convertView!=null?((Button)convertView).getText():"null"));
+        Log.v(getClass().getSimpleName(), "Adding cue button " + cue.getCueName() + " was " + (convertView != null ? ((Button) convertView).getText() : "null"));
 
         Button button = CueClickListener.makeButton(cue.getCueName(), mContext);
         button.setOnClickListener(new CueSheetClickListener());

@@ -17,6 +17,7 @@ import com.AuroraByteSoftware.AuroraDMX.CueClickListener;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.jmedeisis.draglinearlayout.DragLinearLayout;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -65,16 +66,13 @@ public class EditCueMenu extends MainActivity {
 
 
                 EditText editCueName = (EditText) view.findViewById(R.id.editCueName);
-                EditText editTextFadeUp = (EditText) view.findViewById(R.id.editTextFadeUp);
-                EditText editTextFadeDown = (EditText) view.findViewById(R.id.editTextFadeDown);
+                EditText editTextFade = (EditText) view.findViewById(R.id.editTextFade);
 
                 try {
                     String cueName = editCueName.getText().toString();
-                    int FadeUp = Integer.parseInt(editTextFadeUp.getText().toString());
-                    int FadeDown = Integer.parseInt(editTextFadeDown.getText().toString());
+                    int fadeTime = Integer.parseInt(editTextFade.getText().toString());
                     alCues.get(currentCue).setCueName(cueName);
-                    alCues.get(currentCue).setFadeUpTime(FadeUp);
-                    alCues.get(currentCue).setFadeDownTime(FadeDown);
+                    alCues.get(currentCue).setFadeUpTime(fadeTime);
 
                     // Set new button name
                     alCues.get(currentCue).getButton().setText(cueName);
@@ -95,11 +93,9 @@ public class EditCueMenu extends MainActivity {
                 ViewGroup layout = (ViewGroup) alCues.get(currentCue).getButton().getParent();
 
                 // Read global settings
-                int fadeUpTime = 5;
-                int fadeDownTime = 5;
+                int fadeTime = 5;
                 try {
-                    fadeUpTime = Integer.parseInt(getSharedPref().getString("fade_up_time", "5"));
-                    fadeDownTime = Integer.parseInt(getSharedPref().getString("fade_down_time", "5"));
+                    fadeTime = Integer.parseInt(getSharedPref().getString("fade_up_time", "5"));
                 } catch (Throwable t) {
                     Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
                 }
@@ -121,7 +117,7 @@ public class EditCueMenu extends MainActivity {
                     ((GridView) layout).invalidateViews();
                 }
                 // currentCue
-                CueObj newCue = new CueObj(thisCueNum, fadeUpTime, fadeDownTime, getCurrentChannelArray(), button);
+                CueObj newCue = new CueObj(thisCueNum, fadeTime, getCurrentChannelArray(), button);
                 alCues.add(currentCue, newCue);
                 alert.dismiss();
             }
@@ -158,6 +154,12 @@ public class EditCueMenu extends MainActivity {
                     }
                 } else {
                     Toast.makeText(context, R.string.canNotDeleteWhileFading, Toast.LENGTH_SHORT).show();
+                }
+                // delete from chases
+                for (ChaseObj alChase : MainActivity.alChases) {
+                    if (!alChase.getCues().isEmpty()) {
+                        alChase.getCues().remove(currentCue);
+                    }
                 }
                 alert.dismiss();
             }
@@ -218,14 +220,11 @@ public class EditCueMenu extends MainActivity {
             }
         });
 
-        EditText editCueName = (EditText) view.findViewById(R.id.editCueName);
+        EditText editCueName = view.findViewById(R.id.editCueName);
         editCueName.setText(alCues.get(currentCue).getCueName());
 
-        EditText editTextFadeUp = (EditText) view.findViewById(R.id.editTextFadeUp);
-        editTextFadeUp.setText(String.format("%1$s", alCues.get(currentCue).getFadeUpTime()));
-
-        EditText editTextFadeDown = (EditText) view.findViewById(R.id.editTextFadeDown);
-        editTextFadeDown.setText(String.format("%1$s", alCues.get(currentCue).getFadeDownTime()));
+        EditText editFadeText = view.findViewById(R.id.editTextFade);
+        editFadeText.setText(String.format("%1$s", alCues.get(currentCue).getFadeUpTime()));
 
         alert.show();
     }

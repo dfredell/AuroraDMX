@@ -57,7 +57,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
     }
 
     private void init() {
-        LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_rgb, null);
 
         tvChNum = (TextView) viewGroup.findViewById(R.id.channel_rgb_number);
@@ -106,8 +106,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
         });
 
         final List<Pair<String, String>> presets = FixtureUtility.getParsedValuePresets(getValuePresets(), PRESET_VALUE_REGEX);
-        if (presets == null)
+        if (presets == null) {
             return;
+        }
         String[] presetArray = new String[presets.size()];
         int i = 0;
         for (Pair<String, String> v : presets) {
@@ -217,6 +218,8 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
+        // TODO: I don't know how to determine if a color is going up or down, so I'll just always use stepsToEndValUp
+        // It would be weird if Red went to its final color before other just becasue he decreased
         step[0] = (endVal.get(0) - rgbLevel.get(0)) / steps;
         step[1] = (endVal.get(1) - rgbLevel.get(1)) / steps;
         step[2] = (endVal.get(2) - rgbLevel.get(2)) / steps;
@@ -229,27 +232,10 @@ public class RGBFixture extends Fixture implements OnClickListener {
      * Adds one step Up to the current level
      */
     @Override
-    public void incrementLevelUp() {
-        if (step[0] > 0)
-            stepIteram[0] += step[0];
-        if (step[1] > 0)
-            stepIteram[1] += step[1];
-        if (step[2] > 0)
-            stepIteram[2] += step[2];
-        updateIncrementedLevel();
-    }
-
-    /**
-     * Adds one step Down to the current level
-     */
-    @Override
-    public void incrementLevelDown() {
-        if (step[0] < 0)
-            stepIteram[0] += step[0];
-        if (step[1] < 0)
-            stepIteram[1] += step[1];
-        if (step[2] < 0)
-            stepIteram[2] += step[2];
+    public void incrementLevel() {
+        stepIteram[0] += step[0];
+        stepIteram[1] += step[1];
+        stepIteram[2] += step[2];
         updateIncrementedLevel();
     }
 
@@ -258,6 +244,10 @@ public class RGBFixture extends Fixture implements OnClickListener {
         rgbLevel.set(1, (int) Math.round(stepIteram[1]));
         rgbLevel.set(2, (int) Math.round(stepIteram[2]));
         ambilWarnaDialog.setRGBLevel(rgbLevel);
+    }
+
+    public void updateUi() {
+//        ambilWarnaDialog.getViewSatVal().invalidate();
     }
 
     @Override

@@ -20,7 +20,6 @@ import java.util.List;
 
 public class EditColumnMenu extends MainActivity {
 
-    private static final String TAG = "AuroraDMX";
 
     public static void createEditColumnMenu(View v, final MainActivity context, final Fixture fixture,
                                             String chText, int chLevel, String chValuePresets) {
@@ -34,29 +33,22 @@ public class EditColumnMenu extends MainActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                EditText editColumnName = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnName);
-                EditText editValuePresets = (EditText) ((AlertDialog) dialog).findViewById(R.id.editValuePresets);
-
                 try {
-                    String columnName = editColumnName.getText().toString();
-                    Log.d(TAG, "Col name: " + columnName);
+                    String columnName = UiUtil.getTextFromDialog(dialog, R.id.editColumnName);
+                    Log.d(getClass().getSimpleName(), "Col name: " + columnName);
                     fixture.setColumnText(columnName);
 
-                    String valuePresets = editValuePresets.getText().toString();
-                    Log.d(TAG, "Value presets: " + valuePresets);
+                    String valuePresets = UiUtil.getTextFromDialog(dialog, R.id.editValuePresets);
+                    Log.d(getClass().getSimpleName(), "Value presets: " + valuePresets);
                     fixture.setValuePresets(valuePresets);
 
                     List<Integer> specifiedLevel = new ArrayList<>();
                     if (fixture.isRGB()) {
-                        EditText editRLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editRLevel);
-                        EditText editGLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editGLevel);
-                        EditText editBLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editBLevel);
-                        specifiedLevel.add(Integer.parseInt(editRLevel.getText().toString()));
-                        specifiedLevel.add(Integer.parseInt(editGLevel.getText().toString()));
-                        specifiedLevel.add(Integer.parseInt(editBLevel.getText().toString()));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editRLevel));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editGLevel));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editBLevel));
                     } else {
-                        EditText editColumnLevel = (EditText) ((AlertDialog) dialog).findViewById(R.id.editColumnLevel);
-                        specifiedLevel.add(Integer.parseInt(editColumnLevel.getText().toString()));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editColumnLevel));
                     }
                     fixture.setChLevels(specifiedLevel);
 

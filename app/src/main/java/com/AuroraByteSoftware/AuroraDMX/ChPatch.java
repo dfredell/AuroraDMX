@@ -28,8 +28,9 @@ public class ChPatch implements Serializable {
     }
 
     public void addDimmer(Integer dimmer) {
-        if (!dimmers.contains(dimmer))
+        if (!dimmers.contains(dimmer)) {
             dimmers.add(dimmer);
+        }
     }
 
 }

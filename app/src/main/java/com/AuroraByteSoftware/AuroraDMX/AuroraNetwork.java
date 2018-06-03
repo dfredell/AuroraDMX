@@ -1,6 +1,7 @@
 package com.AuroraByteSoftware.AuroraDMX;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetUpdate;
 import com.AuroraByteSoftware.AuroraDMX.network.SendSacnUpdate;
@@ -24,11 +25,12 @@ public class AuroraNetwork {
     private static DatagramSocket artnetSocket = null;
     public static final int ART_NET_PORT = 6454;
 
-    private AuroraNetwork() {}
+    private AuroraNetwork() {
+    }
 
     public static void setUpNetwork(Activity activity) {
         String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
-
+        Log.i("AuroraNetwork", "Starting Network " + protocol);
         stopNetwork();
 
         if ("SACNUNI".equals(protocol)) {
@@ -44,25 +46,22 @@ public class AuroraNetwork {
 
     }
 
-     public static void stopNetwork() {
+    public static void stopNetwork() {
         if (ArtNet != null) {
             ArtNet.cancel();
-            ArtNet.purge();
         }
         if (SACN != null) {
             SACN.cancel();
-            SACN.purge();
         }
         if (SACNUnicast != null) {
             SACNUnicast.cancel();
-            SACNUnicast.purge();
         }
         if (clientSocket != null) {
             clientSocket.close();
         }
     }
 
-    public static DatagramSocket getClientSocket(){
+    public static DatagramSocket getClientSocket() {
         return clientSocket;
     }
 
@@ -72,7 +71,7 @@ public class AuroraNetwork {
 
     public static DatagramSocket getArtnetSocket() throws SocketException {
         if (artnetSocket == null || artnetSocket.isClosed()) {
-            artnetSocket= new DatagramSocket(ART_NET_PORT);
+            artnetSocket = new DatagramSocket(ART_NET_PORT);
             artnetSocket.setReuseAddress(true);
         }
         return artnetSocket;

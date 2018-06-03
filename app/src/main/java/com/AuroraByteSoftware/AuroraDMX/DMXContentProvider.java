@@ -2,6 +2,7 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DMXContentProvider extends ContentProvider implements ContentProvider.PipeDataWriter<InputStream> {
-    private static final String TAG = "AuroraDMX";
 
     public DMXContentProvider() {
     }
@@ -31,6 +31,15 @@ public class DMXContentProvider extends ContentProvider implements ContentProvid
     @Override
     public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
         File file = new File(getContext().getCacheDir(), uri.getLastPathSegment());//#
+        try {
+            if (!file.getCanonicalPath().startsWith(this.getContext().getCacheDir().getCanonicalPath())) {
+                // https://support.google.com/faqs/answer/7496913
+                throw new IllegalArgumentException();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
         return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
     }
 
@@ -79,17 +88,17 @@ public class DMXContentProvider extends ContentProvider implements ContentProvid
                 fout.write(buffer, 0, n);
             }
         } catch (IOException e) {
-            Log.i(TAG, "Failed transferring", e);
+            Log.i(getClass().getSimpleName(), "Failed transferring", e);
         } finally {
             try {
                 arg4.close();
             } catch (IOException e) {
-                Log.i(TAG, "Can't close", e);
+                Log.i(getClass().getSimpleName(), "Can't close", e);
             }
             try {
                 fout.close();
             } catch (IOException e) {
-                Log.i(TAG, "Can't close", e);
+                Log.i(getClass().getSimpleName(), "Can't close", e);
             }
         }
     }

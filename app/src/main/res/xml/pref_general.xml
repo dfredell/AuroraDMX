@@ -10,16 +10,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="@string/default_fadeUp"
-        android:maxLength="3"/>
-    <EditTextPreference
-        android:defaultValue="@string/pref_default_fade_time"
-        android:inputType="number"
-        android:key="fade_down_time"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/default_fadeDown"
+        android:title="@string/default_fade"
         android:maxLength="3"/>
     <EditTextPreference
         android:defaultValue="@string/pref_default_channels"
@@ -29,6 +20,24 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/number_of_channels"
+        android:maxLength="3"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_fade_time"
+        android:inputType="number"
+        android:key="chase_fade_time"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/default_chaseFade"
+        android:maxLength="3"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_fade_time"
+        android:inputType="number"
+        android:key="chase_wait_time"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/default_chaseWait"
         android:maxLength="3"/>
     <!--
          NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to

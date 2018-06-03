@@ -16,7 +16,6 @@ import java.util.List;
  * Created by furtchet on 12/6/15.
  */
 public class CueClickListener implements View.OnClickListener, View.OnLongClickListener {
-    private static final String TAG = "AuroraDMX";
     private Context context;
     private Button button;
 
@@ -29,7 +28,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
             button = (Button) arg0;
         }
         if (button == null || button.getContext() == null) {
-            Log.e(TAG, "Cue button onclick had a null context");
+            Log.e(getClass().getSimpleName(), "Cue button onclick had a null context");
             return;
         }
         context = button.getContext();
@@ -42,14 +41,14 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         }
 
         if (curCue == -1) {// Adding a new cue
-            createCue(button, MainActivity.getCurrentChannelArray(), -1, -1);
+            createCue(button, MainActivity.getCurrentChannelArray(), -1);
         } else {
             // ======= Loading a cue ========
-            Log.d(TAG, "oldChLevels " + MainActivity.getCurrentChannelArray());
-            CueFade cueFade = new CueFade();
-            cueFade.startCueFade(MainActivity.alCues.get(curCue));
+            Log.d(getClass().getSimpleName(), "oldChLevels " + MainActivity.getCurrentChannelArray());
+            MainActivity.getCueFade().startCueFade(MainActivity.alCues.get(curCue));
         }
     }
+
 
     /**
      * Cue Long Click handler
@@ -71,16 +70,14 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
 
     /**
      * Adds a new cue with the current ch Levels
-     *
-     * @param button   of "Add Cue"
+     *  @param button   of "Add Cue"
      * @param chLevels level of channels
      */
-    private void createCue(Button button, List<Integer> chLevels, int fadeUpTime, int fadeDownTime) {
+    private void createCue(Button button, List<Integer> chLevels, int fadeTime) {
         // Rename the old button to Cue #
 
         try {
-            fadeUpTime = (fadeUpTime == -1) ? Integer.parseInt(MainActivity.getSharedPref().getString("fade_up_time", "5")) : fadeUpTime;
-            fadeDownTime = (fadeDownTime == -1) ? Integer.parseInt(MainActivity.getSharedPref().getString("fade_down_time", "5")) : fadeDownTime;
+            fadeTime = (fadeTime == -1) ? Integer.parseInt(MainActivity.getSharedPref().getString("fade_up_time", "5")) : fadeTime;
         } catch (Throwable t) {
             t.printStackTrace();
             Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
@@ -89,7 +86,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
 
         button.setText(name);
         // Add cue name
-        MainActivity.alCues.add(new CueObj(name, fadeUpTime, fadeDownTime, chLevels, button));
+        MainActivity.alCues.add(new CueObj(name, fadeTime, chLevels, button));
         MainActivity.cueCount++;
 
         // create a new "Add Cue" button

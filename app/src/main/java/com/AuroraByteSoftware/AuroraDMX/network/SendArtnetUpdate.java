@@ -26,14 +26,22 @@ public class SendArtnetUpdate extends TimerTask {
     private int previousMessageSentAgo = 0;
     private DatagramSocket clientSocket;
 
-    public SendArtnetUpdate(Activity activity, DatagramSocket datagramSocket) {
+    public SendArtnetUpdate(final Activity activity, DatagramSocket datagramSocket) {
         this.activity = activity;
         this.clientSocket = datagramSocket;
-        String serverPref = MainActivity.getSharedPref().getString(SettingsActivity.serveraddress.trim(), "");
+        final String serverPref = MainActivity.getSharedPref().getString(SettingsActivity.serveraddress.trim(), "");
         String[] splitServer = serverPref.split(":");
         if (splitServer.length == 2) {
             serverIp = splitServer[0];
-            artnetPort = Integer.parseInt(splitServer[1].trim());
+            try {
+                artnetPort = Integer.parseInt(splitServer[1].trim());
+            }catch (NumberFormatException e){
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, String.format(activity.getString(R.string.serverUnknown), serverPref), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         } else {
             serverIp = serverPref;
         }
@@ -46,7 +54,7 @@ public class SendArtnetUpdate extends TimerTask {
         try {
             clientSocket = AuroraNetwork.getArtnetSocket();
             IPAddress = InetAddress.getByName(serverIp);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             activity.runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(activity, String.format(activity.getString(R.string.serverUnknown), serverIp + ":" + artnetPort), Toast.LENGTH_LONG).show();

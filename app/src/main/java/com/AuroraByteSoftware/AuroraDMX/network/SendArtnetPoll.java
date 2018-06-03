@@ -31,7 +31,6 @@ import fr.azelart.artnetstack.utils.ArtNetPacketEncoder;
 public class SendArtnetPoll extends Thread {
     private static final int TIMEOUT = 1500;
     private Context superContext = null;
-    private static final String TAG = "AuroraDMX";
     private DatagramSocket clientSocket = null;
 
     @Override
@@ -49,7 +48,7 @@ public class SendArtnetPoll extends Thread {
             multicastLock.acquire();
 
             clientSocket = AuroraNetwork.getArtnetSocket();
-            Log.i(TAG, "Starting SendArtnetPoll");
+            Log.i(getClass().getSimpleName(), "Starting SendArtnetPoll");
             Controller cont = new Controller();
             byte[] out = ArtNetPacketEncoder.encodeArtPollPacket(cont);
             final DatagramPacket sendPacket = new DatagramPacket(out, out.length, InetAddress.getByName("255.255.255.255"), AuroraNetwork.ART_NET_PORT);
@@ -75,8 +74,7 @@ public class SendArtnetPoll extends Thread {
             while (timeOut > System.currentTimeMillis()) {
                 DatagramPacket packet = new DatagramPacket(new byte[256], 256);
                 clientSocket.receive(packet);
-                Log.i(TAG, "Packet Received " + packet.getAddress());
-                Log.i(TAG, "Packet Received " + Arrays.toString(packet.getData()));
+                Log.i(getClass().getSimpleName(), "Packet Received " + packet.getAddress() + "\t" + Arrays.toString(packet.getData()));
                 networkResponse.put(packet.getAddress(), packet.getData());
             }
 
@@ -89,20 +87,23 @@ public class SendArtnetPoll extends Thread {
                 clientSocket.disconnect();
                 clientSocket.close();
             }
-            if (null != MainActivity.progressDialog)
+            if (null != MainActivity.progressDialog) {
                 MainActivity.progressDialog.dismiss();
-            if (null != multicastLock && multicastLock.isHeld())
+            }
+            if (null != multicastLock && multicastLock.isHeld()) {
                 multicastLock.release();
+            }
             sendPacketTimer.cancel();
         }
 
         //Parse the bytes into ArtPollReplies
         for (InetAddress address : networkResponse.keySet()) {
             try {
+                Log.i(getClass().getSimpleName(), "ArtNet Response from " + address);
                 ArtNetObject artNet = ArtNetPacketDecoder.decodeArtNetPacket(networkResponse.get(address), address);
                 if (artNet instanceof ArtPollReply) {
                     ArtPollReply reply = (ArtPollReply) artNet;
-                    Log.i(TAG, String.format("Found ArtNet: '%1$s' '%2$s' '%3$s'", reply.getShortName(), reply.getIp(), Arrays.toString(address.getAddress())));
+                    Log.i(getClass().getSimpleName(), String.format("Found ArtNet: '%1$s' '%2$s' '%3$s'", reply.getShortName(), reply.getIp(), Arrays.toString(address.getAddress())));
                     for (Iterator<ArtPollReply> iterator = MainActivity.foundServers.iterator(); iterator.hasNext(); ) {
                         ArtPollReply foundServer = iterator.next();
                         if (foundServer.getIp().equals(reply.getIp())) {
@@ -111,12 +112,12 @@ public class SendArtnetPoll extends Thread {
                     }
                     MainActivity.foundServers.add(reply);
                 } else if (artNet instanceof ArtPoll) {
-                    Log.i(TAG, String.format("Found ArtPoll: '%1$s' '%2$s'", artNet, artNet.getClass().toString()));
+                    Log.i(getClass().getSimpleName(), String.format("Found ArtPoll: '%1$s' '%2$s'", artNet, artNet.getClass().toString()));
                 } else {
-                    Log.i(TAG, String.format("Did NOT Found ArtNet: %1$s", artNet));
+                    Log.i(getClass().getSimpleName(), String.format("Did NOT Found ArtNet: %1$s", artNet));
                 }
-            } catch (RuntimeException e){
-                Log.w(TAG,"Unable to parse art poll replies ", e);
+            } catch (RuntimeException e) {
+                Log.w(getClass().getSimpleName(), "Unable to parse art poll replies ", e);
             }
         }
         if (clientSocket != null) {
@@ -127,6 +128,9 @@ public class SendArtnetPoll extends Thread {
         Collections.sort(MainActivity.foundServers, new Comparator<ArtPollReply>() {
             @Override
             public int compare(ArtPollReply lhs, ArtPollReply rhs) {
+                if (lhs == null || lhs.getIp() == null || rhs == null) {
+                    return 0;
+                }
                 return lhs.getIp().compareTo(rhs.getIp());
             }
         });

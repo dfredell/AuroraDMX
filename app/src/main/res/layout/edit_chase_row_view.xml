@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    >
+
+    <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/textview_padding_top"
+        android:paddingLeft="@dimen/textview_padding_side"
+        android:paddingRight="@dimen/textview_padding_side"
+        android:paddingTop="@dimen/textview_padding_top"
+        android:text="Cue 123"
+        android:textSize="@dimen/textview_font"
+        android:background="@drawable/selected_edit_chase_cue"
+        />
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/edit_chase_drag"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="right|center"
+        android:paddingBottom="@dimen/textview_padding_top"
+        android:paddingLeft="@dimen/textview_padding_side"
+        android:paddingRight="@dimen/textview_padding_side"
+        android:paddingTop="@dimen/textview_padding_top"
+        android:text="{fa-bars}"
+        android:textSize="@dimen/textview_trashcan"
+        android:layout_alignParentRight="true"
+        />
+
+    <!-- quick and dirty divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@android:color/darker_gray"
+        />
+
+</RelativeLayout>

@@ -29,7 +29,6 @@ public class SendSacnUpdate extends TimerTask {
     private int universe = 1;
     private String server = null;
     private final Activity activity;
-    private static final String TAG = "AuroraDMX";
     private int previousMessageSentAgo = 0;
     private int[] previousMessage = new int[0];
     private DatagramSocket clientSocket;
@@ -44,7 +43,7 @@ public class SendSacnUpdate extends TimerTask {
         } else {
             server = null;
         }
-        Log.v(TAG, "unicast " + server);
+        Log.v(getClass().getSimpleName(), "unicast " + server);
         try {
             universe = Integer.parseInt(univ);
         } catch (NullPointerException | NumberFormatException e) {

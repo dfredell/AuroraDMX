@@ -9,7 +9,6 @@ import android.widget.Button;
  * Created by furtchet on 12/6/15.
  */
 class NextCueListener implements View.OnClickListener, View.OnLongClickListener {
-    private static final String TAG = "AuroraDMX";
     private Button button;
 
     /**
@@ -21,13 +20,13 @@ class NextCueListener implements View.OnClickListener, View.OnLongClickListener 
             button = (Button) arg0;
         }
         if (button != null && button.getContext() == null) {
-            Log.e(TAG, "Cue button onclick had a null context");
+            Log.e(getClass().getSimpleName(), "Cue button onclick had a null context");
             return;
         }
 
         int nextCue;
-        if (MainActivity.upwardCue >= 0) {
-            nextCue = MainActivity.upwardCue;
+        if (MainActivity.getCueFade() != null && MainActivity.getCueFade().getUpwardCue() >= 0) {
+            nextCue = MainActivity.getCueFade().getUpwardCue();
         } else if (!MainActivity.alCues.isEmpty()) {
             nextCue = -1;
         } else {
@@ -35,8 +34,7 @@ class NextCueListener implements View.OnClickListener, View.OnLongClickListener 
         }
         //if there is a next cue
         if (MainActivity.alCues.size() > nextCue + 1) {
-            CueFade cueFade = new CueFade();
-            cueFade.startCueFade(MainActivity.alCues.get(nextCue + 1));
+            MainActivity.getCueFade().startCueFade(MainActivity.alCues.get(nextCue + 1));
         }
     }
 

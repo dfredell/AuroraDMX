@@ -18,13 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.AuroraByteSoftware.AuroraDMX.billing.ClientStateListener;
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetPoll;
 import com.AuroraByteSoftware.AuroraDMX.ui.ManualServerIP;
-import com.AuroraByteSoftware.Billing.util.IabHelper;
-import com.AuroraByteSoftware.Billing.util.IabResult;
-import com.AuroraByteSoftware.Billing.util.Purchase;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingFlowParams;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -55,7 +54,6 @@ public class SettingsActivity extends PreferenceActivity {
     public static final String manualserver = "manualserver";
     public static final String serveraddress = "serveraddress";
     public static final String restoredefaults = "restoredefaults";
-    private static final String TAG = "AuroraDMX";
     private static Thread t;
     private static SettingsActivity settings;
 
@@ -65,12 +63,13 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void onBuildHeaders(List<Header> target) {
         String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
-        if ("SACNUNI".equals(protocol))
+        if ("SACNUNI".equals(protocol)) {
             loadHeadersFromResource(R.xml.pref_headers_sacn_unicast, target);
-        else if ("SACN".equals(protocol))
+        } else if ("SACN".equals(protocol)) {
             loadHeadersFromResource(R.xml.pref_headers_sacn, target);
-        else
+        } else {
             loadHeadersFromResource(R.xml.pref_headers_artnet, target);
+        }
         settings = this;
     }
 
@@ -136,8 +135,10 @@ public class SettingsActivity extends PreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("fade_up_time"));
-            bindPreferenceSummaryToValue(findPreference("fade_down_time"));
+//            bindPreferenceSummaryToValue(findPreference("fade_down_time"));
             bindPreferenceSummaryToValue(findPreference(channels));
+            bindPreferenceSummaryToValue(findPreference("chase_fade_time"));
+            bindPreferenceSummaryToValue(findPreference("chase_wait_time"));
 
 
             // The content view embeds two fragments; now retrieve them and attach
@@ -147,11 +148,15 @@ public class SettingsActivity extends PreferenceActivity {
             findPreference("unlock_channels").setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     //open browser or intent here
-                    Log.i(TAG, "unlock_channels");
-                    if (MainActivity.getmHelper() != null) {
-                        MainActivity.getmHelper().flagEndAsync();
-                        MainActivity.getmHelper().launchPurchaseFlow(getActivity(), MainActivity.ITEM_SKU, 1001,
-                                mPurchaseFinishedListener, "DanExtraData");
+                    Log.i(getClass().getSimpleName(), "unlock_channels");
+                    if (MainActivity.billing != null &&
+                            MainActivity.billing.getBillingClient() != null) {
+                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                                .setSku(ClientStateListener.ITEM_SKU)
+                                .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
+                                .build();
+                        int responseCode = MainActivity.billing.getBillingClient()
+                                .launchBillingFlow(getActivity(), flowParams);
                     }
                     return true;
                 }
@@ -167,17 +172,6 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
-    private static final IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-        public void onIabPurchaseFinished(IabResult result, Purchase purchase, Context context) {
-            if (result.isFailure()) {
-                // Handle error
-                Toast.makeText(context, result.getMessage(), Toast.LENGTH_LONG).show();
-
-            } else if (purchase.getSku().equals(MainActivity.ITEM_SKU)) {
-                Log.d(TAG, "Item bought");
-            }
-        }
-    };
 
     /**
      * This fragment shows general preferences only. It is used when the
@@ -200,7 +194,7 @@ public class SettingsActivity extends PreferenceActivity {
 
             checkboxPrefManual = (CheckBoxPreference) findPreference("checkboxPrefManual");
             Context context = getActivity();
-            if(context==null){
+            if (context == null) {
                 return;
             }
             final String server = PreferenceManager.getDefaultSharedPreferences(context).getString(SettingsActivity.manualserver, "192.168.0.0:0");
@@ -217,8 +211,10 @@ public class SettingsActivity extends PreferenceActivity {
                         p.setChecked(false);// Uncheck the other boxes
                     }
                     if (newValue.equals(true))// Only ask for text when checking
-                        // not unchecking box
+                    // not unchecking box
+                    {
                         ManualServerIP.askForString(getActivity(), checkboxPrefManual);
+                    }
                     return true;
                 }
             });
@@ -250,10 +246,11 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         public void refreshServers() {
-            Log.d(TAG, "Refresh");
+            Log.d(getClass().getSimpleName(), "Refresh");
             PreferenceCategory targetCategory = (PreferenceCategory) findPreference("targetCategory");
-            if (targetCategory != null)
+            if (targetCategory != null) {
                 targetCategory.removeAll();
+            }
             MainActivity.progressDialog = ProgressDialog.show(getActivity(), "",
                     "Searching for ArtNet devices...");
             SendArtnetPoll poll = new SendArtnetPoll();
@@ -291,7 +288,7 @@ public class SettingsActivity extends PreferenceActivity {
                         // create one check box for each setting you need
                         String ipPort = artPollReply.getIp() + ":" + artPollReply.getOutputSubswitch()[i];
                         Context context = getActivity();
-                        if(context==null){
+                        if (context == null) {
                             return;
                         }
                         CheckBoxPreference checkBoxPreference = new CheckBoxPreference(context);
@@ -319,11 +316,14 @@ public class SettingsActivity extends PreferenceActivity {
                         ArrayList<CheckBoxPreference> list = getPreferenceList(targetCategory,
                                 new ArrayList<CheckBoxPreference>());
                         for (CheckBoxPreference others : list) {
-                            if (!others.getKey().equalsIgnoreCase(p.getKey()))
+                            if (!others.getKey().equalsIgnoreCase(p.getKey())) {
                                 others.setChecked(false);// Uncheck the other boxes
+                            }
                         }
                         if (preference instanceof CheckBoxPreference)//Set server IP
+                        {
                             MainActivity.getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) preference.getTitle()).apply();
+                        }
 
 
                         checkboxPrefManual = (CheckBoxPreference) findPreference("checkboxPrefManual");
@@ -388,12 +388,15 @@ public class SettingsActivity extends PreferenceActivity {
      * @return true if valid
      */
     protected boolean isValidFragment(String fragmentName) {
-        if (GeneralPreferenceFragment.class.getName().equals(fragmentName))
+        if (GeneralPreferenceFragment.class.getName().equals(fragmentName)) {
             return true;
-        if (SacnPreferenceFragment.class.getName().equals(fragmentName))
+        }
+        if (SacnPreferenceFragment.class.getName().equals(fragmentName)) {
             return true;
-        if (ArtnetPreferenceFragment.class.getName().equals(fragmentName))
+        }
+        if (ArtnetPreferenceFragment.class.getName().equals(fragmentName)) {
             return true;
+        }
         return SacnUnicastPreferenceFragment.class.getName().equals(fragmentName);
     }
 }

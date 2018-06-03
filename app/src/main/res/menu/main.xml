@@ -15,6 +15,10 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_cues"/>
     <item
+        android:id="@+id/menu_chase"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_chase"/>
+    <item
         android:id="@+id/menu_settings"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_settings"/>

@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -159,18 +160,23 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         updateFixtureLevelText();
     }
 
+    @Override
+    public void updateUi() {
+        seekBar.setProgress((int) chLevel);
+        updateFixtureLevelText();
+    }
 
-    protected void updateFixtureLevelText() {
+    private void updateFixtureLevelText() {
+        String text;
         if (MainActivity.getSharedPref().getBoolean("channel_display_value", false)) {
-            tvVal.setText(String.format("%1$s", (int) chLevel));
+            text = String.format("%1$s", (int) chLevel);
+        } else if (chLevel >= MAX_LEVEL) {
+            text = context.getString(R.string.ChFull);
         } else {
-            if (chLevel >= MAX_LEVEL) {
-                tvVal.setText(context.getString(R.string.ChFull));
-            } else {
-                final String percent = Integer.toString((int) chLevel * 100 / MAX_LEVEL);
-                tvVal.setText(String.format(context.getString(R.string.ChPercent), percent));
-            }
+            final String percent = Integer.toString((int) chLevel * 100 / MAX_LEVEL);
+            text = String.format(context.getString(R.string.ChPercent), percent);
         }
+        tvVal.setText(text);
     }
 
 
@@ -233,7 +239,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     /**
      * Creates 255 steeps between current and endVal
-     *
      * @param endVal value when the fade is finished
      * @param steps  number of steps to take to get to the final falue
      */
@@ -241,29 +246,16 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
         step = (endVal.get(0) - chLevel) / steps;
         stepIteram = chLevel;
-        Log.v(TAG, String.format("Setting up fade %1$s %2$s", endVal.toString(), step));
+        Log.v(getClass().getSimpleName(), String.format("Setting up fade %1$s %2$s", endVal.toString(), step));
     }
 
     /**
      * Adds one step Up to the current level
      */
     @Override
-    public void incrementLevelUp() {
-        if (step > 0) {
-            stepIteram += step;
-            setChLevel((int) Math.round(stepIteram));
-        }
-    }
-
-    /**
-     * Adds one step Down to the current level
-     */
-    @Override
-    public void incrementLevelDown() {
-        if (step < 0) {
-            stepIteram += step;
-            setChLevel((int) Math.round(stepIteram));
-        }
+    public void incrementLevel() {
+        stepIteram += step;
+        setChLevel((int) Math.round(stepIteram));
     }
 
 

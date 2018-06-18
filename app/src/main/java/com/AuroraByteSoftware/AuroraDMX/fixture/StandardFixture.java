@@ -11,7 +11,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.GradientDrawable.Orientation;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,18 +57,18 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     }
 
     private void init() {
-        LayoutInflater inflater = (LayoutInflater)   context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_standard, null);
 
-        tvChNum = (TextView) viewGroup.findViewById(R.id.channel_number);
+        tvChNum = viewGroup.findViewById(R.id.channel_number);
 
-        tvVal = (TextView) viewGroup.findViewById(R.id.channel_level);
+        tvVal = viewGroup.findViewById(R.id.channel_level);
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
 
-        seekBar = (VerticalSeekBar) viewGroup.findViewById(R.id.channel_seek);
+        seekBar = viewGroup.findViewById(R.id.channel_seek);
         seekBar.setOnSeekBarChangeListener(this);
 
-        TextView editButton = (TextView) viewGroup.findViewById(R.id.channel_edit);
+        TextView editButton = viewGroup.findViewById(R.id.channel_edit);
         editButton.setOnClickListener(this);
 
         refreshValuePresetsHook();
@@ -110,7 +109,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
 
         //Update the text view
-        TextView channelName = (TextView) viewGroup.findViewById(R.id.channel_name);
+        TextView channelName = viewGroup.findViewById(R.id.channel_name);
         channelName.setText(chText);
 
         return new LayerDrawable(new Drawable[]{background, foreground});
@@ -199,8 +198,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         });
 
         final List<Pair<String, String>> presets = FixtureUtility.getParsedValuePresets(getValuePresets(), PRESET_VALUE_REGEX);
-        if (presets == null)
+        if (presets == null) {
             return;
+        }
         String[] presetArray = new String[presets.size()];
         int i = 0;
         for (Pair<String, String> v : presets) {
@@ -239,6 +239,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     /**
      * Creates 255 steeps between current and endVal
+     *
      * @param endVal value when the fade is finished
      * @param steps  number of steps to take to get to the final falue
      */

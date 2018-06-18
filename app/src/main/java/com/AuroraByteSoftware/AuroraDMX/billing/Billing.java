@@ -1,23 +1,21 @@
 package com.AuroraByteSoftware.AuroraDMX.billing;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.AuroraByteSoftware.AuroraDMX.MainActivity;
-import com.AuroraByteSoftware.AuroraDMX.R;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * In app purchases from https://developer.android.com/google/play/billing/billing_java_kotlin
  */
-public class Billing implements PurchasesUpdatedListener {
+public class Billing implements PurchasesUpdatedListener, Serializable {
     private ClientStateListener clientStateListener;
     private BillingClient mBillingClient;
     private Context activity;
@@ -32,16 +30,16 @@ public class Billing implements PurchasesUpdatedListener {
     }
 
     public boolean check() {
-        if (!clientStateListener.connect()){
+        if (!clientStateListener.connect()) {
             Log.d(getClass().getSimpleName(), "Connection was lost, reconnecting");
         }
-        Log.d(getClass().getSimpleName(),"Billing check: " + clientStateListener.getPurchaseStatus());
+        Log.d(getClass().getSimpleName(), "Billing check: " + clientStateListener.getPurchaseStatus());
         if (clientStateListener.getPurchaseStatus() == 2) {
             return false;
         } else if (clientStateListener.getPurchaseStatus() == 1) {
             return true;
         }
-        return true ;
+        return true;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class Billing implements PurchasesUpdatedListener {
 
     }
 
-    private String getBillingResponseMessage(@BillingClient.BillingResponse int responseCode){
+    private String getBillingResponseMessage(@BillingClient.BillingResponse int responseCode) {
         switch (responseCode) {
             case BillingClient.BillingResponse.FEATURE_NOT_SUPPORTED:
                 return "Feature not supported";
@@ -61,6 +59,8 @@ public class Billing implements PurchasesUpdatedListener {
                 return "Success";
             case BillingClient.BillingResponse.USER_CANCELED:
                 return "Store Canceled";
+            case BillingClient.BillingResponse.SERVICE_UNAVAILABLE:
+                return "Service Unavailable";
             case BillingClient.BillingResponse.BILLING_UNAVAILABLE:
                 return "Store Unavailable";
             case BillingClient.BillingResponse.ITEM_UNAVAILABLE:

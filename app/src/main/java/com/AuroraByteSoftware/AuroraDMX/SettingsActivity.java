@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.AuroraByteSoftware.AuroraDMX.billing.Billing;
 import com.AuroraByteSoftware.AuroraDMX.billing.ClientStateListener;
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetPoll;
 import com.AuroraByteSoftware.AuroraDMX.ui.ManualServerIP;
@@ -56,6 +57,7 @@ public class SettingsActivity extends PreferenceActivity {
     public static final String restoredefaults = "restoredefaults";
     private static Thread t;
     private static SettingsActivity settings;
+    private static Billing billing = new Billing();
 
     /**
      * {@inheritDoc}
@@ -128,6 +130,7 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            billing.setup(getActivity());
             addPreferencesFromResource(R.xml.pref_general);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
@@ -149,13 +152,13 @@ public class SettingsActivity extends PreferenceActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     //open browser or intent here
                     Log.i(getClass().getSimpleName(), "unlock_channels");
-                    if (MainActivity.billing != null &&
-                            MainActivity.billing.getBillingClient() != null) {
+                    if (billing != null &&
+                            billing.getBillingClient() != null) {
                         BillingFlowParams flowParams = BillingFlowParams.newBuilder()
                                 .setSku(ClientStateListener.ITEM_SKU)
                                 .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
                                 .build();
-                        int responseCode = MainActivity.billing.getBillingClient()
+                        int responseCode = billing.getBillingClient()
                                 .launchBillingFlow(getActivity(), flowParams);
                     }
                     return true;
@@ -282,8 +285,10 @@ public class SettingsActivity extends PreferenceActivity {
             // in this case a PreferenceCategory with key "targetCategory"
             PreferenceCategory targetCategory = (PreferenceCategory) findPreference("targetCategory");
 
-            for (ArtPollReply artPollReply : MainActivity.foundServers) {
-                for (int i = 0; i < 4; i++) {
+            ArrayList<ArtPollReply> foundServers = MainActivity.foundServers;
+            for (int i1 = 0; i1 < foundServers.size(); i1++) {
+                ArtPollReply artPollReply = foundServers.get(i1);
+                for (int i = 0; i < artPollReply.getOutputStatus().length; i++) {
                     if (artPollReply.getOutputStatus()[i].dataTransmitted) {
                         // create one check box for each setting you need
                         String ipPort = artPollReply.getIp() + ":" + artPollReply.getOutputSubswitch()[i];

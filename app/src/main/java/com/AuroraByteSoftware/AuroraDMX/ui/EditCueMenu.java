@@ -65,8 +65,8 @@ public class EditCueMenu extends MainActivity {
             public void onClick(View button) {
 
 
-                EditText editCueName = (EditText) view.findViewById(R.id.editCueName);
-                EditText editTextFade = (EditText) view.findViewById(R.id.editTextFade);
+                EditText editCueName = view.findViewById(R.id.editCueName);
+                EditText editTextFade = view.findViewById(R.id.editTextFade);
 
                 try {
                     String cueName = editCueName.getText().toString();
@@ -187,7 +187,7 @@ public class EditCueMenu extends MainActivity {
                 builder.setView(reorderView);
                 final AlertDialog reorderAlert = builder.create();
 
-                DragLinearLayout dragLinearLayout = (DragLinearLayout) reorderView.findViewById(R.id.cue_reorder_view);
+                DragLinearLayout dragLinearLayout = reorderView.findViewById(R.id.cue_reorder_view);
                 for (CueObj alCue : alCues) {
                     TextView textView = new TextView(context);
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);

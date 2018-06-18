@@ -60,15 +60,15 @@ public class RGBFixture extends Fixture implements OnClickListener {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_rgb, null);
 
-        tvChNum = (TextView) viewGroup.findViewById(R.id.channel_rgb_number);
+        tvChNum = viewGroup.findViewById(R.id.channel_rgb_number);
 
-        tvVal = (TextView) viewGroup.findViewById(R.id.channel_rgb_level);
+        tvVal = viewGroup.findViewById(R.id.channel_rgb_level);
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
 
         View viewById = viewGroup.findViewById(R.id.ambilwarna_dialogView);
         ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this, viewById);
 
-        TextView editButton = (TextView) viewGroup.findViewById(R.id.channel_rgb_edit);
+        TextView editButton = viewGroup.findViewById(R.id.channel_rgb_edit);
         editButton.setOnClickListener(this);
 
         refreshValuePresetsHook();

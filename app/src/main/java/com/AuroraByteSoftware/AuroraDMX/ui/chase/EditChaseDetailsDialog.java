@@ -21,7 +21,6 @@ import com.AuroraByteSoftware.AuroraDMX.ui.UiUtil;
 public class EditChaseDetailsDialog extends DialogFragment implements View.OnClickListener {
 
 
-
     EditChaseDialogListener mListener;
 
     public interface EditChaseDialogListener {

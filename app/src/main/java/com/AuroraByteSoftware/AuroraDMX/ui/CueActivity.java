@@ -18,7 +18,7 @@ public class CueActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cue);
 
-        gridView = (GridView) findViewById(R.id.cue_grid);
+        gridView = findViewById(R.id.cue_grid);
         gridView.setAdapter(new CueGridCell(this));
 
         AuroraNetwork.setUpNetwork(this);

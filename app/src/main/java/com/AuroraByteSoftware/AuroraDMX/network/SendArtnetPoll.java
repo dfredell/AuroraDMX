@@ -43,9 +43,11 @@ public class SendArtnetPoll extends Thread {
 
         try {
 
-            WifiManager wifi = (WifiManager) superContext.getSystemService(Context.WIFI_SERVICE);
-            multicastLock = wifi.createMulticastLock("com.AuroraByteSoftware.AuroraDMX");
-            multicastLock.acquire();
+            WifiManager wifi = (WifiManager) superContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifi != null) {
+                multicastLock = wifi.createMulticastLock("com.AuroraByteSoftware.AuroraDMX");
+                multicastLock.acquire();
+            }
 
             clientSocket = AuroraNetwork.getArtnetSocket();
             Log.i(getClass().getSimpleName(), "Starting SendArtnetPoll");

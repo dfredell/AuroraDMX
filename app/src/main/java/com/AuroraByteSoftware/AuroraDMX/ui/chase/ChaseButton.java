@@ -1,10 +1,7 @@
 package com.AuroraByteSoftware.AuroraDMX.ui.chase;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 

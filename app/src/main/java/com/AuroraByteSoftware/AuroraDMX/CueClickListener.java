@@ -70,7 +70,8 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
 
     /**
      * Adds a new cue with the current ch Levels
-     *  @param button   of "Add Cue"
+     *
+     * @param button   of "Add Cue"
      * @param chLevels level of channels
      */
     private void createCue(Button button, List<Integer> chLevels, int fadeTime) {

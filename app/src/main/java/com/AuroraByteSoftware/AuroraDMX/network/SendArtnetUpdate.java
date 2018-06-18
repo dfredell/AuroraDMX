@@ -35,7 +35,7 @@ public class SendArtnetUpdate extends TimerTask {
             serverIp = splitServer[0];
             try {
                 artnetPort = Integer.parseInt(splitServer[1].trim());
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(activity, String.format(activity.getString(R.string.serverUnknown), serverPref), Toast.LENGTH_LONG).show();

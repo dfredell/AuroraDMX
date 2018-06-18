@@ -57,7 +57,7 @@ public class EditColumnMenu extends MainActivity {
                 } catch (Throwable t) {
                     Toast.makeText(context, R.string.Error, Toast.LENGTH_SHORT).show();
                 }
-                Switch rgbSwitch = (Switch) ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
+                Switch rgbSwitch = ((AlertDialog) dialog).findViewById(R.id.chanel_rgb);
 
                 if (rgbSwitch.isChecked() && !fixture.isRGB()) {
                     FixtureUtility.switchToRGB(fixture, context);

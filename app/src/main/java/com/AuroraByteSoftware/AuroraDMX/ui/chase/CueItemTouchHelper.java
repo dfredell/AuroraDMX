@@ -9,14 +9,12 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 
-import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.Collections;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by furtchet on 3/31/18.

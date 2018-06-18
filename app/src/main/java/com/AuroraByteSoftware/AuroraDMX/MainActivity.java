@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     static Double cueCount = 1.0;// cueCount++ = new cue num
     private static boolean updatingFixtures = false;
     private int orgColor = 0;
-    public static Billing billing = new Billing();
+    public Billing billing = new Billing();
 
     public static final ArrayList<ArtPollReply> foundServers = new ArrayList<>();
     public static ProgressDialog progressDialog = null;
@@ -99,35 +99,6 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         AuroraNetwork.setUpNetwork(this);
     }
 
-//    private void startupIAB() {
-//        mHelper = new IabHelper(this, BASE_64_ENCODED_PUBLIC_KEY);
-//        mHelper.enableDebugLogging(true, "IabHelper");
-//        try {
-//            mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-//                public void onIabSetupFinished(IabResult result) {
-//                    Log.d(getClass().getSimpleName(), "Setup finished.");
-//                    if (!result.isSuccess()) {
-//                        // Oh noes, there was a problem.
-//                        Log.v(getClass().getSimpleName(), "Problem setting up in-app billing: " + result);
-//                        return;
-//                    }
-//                    // Have we been disposed of in the meantime? If so, quit.
-//                    if (mHelper == null) {
-//                        return;
-//                    }
-//                    // IAB is fully set up. Now, let's get an inventory of stuff
-//                    // we own.
-//                    Log.d(getClass().getSimpleName(), "Setup successful. Querying inventory.");
-//                    listOfSkus.add(ITEM_SKU);
-//                    mHelper.queryInventoryAsync(true, listOfSkus, mQueryFinishedListener);
-//                }
-//            });
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            mHelper = null;
-//            Toast.makeText(MainActivity.this, R.string.errorProcessPurchases, Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void startup() {
         updatingFixtures = true;
@@ -169,7 +140,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         updatingFixtures = true;
         // check for app purchase
         boolean paid = true;
-//        if (!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             // Skip the paid check when developing
             try {
                 paid = billing.check();
@@ -177,7 +148,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                 // Do nothing we must not be connected yet
                 e.printStackTrace();
             }
-//        }
+        }
 
         // Input cleansing
         if (numberFixtures > MAX_CHANNEL) {
@@ -193,7 +164,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
         int change = numberFixtures - alColumns.size();
         int numOfChannelsUsed = 0;//use calculateChannelCount() ?
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.ChanelLayout);
+        LinearLayout mainLayout = findViewById(R.id.ChanelLayout);
 
         orgColor = Color.parseColor(getSharedPref().getString("channel_color", "#ffcc00"));
         if (change > 0) {// Adding channels
@@ -436,7 +407,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         alColumns.clear();
         ((LinearLayout) findViewById(R.id.ChanelLayout)).removeAllViews();
         // Refresh views
-        LinearLayout cueLine = ((LinearLayout) findViewById(R.id.CueLine));
+        LinearLayout cueLine = findViewById(R.id.CueLine);
         cueLine.removeAllViews();
         for (CueObj cue : alCues) {
             // create a new "Add Cue" button

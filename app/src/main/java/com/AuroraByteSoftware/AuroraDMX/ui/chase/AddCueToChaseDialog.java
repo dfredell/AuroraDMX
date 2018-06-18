@@ -50,6 +50,7 @@ public class AddCueToChaseDialog extends DialogFragment {
 
     public interface AddCueDialogListener {
         void onClickAddCue(int which);
+
         String[] getAddCueItems();
     }
 }

@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 
 /**
  * Created by furtchet on 2/18/18.

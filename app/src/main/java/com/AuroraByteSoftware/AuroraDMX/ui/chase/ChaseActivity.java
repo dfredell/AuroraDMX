@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.widget.GridView;
 
 import com.AuroraByteSoftware.AuroraDMX.AuroraNetwork;
-import com.AuroraByteSoftware.AuroraDMX.chase.ChaseClickListener;
-import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseClickListener;
+import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseRunner;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -51,7 +51,7 @@ public class ChaseActivity extends Activity {
 
     @Override
     protected void onStop() {
-        Log.d(getClass().getSimpleName(),"Stopping");
+        Log.d(getClass().getSimpleName(), "Stopping");
         getChaseRunner().stopAll();
         MainActivity.pm.save(null);
         super.onStop();
@@ -96,8 +96,8 @@ public class ChaseActivity extends Activity {
 
 
     public static ChaseRunner getChaseRunner() {
-        if (chaseRunner == null){
-            Log.d("ChaseActivity","Creating ChaseRunner");
+        if (chaseRunner == null) {
+            Log.d("ChaseActivity", "Creating ChaseRunner");
             chaseRunner = new ChaseRunner();
         }
         return chaseRunner;

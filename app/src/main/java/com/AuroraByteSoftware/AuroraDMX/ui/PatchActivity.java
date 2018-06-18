@@ -24,10 +24,10 @@ public class PatchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patch);
 
-        chGridView = (GridView) findViewById(R.id.gridView1);
+        chGridView = findViewById(R.id.gridView1);
         chGridView.setAdapter(new GridCell(this, MainActivity.patchList.size() - 1, true));
 
-        dimGridView = (GridView) findViewById(R.id.gridView2);
+        dimGridView = findViewById(R.id.gridView2);
         GridCell dimGridCell = new GridCell(this, MainActivity.MAX_DIMMERS, false);
         dimGridView.setAdapter(dimGridCell);
 

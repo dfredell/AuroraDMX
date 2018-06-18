@@ -63,8 +63,9 @@ public class DummyFixture extends Fixture {
 
     /**
      * Creates 255 steeps between current and endVal
+     *
      * @param endVal value after fade
-     * @param steps number of steps to take to get to the final falue
+     * @param steps  number of steps to take to get to the final falue
      */
     @Override
     public void setupIncrementLevelFade(List<Integer> endVal, double steps) {
@@ -81,12 +82,15 @@ public class DummyFixture extends Fixture {
      */
     @Override
     public void incrementLevel() {
-        if (step[0] > 0)
+        if (step[0] > 0) {
             stepIteram[0] += step[0];
-        if (step[1] > 0)
+        }
+        if (step[1] > 0) {
             stepIteram[1] += step[1];
-        if (step[2] > 0)
+        }
+        if (step[2] > 0) {
             stepIteram[2] += step[2];
+        }
         updateIncrementedLevel();
     }
 

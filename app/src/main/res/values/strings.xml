@@ -55,7 +55,7 @@
     <string name="menu_load">Load</string>
     <string name="menu_share">Share</string>
     <string name="pref_sacn_unicast_ip_def">192.168.0.0</string>
-    <string name="serverUnknown">Server %s Not Found</string>
+    <string name="serverUnknown">DMX Server %s Not Found</string>
     <string name="serverName">Server</string>
     <string name="confirm_revert">Are you sure you want to revert all settings to their default values?</string>
     <string name="confirm_revert_summary">Revert all settings to their default values.</string>

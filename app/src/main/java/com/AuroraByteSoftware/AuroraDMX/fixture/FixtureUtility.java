@@ -37,7 +37,7 @@ public class FixtureUtility {
         for (ChPatch patch : MainActivity.patchList) {
             currentDimCount += patch.getDimmers().size();
         }
-        if(currentDimCount>MainActivity.MAX_DIMMERS){
+        if (currentDimCount > MainActivity.MAX_DIMMERS) {
             Toast.makeText(context, "Can not exceed 512 channels", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -52,8 +52,8 @@ public class FixtureUtility {
         Fixture rgbFixture = new RGBFixture(context, fixture.getChText());
 
         //Remove and add the new view
-        LinearLayout fixtureView = (LinearLayout) context.findViewById(R.id.ChanelLayout);
-        fixtureView.addView(rgbFixture.getViewGroup(),fixtureView.indexOfChild(viewGroup));
+        LinearLayout fixtureView = context.findViewById(R.id.ChanelLayout);
+        fixtureView.addView(rgbFixture.getViewGroup(), fixtureView.indexOfChild(viewGroup));
         fixtureView.removeView(viewGroup);
 
         alColumns.set(indexOf, rgbFixture);
@@ -84,8 +84,8 @@ public class FixtureUtility {
         Fixture standardFixture = new StandardFixture(context, fixture.getChText(), "");
 
         //Remove and add the new view
-        LinearLayout fixtureView = (LinearLayout) context.findViewById(R.id.ChanelLayout);
-        fixtureView.addView(standardFixture.getViewGroup(),fixtureView.indexOfChild(viewGroup));
+        LinearLayout fixtureView = context.findViewById(R.id.ChanelLayout);
+        fixtureView.addView(standardFixture.getViewGroup(), fixtureView.indexOfChild(viewGroup));
         fixtureView.removeView(viewGroup);
 
         alColumns.set(indexOf, standardFixture);
@@ -114,9 +114,9 @@ public class FixtureUtility {
      * <p>
      * Returns null if there are no (valid) presets
      *
-     * @return null|List
      * @param presetValue string input to parse
-     * @param regex validation used for the value
+     * @param regex       validation used for the value
+     * @return null|List
      */
     static List<Pair<String, String>> getParsedValuePresets(String presetValue, String regex) {
         if (StringUtils.isEmpty(presetValue)) {

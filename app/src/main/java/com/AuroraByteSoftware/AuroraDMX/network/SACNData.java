@@ -6,7 +6,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * @author Dan Fredell
- *         April 26, 2014
+ * April 26, 2014
  */
 class SACNData {
 

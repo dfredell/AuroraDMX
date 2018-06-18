@@ -60,5 +60,4 @@ class ChaseGridCell extends BaseAdapter {
     }
 
 
-
 }

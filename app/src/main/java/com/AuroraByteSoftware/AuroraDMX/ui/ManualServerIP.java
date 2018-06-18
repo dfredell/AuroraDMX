@@ -26,7 +26,7 @@ public class ManualServerIP {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                EditText editTextServerIP = (EditText) ((AlertDialog) arg0)
+                EditText editTextServerIP = ((AlertDialog) arg0)
                         .findViewById(R.id.editTextServerIP);
                 MainActivity.getSharedPref().edit().putString(
                         SettingsActivity.manualserver, editTextServerIP.getText().toString()).apply();
@@ -37,7 +37,7 @@ public class ManualServerIP {
         // set prompts.xml to alertdialog builder
         LayoutInflater li = LayoutInflater.from(activity);
         View promptsView = li.inflate(R.layout.dialog_server, null);
-        EditText editTextServerIP = (EditText) promptsView.findViewById(R.id.editTextServerIP);
+        EditText editTextServerIP = promptsView.findViewById(R.id.editTextServerIP);
         String addr = MainActivity.getSharedPref().getString(SettingsActivity.manualserver, "192.168.0.0:0");
         editTextServerIP.setText(addr);
         editTextServerIP.setSelection(addr.length());

@@ -58,7 +58,7 @@ Donate: https://www.paypal.me/DanFredell
 
 # Thanks #
 
-![BrowserStack.com](/Pictures/Browserstack-logo.svg?raw=true&sanitize=true "BrowserStack")
+[![BrowserStack](/Pictures/Browserstack-logo.svg?raw=true&sanitize=true "BrowserStack")](https://www.browserstack.com/)
 
 # License # 
 

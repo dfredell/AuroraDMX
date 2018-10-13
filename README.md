@@ -56,6 +56,10 @@ Donate: https://www.paypal.me/DanFredell
 
 * Create a Pull Request
 
+# Thanks #
+
+![BrowserStack.com](master/Pictures/Browserstack-logo.svg?raw=true "BrowserStack")
+
 # License # 
 
 GNU General Public License v3 (GPL-3) 

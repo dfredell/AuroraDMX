@@ -52,7 +52,7 @@ public class EditChaseActivity extends Activity implements
         if (chaseIndex < 0) {
             throw new IndexOutOfBoundsException("Couldn't transfer Chase Index");
         }
-        chase = MainActivity.alChases.get(chaseIndex);
+        chase = MainActivity.getAlChases().get(chaseIndex);
         mRecyclerView.setAdapter(new EditChaseAdaptor(chase, this));
 
         setUpItemTouchHelper();
@@ -108,7 +108,7 @@ public class EditChaseActivity extends Activity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.chase_edit_menu_delete:
-                MainActivity.alChases.remove(chase);
+                MainActivity.getAlChases().remove(chase);
                 finish();
                 return true;
             case R.id.chase_edit_menu_add:

@@ -104,13 +104,13 @@ public class ChaseActivity extends Activity {
     }
 
     private void addChase() {
-        String name = "Chase " + (MainActivity.alChases.size() + 1);
+        String name = "Chase " + (MainActivity.getAlChases().size() + 1);
         int chaseFadeTime = Integer.parseInt(MainActivity.getSharedPref().getString("chase_fade_time", "5"));
         int waitTime = Integer.parseInt(MainActivity.getSharedPref().getString("chase_wait_time", "5"));
 
         ChaseObj chaseObj = new ChaseObj(name, chaseFadeTime, waitTime, new ArrayList<CueObj>(), null);
         chaseObj.setButton(ChaseClickListener.makeButton(chaseObj, this));
-        MainActivity.alChases.add(chaseObj);
+        MainActivity.getAlChases().add(chaseObj);
         gridView.invalidateViews();
     }
 }

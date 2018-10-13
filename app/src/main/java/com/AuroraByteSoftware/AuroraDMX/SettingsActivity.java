@@ -33,6 +33,8 @@ import java.util.List;
 
 import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -227,11 +229,15 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             inflater.inflate(R.menu.server, menu);
-            menu.findItem(R.id.menu_server_refresh).setIcon(
-                    new IconDrawable(this.getActivity(), FontAwesomeIcons.fa_refresh)
-                            .colorRes(R.color.white)
-                            .alpha(204)
-                            .actionBarSize());
+            try {
+                menu.findItem(R.id.menu_server_refresh).setIcon(
+                        new IconDrawable(this.getActivity(), FontAwesomeIcons.fa_refresh)
+                                .colorRes(R.color.white)
+                                .alpha(204)
+                                .actionBarSize());
+            } catch (IllegalStateException e){
+                Log.w(getClass().getSimpleName(), "onCreateOptionsMenu: Icons not setup " + e.getMessage());
+            }
         }
 
         /**

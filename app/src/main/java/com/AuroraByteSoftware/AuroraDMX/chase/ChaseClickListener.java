@@ -73,7 +73,7 @@ public class ChaseClickListener implements View.OnClickListener, View.OnLongClic
     @Override
     public boolean onLongClick(View buttonView) {
         Intent intent = new Intent(buttonView.getContext(), EditChaseActivity.class);
-        intent.putExtra(CHASE_EXTRA, MainActivity.alChases.indexOf(chase));
+        intent.putExtra(CHASE_EXTRA, MainActivity.getAlChases().indexOf(chase));
         buttonView.getContext().startActivity(intent);
 
         return true;

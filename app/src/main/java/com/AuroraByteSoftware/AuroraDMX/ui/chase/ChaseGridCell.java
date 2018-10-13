@@ -21,7 +21,7 @@ class ChaseGridCell extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return MainActivity.alChases.size();
+        return MainActivity.getAlChases().size();
     }
 
     @Override
@@ -38,7 +38,7 @@ class ChaseGridCell extends BaseAdapter {
     //Called when scrolling
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ChaseObj chase = MainActivity.alChases.get(position);
+        ChaseObj chase = MainActivity.getAlChases().get(position);
 
         if (convertView != null
                 && chase != null

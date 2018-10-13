@@ -153,7 +153,7 @@ public class ChaseRunner extends TimerTask {
      */
     public void stopAll() {
         isRunning = false;
-        for (ChaseObj alChase : MainActivity.alChases) {
+        for (ChaseObj alChase : MainActivity.getAlChases()) {
             alChase.getButton().getProgressBar().setAlpha(0);
         }
         waitFadeHandler.removeCallbacksAndMessages(null);

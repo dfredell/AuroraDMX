@@ -156,8 +156,8 @@ public class EditCueMenu extends MainActivity {
                     Toast.makeText(context, R.string.canNotDeleteWhileFading, Toast.LENGTH_SHORT).show();
                 }
                 // delete from chases
-                for (ChaseObj alChase : MainActivity.alChases) {
-                    if (!alChase.getCues().isEmpty()) {
+                for (ChaseObj alChase : MainActivity.getAlChases()) {
+                    if (!alChase.getCues().isEmpty() && alChase.getCues().contains(currentCue)) {
                         alChase.getCues().remove(currentCue);
                     }
                 }

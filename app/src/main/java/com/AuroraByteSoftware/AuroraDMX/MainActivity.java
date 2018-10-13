@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public static List<ChPatch> patchList = new ArrayList<>();
     public static List<Fixture> alColumns = null;
     public static ArrayList<CueObj> alCues = null;
-    public static ArrayList<ChaseObj> alChases = null;
+    private static ArrayList<ChaseObj> alChases = null;
     public static CueFade cueFade = null;
 
     public static ProjectManagement pm = null;
@@ -463,6 +463,17 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     public static List<Fixture> getAlColumns() {
         return alColumns;
+    }
+
+    public static ArrayList<ChaseObj> getAlChases() {
+        if (alChases == null) {
+            alChases = new ArrayList<>();
+        }
+        return alChases;
+    }
+
+    public static void setAlChases(ArrayList<ChaseObj> alChases) {
+        MainActivity.alChases = alChases;
     }
 
     public static void setUpdatingFixtures(boolean updatingFixtures) {

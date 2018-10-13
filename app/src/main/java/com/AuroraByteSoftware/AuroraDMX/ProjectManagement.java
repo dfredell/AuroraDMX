@@ -114,7 +114,7 @@ public class ProjectManagement extends MainActivity {
             objectOutput.writeObject(channelNames);
             objectOutput.writeObject(isRGB);
             objectOutput.writeObject(valuePresets);
-            objectOutput.writeObject(alChases);
+            objectOutput.writeObject(getAlChases());
             byte[] data = arrayOutputStream.toByteArray();
 
             objectOutput.close();
@@ -317,10 +317,10 @@ public class ProjectManagement extends MainActivity {
             if (readObject6ChAry != null && readObject6ChAry.getClass().equals(int[].class)) {
                 chLvls = Arrays.asList(ArrayUtils.toObject((int[]) readObject6ChAry));
             }
-            if (readObject10Chase != null && readObject10Chase.getClass().equals(alChases.getClass()))
+            if (readObject10Chase != null && readObject10Chase.getClass().equals(getAlChases().getClass()))
             //noinspection unchecked
             {
-                alChases = (ArrayList<ChaseObj>) readObject10Chase;
+                setAlChases((ArrayList<ChaseObj>) readObject10Chase);
             }
 
 

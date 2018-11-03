@@ -106,7 +106,7 @@ public class ProjectManagement extends MainActivity {
         try {
             ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
             objectOutput.writeObject(alColumns.size());
-            objectOutput.writeObject(alCues);
+            objectOutput.writeObject(getAlCues());
             objectOutput.writeObject(patchList);
             objectOutput.writeObject(cueCount);
             objectOutput.writeObject(getSharedPref().getString(SettingsActivity.serveraddress, ""));
@@ -251,7 +251,7 @@ public class ProjectManagement extends MainActivity {
             AuroraNetwork.stopNetwork();
 
             //Clear current screen
-            alCues.clear();
+            getAlCues().clear();
             for (Fixture columns : alColumns) {
                 columns.getViewGroup().removeAllViews();
             }
@@ -295,22 +295,16 @@ public class ProjectManagement extends MainActivity {
                 mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB, valuePresets);
                 getSharedPref().edit().putString(SettingsActivity.channels, readObject1FixtureCount + "").apply();
             }
-            if (readObject2Cues.getClass().equals(alCues.getClass()) && readObject2Cues instanceof ArrayList<?>)
-            //noinspection unchecked
-            {
-                alCues = (ArrayList<CueObj>) readObject2Cues;
-            }
-            if (readObject3Patch.getClass().equals(patch.getClass())) {
+            if (readObject2Cues.getClass().equals(getAlCues().getClass()) && readObject2Cues instanceof ArrayList<?>)
+                //noinspection unchecked
+                setAlCues((ArrayList<CueObj>) readObject2Cues);
+            if (readObject3Patch.getClass().equals(patch.getClass()))
                 patch = (int[][]) readObject3Patch;
-            }
             if (readObject3Patch.getClass().equals(patchList.getClass()))
-            //noinspection unchecked
-            {
+                //noinspection unchecked
                 patchList = new ArrayList<>((List<ChPatch>) readObject3Patch);
-            }
-            if (readObject4CueCount.getClass().equals(Double.class)) {
+            if (readObject4CueCount.getClass().equals(Double.class))
                 cueCount = (Double) readObject4CueCount;
-            }
             if (readObject5IPAdr.getClass().equals(String.class)) {
                 getSharedPref().edit().putString(SettingsActivity.serveraddress, (String) readObject5IPAdr).apply();
             }
@@ -362,7 +356,7 @@ public class ProjectManagement extends MainActivity {
         // Refresh views
         LinearLayout cueLine = mainActivity.findViewById(R.id.CueLine);
         cueLine.removeAllViews();
-        for (CueObj cue : alCues) {
+        for (CueObj cue : getAlCues()) {
             // create a new "Add Cue" button
             cue.setButton(CueClickListener.makeButton(cue.getCueName(), mainActivity));
             cueLine.addView(cue.getButton());
@@ -380,7 +374,7 @@ public class ProjectManagement extends MainActivity {
      * @param patch array to be converted to patchList
      */
     private void migrateData(int[][] patch) {
-        for (CueObj cue : alCues) {
+        for (CueObj cue : getAlCues()) {
             if (cue.getOriginalLevels().length > 1 && cue.getLevels() == null) {
                 List<Integer> levelsList = new ArrayList<>(Arrays.asList(ArrayUtils.toObject(cue.getOriginalLevels())));
                 cue.setLevelsList(levelsList);

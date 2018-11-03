@@ -31,6 +31,9 @@ public class ChaseRunner extends TimerTask {
     private final ProgressHandler waitFadeHandler = new ProgressHandler(Looper.getMainLooper());
     private long delay = 1000;
 
+    /**
+     * Hit once at the start of a new cue fade.
+     */
     @Override
     public void run() {
         if (Looper.myLooper() == null) {
@@ -44,30 +47,44 @@ public class ChaseRunner extends TimerTask {
         } else {
             nextCue++;
         }
-        waitFadeHandler.removeCallbacksAndMessages(null);
 
-        ProgressBar progressBar = chase.getButton().getProgressBar();
+        waitFadeHandler.removeCallbacksAndMessages(null);
+        waitFadeHandler.removeCallbacks(progressWait);
+
+        final ProgressBar progressBar = chase.getButton().getProgressBar();
         progressBar.setProgress(0);
         progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#ffd700"), PorterDuff.Mode.MULTIPLY);
         if (fadeObj != null) {
             fadeObj.stop();
         }
-        fadeObj = MainActivity.getCueFade().startCueFade(chase.getCues().get(nextCue), chase.getFadeTime(), progressBar);
+
+        // Move the chase progress bar
+        CueFade.FadeFinish fadeFinish = new CueFade.FadeFinish() {
+            @Override
+            public void finished() {
+                //Skip wait?
+                if (chase.getWaitTime() > 0) {
+                    //Display the wait time
+                    progressWait = new ProgressWait(chase.getWaitTime());
+                    waitFadeHandler.setProgressBar(progressBar);
+                    waitFadeHandler.postDelayed(progressWait, 0);
+                }
+            }
+        };
+        CueFade.FadeProgress fadeUpProgress = new CueFade.FadeProgress() {
+            @Override
+            public void update(int percent) {
+                progressBar.setRotation(0);
+                progressBar.setProgress(percent);
+            }
+        };
+        fadeObj = MainActivity.getCueFade().startCueFade(chase.getCues().get(nextCue), chase.getFadeTime(), fadeUpProgress, fadeFinish);
         currentCue = nextCue;
 
 
-        //Skip wait?
-        if (chase.getWaitTime() > 0) {
-            //Display the wait time
-            progressWait = new ProgressWait(chase.getWaitTime());
-            waitFadeHandler.setProgressBar(progressBar);
-            waitFadeHandler.postDelayed(progressWait, chase.getFadeTime() * 1000);
-//            progressWaitTimer = new Timer();
-//            progressWaitTimer.scheduleAtFixedRate(progressWait,
-//                    chase.getFadeTime() * 1000,
-//                    1000 / PROGRESS_FRAMES_PER_SEC);
-        }
+
         if (isRunning) {
+            // Add the next cue fade to the stack. This causes the next cue fade to start after this one finishes.
             Log.d(getClass().getSimpleName(), "chaseToChaseHandler postDelayed '" + delay + "'");
             chaseToChaseHandler.postDelayed(this, delay);
         }
@@ -95,9 +112,6 @@ public class ChaseRunner extends TimerTask {
         this.delay = (fadeTime + waitTime) * 1000L;
         this.isRunning = true;
         chaseToChaseHandler.postDelayed(this, 0);
-//        chaseRunnerTimer = new Timer();
-//        chaseRunnerTimer.scheduleAtFixedRate(chaseRunner, 0, delay);
-//        activity.runOnUiThread(chaseRunner);
     }
 
 
@@ -135,6 +149,7 @@ public class ChaseRunner extends TimerTask {
     public void stop(ChaseObj chase) {
         isRunning = false;
         chase.getButton().getProgressBar().setAlpha(0);
+        waitFadeHandler.removeCallbacks(progressWait);
         waitFadeHandler.removeCallbacksAndMessages(null);
         chaseToChaseHandler.removeCallbacksAndMessages(null);
         if (fadeObj != null) {

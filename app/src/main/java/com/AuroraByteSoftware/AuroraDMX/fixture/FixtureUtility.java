@@ -61,7 +61,7 @@ public class FixtureUtility {
         context.recalculateFixtureNumbers();
 
         //Add Red and Green levels to cues at 0
-        for (CueObj cue : MainActivity.alCues) {
+        for (CueObj cue : MainActivity.getAlCues()) {
             cue.getLevels().add(indexOf, 0);
             cue.getLevels().add(indexOf, 0);
         }
@@ -92,7 +92,7 @@ public class FixtureUtility {
 
         context.recalculateFixtureNumbers();
         //Remove Red and Green levels from cues
-        for (CueObj cue : MainActivity.alCues) {
+        for (CueObj cue : MainActivity.getAlCues()) {
             cue.getLevels().remove(indexOf);
             cue.getLevels().remove(indexOf);
         }

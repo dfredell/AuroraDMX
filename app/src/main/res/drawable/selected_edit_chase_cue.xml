@@ -5,5 +5,5 @@
         <color android:color="#777"/>
     </item>
     <!-- Standard background color -->
-    <item android:drawable="@android:color/black" android:state_selected="false" />
+    <!--<item android:drawable="@android:color/black" android:state_selected="false" />-->
 </selector>

@@ -29,8 +29,8 @@ public class CueSheetClickListener implements View.OnClickListener, View.OnLongC
         }
         context = button.getContext();
         int curCue = -1;// Current cue number on alCues scale
-        for (int x = 0; x < MainActivity.alCues.size(); x++) {
-            if (button == MainActivity.alCues.get(x).getButton()) {
+        for (int x = 0; x < MainActivity.getAlCues().size(); x++) {
+            if (button == MainActivity.getAlCues().get(x).getButton()) {
                 curCue = x;
                 break;
             }
@@ -41,7 +41,7 @@ public class CueSheetClickListener implements View.OnClickListener, View.OnLongC
         } else {
             // ======= Loading a cue ========
             Log.d(getClass().getSimpleName(), "oldChLevels " + MainActivity.getCurrentChannelArray());
-            MainActivity.getCueFade().startCueFade(MainActivity.alCues.get(curCue));
+            MainActivity.getCueFade().startCueFade(MainActivity.getAlCues().get(curCue));
         }
     }
 
@@ -51,13 +51,13 @@ public class CueSheetClickListener implements View.OnClickListener, View.OnLongC
     @Override
     public boolean onLongClick(View buttonView) {
         boolean buttonIsAddCue = true;
-        for (CueObj cue : MainActivity.alCues) {
+        for (CueObj cue : MainActivity.getAlCues()) {
             if (cue.getButton() == buttonView) {
                 buttonIsAddCue = false;
             }
         }
         if (!buttonIsAddCue) {
-            EditCueMenu.createEditCueMenu(MainActivity.alCues, (Button) buttonView, true);
+            EditCueMenu.createEditCueMenu(MainActivity.getAlCues(), (Button) buttonView, true);
         }
         return true;
     }

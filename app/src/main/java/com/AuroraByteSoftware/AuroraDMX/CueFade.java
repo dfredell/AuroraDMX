@@ -28,6 +28,13 @@ public class CueFade extends MainActivity implements Serializable {
         }
     };
 
+    public interface FadeProgress {
+        void update(int percent);
+    }
+    public interface FadeFinish {
+        void finished();
+    }
+
 
     /**
      * Fades the cue light from the previous cue to the next cue
@@ -35,7 +42,7 @@ public class CueFade extends MainActivity implements Serializable {
      * @param nextCue the destination cue to set fixture levels
      */
     public void startCueFade(final CueObj nextCue) {
-        startCueFade(nextCue, nextCue.getFadeUpTime(), null);
+        startCueFade(nextCue, nextCue.getFadeUpTime(), null, null);
     }
 
     /**
@@ -44,26 +51,26 @@ public class CueFade extends MainActivity implements Serializable {
      * @param nextCue  the destination cue to set fixture levels
      * @param fadeTime Override the fade time
      */
-    public FadeObj startCueFade(final CueObj nextCue, int fadeTime, final ProgressBar progressBar) {
+    public FadeObj startCueFade(final CueObj nextCue, int fadeTime, final FadeProgress fadeProgress, final FadeFinish finish) {
 
         int prevCueNum = downwardCue;
         final CueObj prevCue;
-        if (alCues.size() <= prevCueNum || prevCueNum < 0) {
+        if (getAlCues().size() <= prevCueNum || prevCueNum < 0) {
             prevCue = null;
         } else {
-            prevCue = alCues.get(prevCueNum);
+            prevCue = getAlCues().get(prevCueNum);
         }
 
         Log.d(getClass().getSimpleName(), "startCueFade next " + nextCue + "\tprev " + prevCue);
         List<Integer> newChLevels = nextCue.getLevels();
 
         Log.d(getClass().getSimpleName(), String.format("newChLevels %1$s", newChLevels));
-        upwardCue = alCues.indexOf(nextCue);
+        upwardCue = getAlCues().indexOf(nextCue);
         downwardCue = upwardCue;
 
         //Cancel any previous fades
         fadeObj.stop();
-        for (CueObj cue : MainActivity.alCues) {
+        for (CueObj cue : MainActivity.getAlCues()) {
             cue.setFadeInProgress(false);
             cue.setHighlight(0, 0, 0);
         }
@@ -110,10 +117,8 @@ public class CueFade extends MainActivity implements Serializable {
                 public void run() {
                     if (progress < steps) {
                         nextCue.setHighlight(0, nextCue.getHighlight() + (256 / steps), 0);
-                        if (progressBar != null) {
-                            // Move the chase progress bar
-                            progressBar.setRotation(0);
-                            progressBar.setProgress(progress * 100 / steps);
+                        if (fadeProgress != null) {
+                            fadeProgress.update(progress * 100 / steps);
                         }
                         for (Fixture col : alColumns) {
                             col.incrementLevel();
@@ -124,6 +129,8 @@ public class CueFade extends MainActivity implements Serializable {
                     } else {
                         nextCue.setHighlight(0, 171, 102);
                         nextCue.setFadeInProgress(false);
+                        if(finish!=null)
+                            finish.finished();
                     }
                 }
             };
@@ -147,7 +154,7 @@ public class CueFade extends MainActivity implements Serializable {
                 fadeHandler.removeCallbacks(upRunnable);
                 upRunnable = null;
             }
-            for (CueObj cue : MainActivity.alCues) {
+            for (CueObj cue : MainActivity.getAlCues()) {
                 cue.setFadeInProgress(false);
             }
         }

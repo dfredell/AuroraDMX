@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
      */
     public static List<ChPatch> patchList = new ArrayList<>();
     public static List<Fixture> alColumns = null;
-    public static ArrayList<CueObj> alCues = null;
+    private static ArrayList<CueObj> alCues = null;
     private static ArrayList<ChaseObj> alChases = null;
     public static CueFade cueFade = null;
 
@@ -109,7 +109,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
-        alCues = new ArrayList<>();
+        setAlCues(new ArrayList<CueObj>());
         alColumns = new ArrayList<>();
         alChases = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
@@ -186,7 +186,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             for (Fixture fixture : alColumns) {
                 numOfChannelsUsed += fixture.getChLevels().size();
             }
-            for (CueObj cue : alCues) {// Pad ch's in cues
+            for (CueObj cue : getAlCues()) {// Pad ch's in cues
                 cue.padChannels(numOfChannelsUsed);
             }
             for (int i = patchList.size(); i < numOfChannelsUsed; i++) {
@@ -200,7 +200,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
             for (Fixture fixture : alColumns) {
                 numOfChannelsUsed += fixture.getChLevels().size();
             }
-            for (CueObj cue : alCues) {
+            for (CueObj cue : getAlCues()) {
                 cue.padChannels(numOfChannelsUsed);
             }
             patchList = new ArrayList<>(patchList.subList(0, numOfChannelsUsed));
@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean fadingInProgress = false;
-        for (CueObj cue : alCues) {
+        for (CueObj cue : getAlCues()) {
             if (cue.isFadeInProgress()) {
                 fadingInProgress = true;
             }
@@ -399,7 +399,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         getSharedPref().edit().clear().apply();
         // Stop ArtNet
         AuroraNetwork.stopNetwork();
-        alCues.clear();
+        getAlCues().clear();
         cueCount = 1.0;
         for (Fixture columns : alColumns) {
             columns.getViewGroup().removeAllViews();
@@ -409,7 +409,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         // Refresh views
         LinearLayout cueLine = findViewById(R.id.CueLine);
         cueLine.removeAllViews();
-        for (CueObj cue : alCues) {
+        for (CueObj cue : getAlCues()) {
             // create a new "Add Cue" button
             cue.setButton(CueClickListener.makeButton(cue.getCueName(), this));
             cueLine.addView(cue.getButton());
@@ -478,5 +478,16 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     public static void setUpdatingFixtures(boolean updatingFixtures) {
         MainActivity.updatingFixtures = updatingFixtures;
+    }
+
+    public static ArrayList<CueObj> getAlCues() {
+        if (alCues == null) {
+            alCues = new ArrayList<>();
+        }
+        return alCues;
+    }
+
+    public static void setAlCues(ArrayList<CueObj> alCues) {
+        MainActivity.alCues = alCues;
     }
 }

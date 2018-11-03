@@ -97,7 +97,9 @@ public class CueObj implements Serializable {
     /**
      * Sets the cue button to be highlighted with its progress
      */
-    public void setHighlight(int r, int g, int b) {
+    void setHighlight(int r, int g, int b) {
+        if (button == null)
+            return;
         highlight = r + g + b;
         this.r = r;
         this.g = g;
@@ -111,6 +113,8 @@ public class CueObj implements Serializable {
     }
 
     public void refreshHighlight() {
+        if (button == null)
+            return;
         if (highlight != 0) {
             button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
             button.postInvalidate();
@@ -119,7 +123,7 @@ public class CueObj implements Serializable {
         }
     }
 
-    public int getHighlight() {
+    int getHighlight() {
         return highlight;
     }
 

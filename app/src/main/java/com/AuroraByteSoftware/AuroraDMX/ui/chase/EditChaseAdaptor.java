@@ -39,7 +39,6 @@ public class EditChaseAdaptor extends RecyclerView.Adapter<EditChaseAdaptor.View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.itemView.setBackgroundColor(Color.BLACK);
         holder.titleTextView.setVisibility(View.VISIBLE);
         CueObj cueObj = chase.getCues().get(position);
         holder.setCue(cueObj);

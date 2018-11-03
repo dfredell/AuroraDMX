@@ -26,7 +26,7 @@ class CueGridCell extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return MainActivity.alCues.size();
+        return MainActivity.getAlCues().size();
     }
 
     @Override
@@ -43,7 +43,7 @@ class CueGridCell extends BaseAdapter {
     //Called when scrolling
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        CueObj cue = MainActivity.alCues.get(position);
+        CueObj cue = MainActivity.getAlCues().get(position);
 
         if (convertView != null && cue != null && cue.getButton() != null && cue.getButton().equals(convertView)) {
             return convertView;

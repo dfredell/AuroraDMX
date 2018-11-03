@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="TiledWallpaper" parent="android:Theme.Holo">
+    <style name="TiledWallpaper" parent="android:Theme.DeviceDefault">
             <!--<item name="android:background">@layout/tiled_wallpaper</item>-->
    
         <!--
@@ -15,7 +15,7 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo">
+    <style name="AppTheme" parent="android:Theme.DeviceDefault">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 

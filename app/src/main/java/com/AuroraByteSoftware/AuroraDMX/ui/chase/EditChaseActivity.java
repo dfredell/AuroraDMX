@@ -141,16 +141,16 @@ public class EditChaseActivity extends Activity implements
 
     @Override
     public void onClickAddCue(int which) {
-        chase.getCues().add(MainActivity.alCues.get(which));
+        chase.getCues().add(MainActivity.getAlCues().get(which));
         mRecyclerView.invalidateItemDecorations();
     }
 
     @Override
     public String[] getAddCueItems() {
-        int size = MainActivity.alCues.size();
+        int size = MainActivity.getAlCues().size();
         String[] strings = new String[size];
         for (int i = 0; i < size; i++) {
-            strings[i] = MainActivity.alCues.get(i).getCueName();
+            strings[i] = MainActivity.getAlCues().get(i).getCueName();
         }
         return strings;
     }

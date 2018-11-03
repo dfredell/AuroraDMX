@@ -33,8 +33,8 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         }
         context = button.getContext();
         int curCue = -1;// Current cue number on alCues scale
-        for (int x = 0; x < MainActivity.alCues.size(); x++) {
-            if (button == MainActivity.alCues.get(x).getButton()) {
+        for (int x = 0; x < MainActivity.getAlCues().size(); x++) {
+            if (button == MainActivity.getAlCues().get(x).getButton()) {
                 curCue = x;
                 break;
             }
@@ -45,7 +45,7 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
         } else {
             // ======= Loading a cue ========
             Log.d(getClass().getSimpleName(), "oldChLevels " + MainActivity.getCurrentChannelArray());
-            MainActivity.getCueFade().startCueFade(MainActivity.alCues.get(curCue));
+            MainActivity.getCueFade().startCueFade(MainActivity.getAlCues().get(curCue));
         }
     }
 
@@ -56,13 +56,13 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
     @Override
     public boolean onLongClick(View buttonView) {
         boolean buttonIsAddCue = true;
-        for (CueObj cue : MainActivity.alCues) {
+        for (CueObj cue : MainActivity.getAlCues()) {
             if (cue.getButton() == buttonView) {
                 buttonIsAddCue = false;
             }
         }
         if (!buttonIsAddCue) {
-            EditCueMenu.createEditCueMenu(MainActivity.alCues, (Button) buttonView, false);
+            EditCueMenu.createEditCueMenu(MainActivity.getAlCues(), (Button) buttonView, false);
         }
         return true;
     }
@@ -83,11 +83,11 @@ public class CueClickListener implements View.OnClickListener, View.OnLongClickL
             t.printStackTrace();
             Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
         }
-        String name = String.format(context.getString(R.string.cue), Integer.toString(MainActivity.alCues.size() + 1));
+        String name = String.format(context.getString(R.string.cue), Integer.toString(MainActivity.getAlCues().size() + 1));
 
         button.setText(name);
         // Add cue name
-        MainActivity.alCues.add(new CueObj(name, fadeTime, chLevels, button));
+        MainActivity.getAlCues().add(new CueObj(name, fadeTime, chLevels, button));
         MainActivity.cueCount++;
 
         // create a new "Add Cue" button

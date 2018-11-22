@@ -82,7 +82,6 @@ public class ChaseRunner extends TimerTask {
         currentCue = nextCue;
 
 
-
         if (isRunning) {
             // Add the next cue fade to the stack. This causes the next cue fade to start after this one finishes.
             Log.d(getClass().getSimpleName(), "chaseToChaseHandler postDelayed '" + delay + "'");
@@ -169,7 +168,8 @@ public class ChaseRunner extends TimerTask {
     public void stopAll() {
         isRunning = false;
         for (ChaseObj alChase : MainActivity.getAlChases()) {
-            alChase.getButton().getProgressBar().setAlpha(0);
+            if (alChase.getButton() != null && alChase.getButton().getProgressBar() != null)
+                alChase.getButton().getProgressBar().setAlpha(0);
         }
         waitFadeHandler.removeCallbacksAndMessages(null);
         chaseToChaseHandler.removeCallbacksAndMessages(null);

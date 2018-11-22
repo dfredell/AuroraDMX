@@ -112,4 +112,5 @@
     <!-- dialog_edit_chase_details -->
     <string name="edit_chase_fade_time">Fade Time </string>
     <string name="edit_chase_wait_time">Wait Time </string>
+    <string name="chase_menu_reorder">Reorder</string>
 </resources>

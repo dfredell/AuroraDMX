@@ -180,42 +180,8 @@ public class EditCueMenu extends MainActivity {
         view.findViewById(R.id.cue_reorder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View clickView) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                LayoutInflater li = LayoutInflater.from(context);
-                final View reorderView = li.inflate(R.layout.dialog_cue_reorder, null, false);
-                builder.setView(reorderView);
-                final AlertDialog reorderAlert = builder.create();
-
-                DragLinearLayout dragLinearLayout = reorderView.findViewById(R.id.cue_reorder_view);
-                for (CueObj alCue : alCues) {
-                    TextView textView = new TextView(context);
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    textView.setText(alCue.getCueName());
-                    dragLinearLayout.addView(textView);
-                }
-                for (int i = 0; i < dragLinearLayout.getChildCount(); i++) {
-                    View child = dragLinearLayout.getChildAt(i);
-                    dragLinearLayout.setViewDraggable(child, child);
-                }
-                //When items drag reorder them in their array
-                dragLinearLayout.setOnViewSwapListener(new DragLinearLayout.OnViewSwapListener() {
-                    @Override
-                    public void onSwap(View firstView, int firstPosition,
-                                       View secondView, int secondPosition) {
-                        Collections.swap(alCues, firstPosition, secondPosition);
-                        ViewGroup parent = (ViewGroup) button.getParent();
-                        if (!inCueSheet) {
-                            View childAt = parent.getChildAt(firstPosition);
-                            parent.removeView(childAt);
-                            parent.addView(childAt, secondPosition);
-                        } else {
-                            //Refresh the cue sheet screen
-                            ((GridView) alCues.get(0).getButton().getParent()).invalidateViews();
-                        }
-                    }
-                });
+                reorderCues(context, alCues, button, inCueSheet);
                 alert.dismiss();
-                reorderAlert.show();
             }
         });
 
@@ -226,5 +192,44 @@ public class EditCueMenu extends MainActivity {
         editFadeText.setText(String.format("%1$s", alCues.get(currentCue).getFadeUpTime()));
 
         alert.show();
+    }
+
+    /**
+     * Create a popup that allows dragging to reorder the cues
+     */
+    private static void reorderCues(Context context, final ArrayList<CueObj> alCues, final Button button, final boolean inCueSheet) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater li = LayoutInflater.from(context);
+        final View reorderView = li.inflate(R.layout.dialog_cue_reorder, null, false);
+        builder.setView(reorderView);
+        final AlertDialog reorderAlert = builder.create();
+
+        DragLinearLayout dragLinearLayout = reorderView.findViewById(R.id.cue_reorder_view);
+        for (CueObj alCue : alCues) {
+            final View inflate = LayoutInflater.from(context).inflate(R.layout.edit_chase_row_view, dragLinearLayout, false);
+            TextView titleTextView = inflate.findViewById(R.id.title_text_view);
+            View handleView = inflate.findViewById(R.id.edit_chase_drag);
+            titleTextView.setText(alCue.getCueName());
+            dragLinearLayout.addView(inflate);
+            dragLinearLayout.setViewDraggable(inflate, handleView);
+        }
+        //When items drag reorder them in their array
+        dragLinearLayout.setOnViewSwapListener(new DragLinearLayout.OnViewSwapListener() {
+            @Override
+            public void onSwap(View firstView, int firstPosition,
+                               View secondView, int secondPosition) {
+                Collections.swap(alCues, firstPosition, secondPosition);
+                ViewGroup parent = (ViewGroup) button.getParent();
+                if (!inCueSheet) {
+                    View childAt = parent.getChildAt(firstPosition);
+                    parent.removeView(childAt);
+                    parent.addView(childAt, secondPosition);
+                } else {
+                    //Refresh the cue sheet screen
+                    ((GridView) alCues.get(0).getButton().getParent()).invalidateViews();
+                }
+            }
+        });
+        reorderAlert.show();
     }
 }

@@ -10,5 +10,9 @@
         android:id="@+id/menu_add"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_add"/>
+    <item
+        android:id="@+id/chase_menu_reorder"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/chase_menu_reorder"/>
 
 </menu>

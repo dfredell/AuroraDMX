@@ -1,13 +1,18 @@
 package com.AuroraByteSoftware.AuroraDMX.ui.chase;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.AuroraByteSoftware.AuroraDMX.AuroraNetwork;
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
@@ -18,8 +23,10 @@ import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseRunner;
 import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
 import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
+import com.jmedeisis.draglinearlayout.DragLinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Display a full screen grid of chase buttons
@@ -76,6 +83,7 @@ public class ChaseActivity extends Activity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.chase, menu);
         FontAwesomeManager.addFAIcon(menu, R.id.menu_add, FontAwesomeIcons.fa_plus, this);
+        FontAwesomeManager.addFAIcon(menu, R.id.chase_menu_reorder, FontAwesomeIcons.fa_list_ol, this);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -90,9 +98,44 @@ public class ChaseActivity extends Activity {
             case R.id.menu_add:
                 addChase();
                 return true;
+            case R.id.chase_menu_reorder:
+                reorderChase();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Create a popup that allows dragging to reorder the chases
+     */
+    private void reorderChase() {
+        final Context context = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater li = LayoutInflater.from(context);
+        final View reorderView = li.inflate(R.layout.dialog_cue_reorder, null, false);
+        builder.setView(reorderView);
+        final AlertDialog reorderAlert = builder.create();
+
+        DragLinearLayout dragLinearLayout = reorderView.findViewById(R.id.cue_reorder_view);
+        for (ChaseObj chaseObj : MainActivity.getAlChases()) {
+            final View inflate = LayoutInflater.from(this).inflate(R.layout.edit_chase_row_view, dragLinearLayout, false);
+            TextView titleTextView = inflate.findViewById(R.id.title_text_view);
+            View handleView = inflate.findViewById(R.id.edit_chase_drag);
+            titleTextView.setText(chaseObj.getName());
+            dragLinearLayout.addView(inflate);
+            dragLinearLayout.setViewDraggable(inflate, handleView);
+        }
+        //When items drag reorder them in their array
+        dragLinearLayout.setOnViewSwapListener(new DragLinearLayout.OnViewSwapListener() {
+            @Override
+            public void onSwap(View firstView, int firstPosition,
+                               View secondView, int secondPosition) {
+                Collections.swap(MainActivity.getAlChases(), firstPosition, secondPosition);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        reorderAlert.show();
     }
 
 

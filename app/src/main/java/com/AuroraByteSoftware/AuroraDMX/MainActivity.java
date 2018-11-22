@@ -2,11 +2,11 @@ package com.AuroraByteSoftware.AuroraDMX;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,11 +23,11 @@ import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
 import com.AuroraByteSoftware.AuroraDMX.fixture.StandardFixture;
 import com.AuroraByteSoftware.AuroraDMX.ui.CueActivity;
+import com.AuroraByteSoftware.AuroraDMX.ui.ImportFile;
 import com.AuroraByteSoftware.AuroraDMX.ui.PatchActivity;
 import com.AuroraByteSoftware.AuroraDMX.ui.chase.ChaseActivity;
-import com.joanzapata.iconify.IconDrawable;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
 import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.IOException;
@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
+
+import static com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager.addFAIcon;
 
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
 
@@ -87,7 +89,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         //Open the file if the user clicked on a file in the file system
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             try {
-                pm.openFile(intent.getDataString());
+                pm.openFile(intent.getData(), this);
             } catch (IOException | SecurityException e) {
                 Toast.makeText(MainActivity.this, R.string.cannotOpen, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -237,17 +239,10 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         addFAIcon(menu, R.id.menu_chase, FontAwesomeIcons.fa_fast_forward, this);
         addFAIcon(menu, R.id.menu_settings, FontAwesomeIcons.fa_cog, this);
         addFAIcon(menu, R.id.menu_share, FontAwesomeIcons.fa_share_alt, this);
+        addFAIcon(menu, R.id.menu_import, FontAwesomeIcons.fa_file_import, this);
         addFAIcon(menu, R.id.menu_save, FontAwesomeIcons.fa_save, this);
         addFAIcon(menu, R.id.menu_load, FontAwesomeIcons.fa_folder_open, this);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    public static void addFAIcon(Menu menu, int menuId, FontAwesomeIcons faIcon, Context context) {
-        menu.findItem(menuId).setIcon(
-                new IconDrawable(context, faIcon)
-                        .colorRes(R.color.white)
-                        .alpha(204)
-                        .actionBarSize());
     }
 
     /**
@@ -289,6 +284,10 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                     return true;
                 case R.id.menu_share:
                     pm.onShare();
+                    return true;
+                case R.id.menu_import:
+                    ImportFile importFile = new ImportFile();
+                    importFile.onImport(this);
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
@@ -444,6 +443,43 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 //            Log.i(getClass().getSimpleName(), "onActivityResult handled by IABUtil.");
 //        }
 //    }
+
+
+    /**
+     * Listener that is called after the user selects a file to import
+     * @param requestCode
+     * @param resultCode
+     * @param resultData
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+
+        // The ACTION_OPEN_DOCUMENT intent was sent with the request code
+        // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
+        // response to some other intent, and the code below shouldn't run at all.
+
+        if (requestCode == ImportFile.READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+            if (resultData != null) {
+                Uri uri = resultData.getData();
+                Log.i("AuroraDMX", "Uri: " + uri.toString());
+                //Open the file if the user clicked on a file in the file system
+                try {
+                    pm.openFile(uri, this);
+                } catch (IOException | SecurityException e) {
+                    Toast.makeText(MainActivity.this, R.string.cannotOpen, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
+                AuroraNetwork.setUpNetwork(this);
+
+            }
+        }
+    }
 
     public void recalculateFixtureNumbers() {
         int currentFixtureNum = 1;

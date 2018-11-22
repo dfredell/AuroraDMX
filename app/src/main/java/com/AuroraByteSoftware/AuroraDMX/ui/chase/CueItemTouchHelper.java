@@ -11,8 +11,8 @@ import android.view.View;
 
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
 
 import java.util.Collections;
 
@@ -39,9 +39,7 @@ public class CueItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     private void init() {
         background = new ColorDrawable(Color.RED);
 
-        trashCan = new IconDrawable(mRecyclerView.getContext(), FontAwesomeIcons.fa_trash)
-                .colorRes(R.color.white)
-                .sizeRes(R.dimen.textview_trashcan);
+        trashCan = FontAwesomeManager.createIcon(FontAwesomeIcons.fa_trash, mRecyclerView.getContext());
 
         xMarkMargin = (int) mRecyclerView.getContext().getResources().getDimension(R.dimen.activity_horizontal_margin);
         initiated = true;

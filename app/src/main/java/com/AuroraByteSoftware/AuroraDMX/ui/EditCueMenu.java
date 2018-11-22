@@ -18,9 +18,10 @@ import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.TextDrawable;
 import com.jmedeisis.draglinearlayout.DragLinearLayout;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,11 +51,9 @@ public class EditCueMenu extends MainActivity {
         final AlertDialog alert = builder.create();
 
         builder.setCancelable(true);
-        builder.setIcon(
-                new IconDrawable(context.getApplicationContext(), FontAwesomeIcons.fa_info_circle)
-                        .colorRes(R.color.white)
-                        .alpha(204)
-                        .actionBarSize());
+
+        TextDrawable icon = FontAwesomeManager.createIcon(FontAwesomeIcons.fa_info_circle, context.getApplicationContext());
+        builder.setIcon(icon);
 
         builder.setTitle(String.format(context.getString(R.string.cue), alCues.get(currentCue).getCueName()));
 

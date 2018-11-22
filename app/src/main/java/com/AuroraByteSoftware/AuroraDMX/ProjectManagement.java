@@ -3,11 +3,14 @@ package com.AuroraByteSoftware.AuroraDMX;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
@@ -20,11 +23,13 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.TextDrawable;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -51,6 +56,8 @@ public class ProjectManagement extends MainActivity {
     private static final String PREF_OLD_POINTER_HUMAN = "Default Project";
     private static final String PREF_SAVES = "LIST_OF_SAVED_PROJECTS";
     private static final String PREF_DEF = "DEFAULT_PROJECT_TO_LOAD";
+    private static final String FILE_EXTENSION = ".AuroraDMX";
+
     private static boolean DeleteInProgress = false;
 
     /**
@@ -138,7 +145,7 @@ public class ProjectManagement extends MainActivity {
                 clearCache(mainActivity);
                 File dir = mainActivity.getCacheDir();
                 Log.d(getClass().getSimpleName(), "Mkdir response " + dir.mkdirs());
-                String fileName = (key.equals(PREF_OLD_POINTER) ? PREF_OLD_POINTER_HUMAN : key) + ".AuroraDMX";
+                String fileName = (key.equals(PREF_OLD_POINTER) ? PREF_OLD_POINTER_HUMAN : key) + FILE_EXTENSION;
                 File file = new File(dir, fileName);
                 FileOutputStream fileStream = new FileOutputStream(file);
                 out.writeTo(fileStream);
@@ -177,13 +184,21 @@ public class ProjectManagement extends MainActivity {
         }
     }
 
-    void openFile(String uri) throws IOException, SecurityException {
+    void openFile(Uri uri, ContextWrapper context) throws IOException, SecurityException {
         Log.d(getClass().getSimpleName(), "open URI " + uri);
+        String fileName = getFileName(uri, context);
+        if (!fileName.endsWith(FILE_EXTENSION)) {
+            Toast.makeText(context, R.string.cannotOpen, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("AuroraDMX", "Importing file " + fileName);
+        fileName = fileName.replaceAll(FILE_EXTENSION, "");
 
-        InputStream stream = mainActivity.getContentResolver().openInputStream(Uri.parse(uri));
+        InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
         byte[] data = readBytes(stream);
         loadData(data);
-        mainActivity.setTitle(mainActivity.getString(R.string.openedFile));
+        mainActivity.setTitle(fileName);
+        save(fileName);
     }
 
     /**
@@ -396,10 +411,8 @@ public class ProjectManagement extends MainActivity {
     public void onSaveClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Save Project");
-        builder.setIcon(
-                new IconDrawable(mainActivity, FontAwesomeIcons.fa_save)
-                        .alpha(204)
-                        .actionBarSize());
+        TextDrawable icon = FontAwesomeManager.createIcon(FontAwesomeIcons.fa_save, mainActivity);
+        builder.setIcon(icon);
 
         final EditText editText = new EditText(mainActivity);
 
@@ -442,10 +455,8 @@ public class ProjectManagement extends MainActivity {
                 DeleteInProgress = true;
                 AlertDialog.Builder adb = new AlertDialog.Builder(mainActivity);
                 adb.setTitle("Delete");
-                adb.setIcon(new IconDrawable(mainActivity, FontAwesomeIcons.fa_exclamation_triangle)
-                        .colorRes(R.color.white)
-                        .alpha(204)
-                        .actionBarSize());
+                TextDrawable icon = FontAwesomeManager.createIcon(FontAwesomeIcons.fa_exclamation_triangle, mainActivity);
+                adb.setIcon(icon);
                 final String proj = listOfProjectsArray[position];
                 String proj_human = PREF_OLD_POINTER.equals(proj) ? PREF_OLD_POINTER_HUMAN : proj;
                 adb.setMessage("Are you sure you want to delete project '" + proj_human + "'?");
@@ -477,10 +488,8 @@ public class ProjectManagement extends MainActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setTitle("Load Project");
-        builder.setIcon(
-                new IconDrawable(mainActivity, FontAwesomeIcons.fa_folder_open)
-                        .alpha(204)
-                        .actionBarSize());
+        TextDrawable icon = FontAwesomeManager.createIcon(FontAwesomeIcons.fa_folder_open, mainActivity);
+        builder.setIcon(icon);
 
         builder.setView(listView);
 
@@ -506,5 +515,27 @@ public class ProjectManagement extends MainActivity {
 
         dialog.show();
 
+    }
+
+    public String getFileName(Uri uri, ContextWrapper activity) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 }

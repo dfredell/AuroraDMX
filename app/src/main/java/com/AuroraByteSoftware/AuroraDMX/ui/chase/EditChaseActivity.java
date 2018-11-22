@@ -15,7 +15,8 @@ import com.AuroraByteSoftware.AuroraDMX.MainActivity;
 import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseClickListener;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
 
 
 public class EditChaseActivity extends Activity implements
@@ -94,9 +95,9 @@ public class EditChaseActivity extends Activity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.chase_edit, menu);
-        MainActivity.addFAIcon(menu, R.id.chase_edit_menu_delete, FontAwesomeIcons.fa_trash, this);
-        MainActivity.addFAIcon(menu, R.id.chase_edit_menu_add, FontAwesomeIcons.fa_plus, this);
-        MainActivity.addFAIcon(menu, R.id.chase_edit_menu_settings, FontAwesomeIcons.fa_cog, this);
+        FontAwesomeManager.addFAIcon(menu, R.id.chase_edit_menu_delete, FontAwesomeIcons.fa_trash, this);
+        FontAwesomeManager.addFAIcon(menu, R.id.chase_edit_menu_add, FontAwesomeIcons.fa_plus, this);
+        FontAwesomeManager.addFAIcon(menu, R.id.chase_edit_menu_settings, FontAwesomeIcons.fa_cog, this);
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -23,17 +23,15 @@ import com.AuroraByteSoftware.AuroraDMX.billing.Billing;
 import com.AuroraByteSoftware.AuroraDMX.billing.ClientStateListener;
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetPoll;
 import com.AuroraByteSoftware.AuroraDMX.ui.ManualServerIP;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingFlowParams;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -230,11 +228,7 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             inflater.inflate(R.menu.server, menu);
             try {
-                menu.findItem(R.id.menu_server_refresh).setIcon(
-                        new IconDrawable(this.getActivity(), FontAwesomeIcons.fa_refresh)
-                                .colorRes(R.color.white)
-                                .alpha(204)
-                                .actionBarSize());
+                FontAwesomeManager.addFAIcon(menu,R.id.menu_server_refresh,FontAwesomeIcons.fa_refresh,this.getActivity());
             } catch (IllegalStateException e){
                 Log.w(getClass().getSimpleName(), "onCreateOptionsMenu: Icons not setup " + e.getMessage());
             }

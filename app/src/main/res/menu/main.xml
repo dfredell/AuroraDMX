@@ -7,10 +7,6 @@
     -->
 
     <item
-        android:id="@+id/menu_patch"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_patch"/>
-    <item
         android:id="@+id/menu_cues"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_cues"/>
@@ -18,6 +14,10 @@
         android:id="@+id/menu_chase"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_chase"/>
+    <item
+        android:id="@+id/menu_patch"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_patch"/>
     <item
         android:id="@+id/menu_settings"
         android:showAsAction="ifRoom|withText"
@@ -34,5 +34,9 @@
         android:id="@+id/menu_share"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_share" />
+    <item
+        android:id="@+id/menu_import"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/menu_import" />
 
 </menu>

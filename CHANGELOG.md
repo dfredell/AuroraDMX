@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0-51]
+### Added
+- GH-#10 Add an import button in case your Android can't auto open the .AuroraDMX file
+
 ## [4.0.5-50]
 ### Fixed
 - Screen rotate looses channel levels

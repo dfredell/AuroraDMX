@@ -16,7 +16,8 @@ import com.AuroraByteSoftware.AuroraDMX.R;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseClickListener;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseObj;
 import com.AuroraByteSoftware.AuroraDMX.chase.ChaseRunner;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
+import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
 
 import java.util.ArrayList;
 
@@ -74,7 +75,7 @@ public class ChaseActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.chase, menu);
-        MainActivity.addFAIcon(menu, R.id.menu_add, FontAwesomeIcons.fa_plus, this);
+        FontAwesomeManager.addFAIcon(menu, R.id.menu_add, FontAwesomeIcons.fa_plus, this);
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -27,6 +27,7 @@
 
     <string name="title_activity_EditCueMenu">Edit Cue Menu</string>
     <string name="title_activity_EditChannelMenu">Edit Channel Menu</string>
+    <string name="title_activity_ImportFile">Import File</string>
     <string name="dimmer">Dimmer</string>
     <string name="channel">Channel</string>
     <string name="menu_clearPatch">Clear Patch</string>
@@ -54,6 +55,7 @@
     <string name="menu_save">Save</string>
     <string name="menu_load">Load</string>
     <string name="menu_share">Share</string>
+    <string name="menu_import">Import</string>
     <string name="pref_sacn_unicast_ip_def">192.168.0.0</string>
     <string name="serverUnknown">DMX Server %s Not Found</string>
     <string name="serverName">Server</string>

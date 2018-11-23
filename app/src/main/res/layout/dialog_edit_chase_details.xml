@@ -70,6 +70,27 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_chase_color"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <com.joanzapata.iconify.widget.IconButton
+            android:text="@string/chase_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_chase_button_color"
+            android:layout_weight="1"
+            android:textSize="26sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

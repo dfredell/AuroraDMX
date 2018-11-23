@@ -2,7 +2,6 @@ package yuku.ambilwarna;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.AuroraByteSoftware.AuroraDMX.R;
-import com.AuroraByteSoftware.AuroraDMX.fixture.RGBFixture;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class AmbilWarnaDialog {
 
@@ -25,20 +20,22 @@ public class AmbilWarnaDialog {
     final ImageView viewTarget;
     final ViewGroup viewContainer;
     final TextView viewChannelName;
-    final float[] currentColorHsv = new float[3];
-    final RGBFixture rgbFixture;
+    float[] currentColorHsv = new float[3];
+    private AmbilWarnaDialogTouch onChange;
 
+    public interface AmbilWarnaDialogTouch {
+        void onTouch(int color);
+    }
 
     /**
      * Create an AmbilWarnaDialog.
      * @param context       activity context
      * @param color         current color
-     * @param fixture to add current value
      * @param view
      */
-    public  AmbilWarnaDialog(final Context context, int color, RGBFixture fixture,final View view) {
+    public  AmbilWarnaDialog(final Context context, int color, AmbilWarnaDialogTouch onChange, final View view) {
+        this.onChange = onChange;
 
-        this.rgbFixture = fixture;
 
         // remove alpha if not supported
             color = color | 0xff000000;
@@ -46,12 +43,39 @@ public class AmbilWarnaDialog {
         Color.colorToHSV(color, currentColorHsv);
 
         viewHue = view.findViewById(R.id.ambilwarna_viewHue);
-        viewChannelName = (TextView) view.findViewById(R.id.rgb_name);
-        viewSatVal = (AmbilWarnaSquare) view.findViewById(R.id.ambilwarna_viewSatBri);
-        viewCursor = (ImageView) view.findViewById(R.id.ambilwarna_cursor);
-        viewTarget = (ImageView) view.findViewById(R.id.ambilwarna_target);
-        viewContainer = (ViewGroup) view.findViewById(R.id.ambilwarna_viewContainer);
+        viewChannelName = view.findViewById(R.id.rgb_name);
+        viewSatVal = view.findViewById(R.id.ambilwarna_viewSatBri);
+        viewCursor = view.findViewById(R.id.ambilwarna_cursor);
+        viewTarget = view.findViewById(R.id.ambilwarna_target);
+        viewContainer = view.findViewById(R.id.ambilwarna_viewContainer);
 
+        onStart(view);
+    }
+
+    /**
+     * Create an AmbilWarnaDialog.
+     * @param color         current color
+     * @param view
+     */
+    public  AmbilWarnaDialog(int color, final View view, AmbilWarnaDialogTouch onChange) {
+        viewChannelName = null;
+        this.onChange = onChange;
+
+        // remove alpha if not supported
+            color = color | 0xff000000;
+
+        Color.colorToHSV(color, currentColorHsv);
+
+        viewHue = view.findViewById(R.id.chase_ambilwarna_viewHue);
+        viewSatVal = view.findViewById(R.id.chase_ambilwarna_viewSatBri);
+        viewCursor = view.findViewById(R.id.chase_ambilwarna_cursor);
+        viewTarget = view.findViewById(R.id.chase_ambilwarna_target);
+        viewContainer = view.findViewById(R.id.edit_chase_ambilwarna_viewContainer);
+
+        onStart(view);
+    }
+
+    private void onStart(final View view) {
         viewSatVal.setHue(getHue());
 
         viewHue.setOnTouchListener(new View.OnTouchListener() {
@@ -74,7 +98,7 @@ public class AmbilWarnaDialog {
                     viewSatVal.setHue(getHue());
                     moveCursor();
 
-                    updateChannelLevel();
+                    onChange.onTouch(getColor());
 
                     return true;
                 }
@@ -102,8 +126,7 @@ public class AmbilWarnaDialog {
 
                     // update view
                     moveTarget();
-
-                    updateChannelLevel();
+                    onChange.onTouch(getColor());
 
                     return true;
                 }
@@ -124,31 +147,17 @@ public class AmbilWarnaDialog {
         });
     }
 
-    protected void updateChannelLevel(){
-        int r = (getColor() >> 16) & 0xFF;
-        int g = (getColor() >> 8) & 0xFF;
-        int b = getColor() & 0xFF;
-        updateChannelLevelText();
-        rgbFixture.setChLevelArray(Arrays.asList(r, g, b));
-    }
 
-    protected void moveCursor() {
+    public void moveCursor() {
         float y = viewHue.getMeasuredHeight() - (getHue() * viewHue.getMeasuredHeight() / 360.f);
         if (y == viewHue.getMeasuredHeight()) y = 0.f;
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewCursor.getLayoutParams();
         layoutParams.leftMargin = (int) (viewHue.getLeft() - Math.floor(viewCursor.getMeasuredWidth() / 2) - viewContainer.getPaddingLeft());
         layoutParams.topMargin = (int) (viewHue.getTop() + y - Math.floor(viewCursor.getMeasuredHeight() / 2) - viewContainer.getPaddingTop());
-//        if (Looper.getMainLooper().getThread() != Thread.currentThread()){
-//            viewCursor.invalidate();
-//            return;
-//        }
         viewCursor.setLayoutParams(layoutParams);
     }
 
-    protected void moveTarget() {
-//        if (Looper.getMainLooper().getThread() != Thread.currentThread()){
-//            return;
-//        }
+    public void moveTarget() {
         float x = getSat() * viewSatVal.getMeasuredWidth();
         float y = (1.f - getVal()) * viewSatVal.getMeasuredHeight();
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewTarget.getLayoutParams();
@@ -195,19 +204,12 @@ public class AmbilWarnaDialog {
         currentColorHsv[2] = val;
     }
 
-    public void setRGBLevel(List<Integer> rgbLevel) {
-        Color.RGBToHSV(rgbLevel.get(0),rgbLevel.get(1),rgbLevel.get(2), currentColorHsv);
-        updateChannelLevelText();
-        moveTarget();
-        moveCursor();
-        viewSatVal.setHue(getHue());
+
+    public float[] getCurrentColorHsv() {
+        return currentColorHsv;
     }
 
-    private void updateChannelLevelText(){
-        int r = (getColor() >> 16) & 0xFF;
-        int g = (getColor() >> 8) & 0xFF;
-        int b = getColor() & 0xFF;
-        rgbFixture.setChText("R:" + r + " G:" + g + " B:" + b);
+    public void setCurrentColorHsv(float[] currentColorHsv) {
+        this.currentColorHsv = currentColorHsv;
     }
-
 }

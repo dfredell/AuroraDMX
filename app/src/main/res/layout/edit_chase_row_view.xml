@@ -9,15 +9,14 @@
         android:id="@+id/title_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/textview_padding_top"
-        android:paddingLeft="@dimen/textview_padding_side"
-        android:paddingRight="@dimen/textview_padding_side"
-        android:paddingTop="@dimen/textview_padding_top"
-        android:text="Cue 123"
-        android:textSize="@dimen/textview_font"
         android:background="@drawable/selected_edit_chase_cue"
-        />
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/textview_padding_side"
+        android:paddingTop="@dimen/textview_padding_top"
+        android:paddingRight="@dimen/textview_padding_side"
+        android:paddingBottom="@dimen/textview_padding_top"
+        android:text="Cue 123"
+        android:textSize="@dimen/textview_font" />
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/edit_chase_drag"

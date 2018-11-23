@@ -157,10 +157,11 @@ public class EditChaseActivity extends Activity implements
     }
 
     @Override
-    public void onEditChaseDetails(String name, int fadeTime, int waitTime) {
+    public void onEditChaseDetails(String name, int fadeTime, int waitTime, int buttonColor) {
         chase.setName(name);
         chase.setFadeTime(fadeTime);
         chase.setWaitTime(waitTime);
+        chase.setButtonColor(buttonColor);
     }
 
     @Override
@@ -169,6 +170,7 @@ public class EditChaseActivity extends Activity implements
         detailsPojo.name = chase.getName();
         detailsPojo.fade = chase.getFadeTime();
         detailsPojo.wait = chase.getWaitTime();
+        detailsPojo.buttonColor = chase.getButtonColor();
         return detailsPojo;
     }
 

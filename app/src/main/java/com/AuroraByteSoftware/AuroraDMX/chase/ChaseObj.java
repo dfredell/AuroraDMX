@@ -1,7 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.chase;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuff;
 
 import com.AuroraByteSoftware.AuroraDMX.CueObj;
 import com.AuroraByteSoftware.AuroraDMX.ui.chase.ChaseButton;
@@ -22,9 +21,7 @@ public class ChaseObj implements Serializable {
     private boolean fadeInProgress = false;
     private String name = "";
     private transient Timer fadeTimer = null;
-    private transient int r = 0;
-    private transient int g = 0;
-    private transient int b = 0;
+    private int buttonColor = 0;
 
     /**
      * makes android compiler happier
@@ -82,31 +79,6 @@ public class ChaseObj implements Serializable {
         this.waitTime = waitTime;
     }
 
-    /**
-     * Sets the cue button to be highlighted with its progress
-     */
-    public void setHighlight(int r, int g, int b) {
-        highlight = r + g + b;
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        if (highlight != 0) {
-            button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
-            button.postInvalidate();
-        } else {
-            button.getBackground().setColorFilter(null);
-        }
-    }
-
-    public void refreshHighlight() {
-//        if (highlight != 0) {
-//            button.getBackground().setColorFilter(Color.argb(255, r, g, b), Mode.DARKEN);
-//            button.postInvalidate();
-//        } else {
-//            button.getBackground().setColorFilter(null);
-//        }
-    }
-
     public int getHighlight() {
         return highlight;
     }
@@ -155,5 +127,17 @@ public class ChaseObj implements Serializable {
 
     public void setFadeTimer(Timer fadeTimer) {
         this.fadeTimer = fadeTimer;
+    }
+
+    public void setButtonColor(int buttonColor) {
+        this.buttonColor = buttonColor;
+        if (buttonColor == 0)
+            button.getButton().getBackground().clearColorFilter();
+        else
+            button.getButton().getBackground().setColorFilter(buttonColor, PorterDuff.Mode.MULTIPLY);
+    }
+
+    public int getButtonColor() {
+        return buttonColor;
     }
 }

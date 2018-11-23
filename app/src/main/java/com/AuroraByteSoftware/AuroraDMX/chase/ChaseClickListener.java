@@ -3,6 +3,7 @@ package com.AuroraByteSoftware.AuroraDMX.chase;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -85,6 +86,8 @@ public class ChaseClickListener implements View.OnClickListener, View.OnLongClic
         button.getButton().setOnClickListener(new ChaseClickListener(chase));
         button.getButton().setLongClickable(true);
         button.getButton().setOnLongClickListener(new ChaseClickListener(chase));
+        if (chase.getButtonColor() != 0)
+            button.getButton().getBackground().setColorFilter(chase.getButtonColor(), PorterDuff.Mode.MULTIPLY);
         return button;
     }
 }

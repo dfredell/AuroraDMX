@@ -18,6 +18,7 @@ import com.AuroraByteSoftware.AuroraDMX.ui.EditColumnMenu;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,7 +67,14 @@ public class RGBFixture extends Fixture implements OnClickListener {
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
 
         View viewById = viewGroup.findViewById(R.id.ambilwarna_dialogView);
-        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, this, viewById);
+
+        final AmbilWarnaDialog.AmbilWarnaDialogTouch onTouch = new AmbilWarnaDialog.AmbilWarnaDialogTouch() {
+            @Override
+            public void onTouch(int color) {
+                updateChannelLevel(color);
+            }
+        };
+        ambilWarnaDialog = new AmbilWarnaDialog(context, 0, onTouch, viewById);
 
         TextView editButton = viewGroup.findViewById(R.id.channel_rgb_edit);
         editButton.setOnClickListener(this);
@@ -74,6 +82,28 @@ public class RGBFixture extends Fixture implements OnClickListener {
         refreshValuePresetsHook();
     }
 
+
+    protected void updateChannelLevel(int color){
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+        updateChannelLevelText(color);
+        setChLevelArray(Arrays.asList(r, g, b));
+    }
+
+    public void setRGBLevel(List<Integer> rgbLevel) {
+        Color.RGBToHSV(rgbLevel.get(0),rgbLevel.get(1),rgbLevel.get(2), ambilWarnaDialog.getCurrentColorHsv());
+        setChText("R:" + rgbLevel.get(0) + " G:" + rgbLevel.get(1) + " B:" + rgbLevel.get(2));
+        ambilWarnaDialog.moveTarget();
+        ambilWarnaDialog.moveCursor();
+    }
+
+    private void updateChannelLevelText(int color){
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+        setChText("R:" + r + " G:" + g + " B:" + b);
+    }
 
     /**
      * Set color to indicate that there are presets and bind listener
@@ -181,7 +211,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
     }
 
     private void updateFixtureLevelText() {
-        ambilWarnaDialog.setRGBLevel(rgbLevel);
+        setRGBLevel(rgbLevel);
     }
 
     /**
@@ -243,7 +273,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
         rgbLevel.set(0, (int) Math.round(stepIteram[0]));
         rgbLevel.set(1, (int) Math.round(stepIteram[1]));
         rgbLevel.set(2, (int) Math.round(stepIteram[2]));
-        ambilWarnaDialog.setRGBLevel(rgbLevel);
+        setRGBLevel(rgbLevel);
     }
 
     public void updateUi() {

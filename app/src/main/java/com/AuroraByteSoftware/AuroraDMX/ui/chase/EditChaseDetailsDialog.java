@@ -153,8 +153,8 @@ public class EditChaseDetailsDialog extends DialogFragment implements View.OnCli
      */
     public void save(View v) {
         String name = UiUtil.getTextFromDialog(getDialog(), R.id.edit_chase_name);
-        int fade = UiUtil.getIntFromDialog(getDialog(), R.id.edit_chase_fade_time);
-        int wait = UiUtil.getIntFromDialog(getDialog(), R.id.edit_chase_wait_time);
+        int fade = UiUtil.getIntFromDialog(getDialog(), R.id.edit_chase_fade_time, v);
+        int wait = UiUtil.getIntFromDialog(getDialog(), R.id.edit_chase_wait_time, v);
 
         if (wait + fade <= 0) {
             Toast.makeText(v.getContext(), R.string.errorZeroFade, Toast.LENGTH_SHORT).show();

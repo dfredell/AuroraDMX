@@ -4,14 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.2.1-53]
+### Fixed
+- Added a default number of 0 to config popups when a blank value
+
 ## [4.2.0-52]
 ### Added
 - GH-#12 Color chase buttons for easier finding
 - GH-#11 Reorder chase and redesigned the popup reorder for cues
+### Fixed
+- Exiting chase crashes when you have more than a page of chase buttons
 
 ## [4.1.0-51]
 ### Added
 - GH-#10 Add an import button in case your Android can't auto open the .AuroraDMX file
+- When opening a project file, now it saves the project as the file name
 
 ## [4.0.5-50]
 ### Fixed

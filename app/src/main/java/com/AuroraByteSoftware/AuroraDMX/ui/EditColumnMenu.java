@@ -21,7 +21,7 @@ import java.util.List;
 public class EditColumnMenu extends MainActivity {
 
 
-    public static void createEditColumnMenu(View v, final MainActivity context, final Fixture fixture,
+    public static void createEditColumnMenu(final View v, final MainActivity context, final Fixture fixture,
                                             String chText, int chLevel, String chValuePresets) {
 
 
@@ -44,11 +44,11 @@ public class EditColumnMenu extends MainActivity {
 
                     List<Integer> specifiedLevel = new ArrayList<>();
                     if (fixture.isRGB()) {
-                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editRLevel));
-                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editGLevel));
-                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editBLevel));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editRLevel, v));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editGLevel, v));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editBLevel, v));
                     } else {
-                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editColumnLevel));
+                        specifiedLevel.add(UiUtil.getIntFromDialog(dialog, R.id.editColumnLevel, v));
                     }
                     fixture.setChLevels(specifiedLevel);
 

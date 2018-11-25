@@ -62,21 +62,13 @@ public class EditCueMenu extends MainActivity {
         view.findViewById(R.id.cue_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
-
-
-                EditText editCueName = view.findViewById(R.id.editCueName);
-                EditText editTextFade = view.findViewById(R.id.editTextFade);
+                final String cueName = UiUtil.getTextFromDialog(view, R.id.editCueName);
+                alCues.get(currentCue).setCueName(cueName);
+                alCues.get(currentCue).setFadeUpTime(UiUtil.getIntFromDialog(view, R.id.editTextFade));
 
                 try {
-                    String cueName = editCueName.getText().toString();
-                    int fadeTime = Integer.parseInt(editTextFade.getText().toString());
-                    alCues.get(currentCue).setCueName(cueName);
-                    alCues.get(currentCue).setFadeUpTime(fadeTime);
-
                     // Set new button name
                     alCues.get(currentCue).getButton().setText(cueName);
-                } catch (NumberFormatException n) {
-                    Toast.makeText(context, R.string.errNumConv, Toast.LENGTH_SHORT).show();
                 } catch (Throwable t) {
                     Toast.makeText(context, R.string.Error, Toast.LENGTH_SHORT).show();
                 }

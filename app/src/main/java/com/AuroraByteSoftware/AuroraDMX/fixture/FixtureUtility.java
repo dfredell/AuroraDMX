@@ -55,6 +55,7 @@ public class FixtureUtility {
         LinearLayout fixtureView = context.findViewById(R.id.ChanelLayout);
         fixtureView.addView(rgbFixture.getViewGroup(), fixtureView.indexOfChild(viewGroup));
         fixtureView.removeView(viewGroup);
+        rgbFixture.setParked(fixture.isParked());
 
         alColumns.set(indexOf, rgbFixture);
 
@@ -87,6 +88,7 @@ public class FixtureUtility {
         LinearLayout fixtureView = context.findViewById(R.id.ChanelLayout);
         fixtureView.addView(standardFixture.getViewGroup(), fixtureView.indexOfChild(viewGroup));
         fixtureView.removeView(viewGroup);
+        standardFixture.setParked(fixture.isParked());
 
         alColumns.set(indexOf, standardFixture);
 

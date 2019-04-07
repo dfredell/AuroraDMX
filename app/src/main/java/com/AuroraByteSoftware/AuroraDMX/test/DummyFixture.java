@@ -133,6 +133,16 @@ public class DummyFixture extends Fixture {
     }
 
     @Override
+    public void setParked(boolean checked) {
+
+    }
+
+    @Override
+    public boolean isParked() {
+        return false;
+    }
+
+    @Override
     public void setFixtureNumber(int currentFixtureNum) {
     }
 }

@@ -109,6 +109,12 @@ public class ProjectManagement extends MainActivity {
             valuePresets[i] = alColumns.get(i).getValuePresets();
         }
 
+        //Get the isParked as an array
+        Boolean isParked[] = new Boolean[alColumns.size()];
+        for (int i = 0; i < alColumns.size(); i++) {
+            isParked[i] = alColumns.get(i).isParked();
+        }
+
         ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
         try {
             ObjectOutputStream objectOutput = new ObjectOutputStream(arrayOutputStream);
@@ -122,6 +128,7 @@ public class ProjectManagement extends MainActivity {
             objectOutput.writeObject(isRGB);
             objectOutput.writeObject(valuePresets);
             objectOutput.writeObject(getAlChases());
+            objectOutput.writeObject(isParked);
             byte[] data = arrayOutputStream.toByteArray();
 
             objectOutput.close();
@@ -260,6 +267,7 @@ public class ProjectManagement extends MainActivity {
         boolean[] isRGB = null;
         String[] valuePresets = null;
         int[][] patch = new int[0][0];
+        Boolean[] isParked = null;
 
         try {
             // Stop ArtNet
@@ -285,6 +293,7 @@ public class ProjectManagement extends MainActivity {
             Object readObject8isRGB = null;
             Object readObject9valuePresets = null;
             Object readObject10Chase = null;
+            Object readObject11Parked = null;
 
             try {
                 readObject6ChAry = in.readObject();
@@ -292,6 +301,7 @@ public class ProjectManagement extends MainActivity {
                 readObject8isRGB = in.readObject();
                 readObject9valuePresets = in.readObject();
                 readObject10Chase = in.readObject();
+                readObject11Parked = in.readObject();
             } catch (EOFException e) {
                 // Do nothing we hit the end of the stored data
             }
@@ -306,8 +316,11 @@ public class ProjectManagement extends MainActivity {
                 if (readObject9valuePresets != null && readObject9valuePresets.getClass().equals(String[].class)) {
                     valuePresets = (String[]) readObject9valuePresets;
                 }
+                if (readObject11Parked != null && readObject11Parked.getClass().equals(Boolean[].class)) {
+                    isParked = (Boolean[]) readObject11Parked;
+                }
 
-                mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB, valuePresets);
+                mainActivity.setNumberOfFixtures((Integer) readObject1FixtureCount, fixtureNames, isRGB, valuePresets, isParked);
                 getSharedPref().edit().putString(SettingsActivity.channels, readObject1FixtureCount + "").apply();
             }
             if (readObject2Cues.getClass().equals(getAlCues().getClass()) && readObject2Cues instanceof ArrayList<?>)

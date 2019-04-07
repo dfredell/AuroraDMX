@@ -115,7 +115,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         alColumns = new ArrayList<>();
         alChases = new ArrayList<>();
         int number_channels = Integer.parseInt(sharedPref.getString(SettingsActivity.channels, "5"));
-        setNumberOfFixtures(number_channels, null, null, null);
+        setNumberOfFixtures(number_channels, null, null, null, null);
         updatingFixtures = false;
     }
 
@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
 
     void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB,
-                             String[] valuePresets) {
+                             String[] valuePresets, Boolean[] isParked) {
         updatingFixtures = true;
         // check for app purchase
         boolean paid = true;
@@ -172,16 +172,22 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         if (change > 0) {// Adding channels
             for (int x = (numberFixtures - change); x < numberFixtures && x < 512; x++) {
                 if (isRGB != null && isRGB[x]) {
-                    alColumns.add(new RGBFixture(
+                    RGBFixture e = new RGBFixture(
                             this,
                             channelNames == null ? null : channelNames[x],
-                            valuePresets == null ? null : valuePresets[x]));
+                            valuePresets == null ? null : valuePresets[x]);
+                    if(isParked != null)
+                        e.setParked(isParked[x]);
+                    alColumns.add(e);
                 } else {
-                    alColumns.add(new StandardFixture(
+                    StandardFixture e = new StandardFixture(
                             this,
                             channelNames == null ? null : channelNames[x],
                             valuePresets == null ? null : valuePresets[x]
-                    ));
+                    );
+                    if(isParked != null)
+                        e.setParked(isParked[x]);
+                    alColumns.add(e);
                 }
                 mainLayout.addView(alColumns.get(x).getViewGroup());
             }
@@ -337,7 +343,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(getClass().getSimpleName(), "Pref Change");
         if (key.equals(SettingsActivity.channels)) {
-            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null, null);
+            setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null, null, null);
         }
     }
 
@@ -364,7 +370,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         } catch (Throwable t) {
             Log.w("ExternalStorage", "Error reading channel number", t);
         }
-        setNumberOfFixtures(number_channels, null, null, null);
+        setNumberOfFixtures(number_channels, null, null, null, null);
 
         //setup cues, the button inside the cue obj may be from the Cue Sheet
         pm.refreshCueView();

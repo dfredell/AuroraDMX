@@ -38,4 +38,8 @@ public abstract class Fixture {
     public abstract void setFixtureNumber(int currentFixtureNum);
 
     public abstract void updateUi();
+
+    public abstract void setParked(boolean checked);
+
+    public abstract boolean isParked();
 }

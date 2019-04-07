@@ -51,7 +51,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_fixture_rgb"
-        android:id="@+id/chanel_rgb" />
+        android:id="@+id/fixture_rgb" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/channel_park"
+        android:id="@+id/fixture_park" />
 
     <LinearLayout
         android:layout_width="match_parent"

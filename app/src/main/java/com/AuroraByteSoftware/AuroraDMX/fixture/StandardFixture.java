@@ -47,6 +47,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     private TextView tvChNum;
     private int defaultLvlTextColor = 0;
     private final static String PRESET_VALUE_REGEX = "^" + REGEX_255 + "$";
+    private boolean parked = false;
 
 
     public StandardFixture(final MainActivity context, String channelName, String valuePresets) {
@@ -255,6 +256,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
      */
     @Override
     public void incrementLevel() {
+        if(isParked()){
+            return;
+        }
         stepIteram += step;
         setChLevel((int) Math.round(stepIteram));
     }
@@ -304,5 +308,15 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
     @Override
     public void setFixtureNumber(int currentFixtureNum) {
         tvChNum.setText(String.format("%1$s", currentFixtureNum));
+    }
+
+    @Override
+    public void setParked(boolean parked) {
+        this.parked = parked;
+    }
+
+    @Override
+    public boolean isParked() {
+        return parked;
     }
 }

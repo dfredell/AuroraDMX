@@ -42,6 +42,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
     private final static String RGB_REGEX = REGEX_255 + "," + REGEX_255 + "," + REGEX_255;
     private final static String RGB_HEX_REGEX = "[a-fA-F0-9]{6}";
     private final static String PRESET_VALUE_REGEX = "^(" + RGB_REGEX + "|" + RGB_HEX_REGEX + ")$";
+    private boolean parked = false;
 
     public RGBFixture(final MainActivity context, String channelName, String presets) {
         this.context = context;
@@ -263,6 +264,9 @@ public class RGBFixture extends Fixture implements OnClickListener {
      */
     @Override
     public void incrementLevel() {
+        if(isParked()){
+            return;
+        }
         stepIteram[0] += step[0];
         stepIteram[1] += step[1];
         stepIteram[2] += step[2];
@@ -320,5 +324,15 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     public void setChLevelArray(List<Integer> chLevels) {
         rgbLevel = chLevels;
+    }
+
+    @Override
+    public void setParked(boolean parked) {
+        this.parked = parked;
+    }
+
+    @Override
+    public boolean isParked() {
+        return parked;
     }
 }

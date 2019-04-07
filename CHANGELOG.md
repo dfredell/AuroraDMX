@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.3.0-55]
+### Added
+- Park Fixture. Toggle if the fixture value will be changed with cues and chases.
+
 ## [4.2.1-53]
 ### Fixed
 - Added a default number of 0 to config popups when a blank value

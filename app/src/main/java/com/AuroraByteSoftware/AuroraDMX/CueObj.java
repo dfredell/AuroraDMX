@@ -14,8 +14,15 @@ public class CueObj implements Serializable {
      * s
      */
     private static final long serialVersionUID = -6835651116806619514L;
-    private int fadeUpTime = 5;
+    /**
+     * @deprecated
+     */
+    private int fadeUpTime = Integer.MAX_VALUE;
+    /**
+     * @deprecated
+     */
     private int fadeDownTime = 5;
+    private double fade = 5.0;
     private ArrayList<Integer> levelsList;
     private int[] levels = new int[0];
     private transient Button button;
@@ -47,28 +54,32 @@ public class CueObj implements Serializable {
         this.button = button;
     }
 
-    public CueObj(String cueName, int a_fadeUpTime, int a_fadeDownTime, List<Integer> a_levels, Button a_button) {
-        fadeUpTime = a_fadeUpTime;
-        fadeDownTime = a_fadeDownTime;
+    public CueObj(String cueName, int a_fade, List<Integer> a_levels, Button a_button) {
+        fade = a_fade;
         levelsList = new ArrayList<>(a_levels);
         button = a_button;
         name = cueName;
     }
 
-    public CueObj(String cueName, int a_fadeTime, List<Integer> a_levels, Button a_button) {
-        this(cueName, a_fadeTime, a_fadeTime, a_levels, a_button);
-    }
-
     /**
      * @return the fadeUpTime
      */
-    public int getFadeUpTime() {
-        return fadeUpTime;
+    public double getFadeTime() {
+        if (fadeUpTime!=Integer.MAX_VALUE){
+            // Used when upgrading from an older version
+            fade = fadeUpTime;
+            setFadeUpTime(Integer.MAX_VALUE);
+        }
+        return fade;
     }
 
     /**
      * @param fadeUpTime2 the fadeUpTime to set
      */
+    public void setFadeTime(double fadeUpTime2) {
+        this.fade = fadeUpTime2;
+    }
+
     public void setFadeUpTime(int fadeUpTime2) {
         this.fadeUpTime = fadeUpTime2;
     }

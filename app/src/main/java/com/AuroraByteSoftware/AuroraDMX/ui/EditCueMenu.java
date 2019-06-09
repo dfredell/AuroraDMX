@@ -3,7 +3,6 @@ package com.AuroraByteSoftware.AuroraDMX.ui;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,7 @@ public class EditCueMenu extends MainActivity {
             public void onClick(View button) {
                 final String cueName = UiUtil.getTextFromDialog(view, R.id.editCueName);
                 alCues.get(currentCue).setCueName(cueName);
-                alCues.get(currentCue).setFadeUpTime(UiUtil.getIntFromDialog(view, R.id.editTextFade));
+                alCues.get(currentCue).setFadeTime(UiUtil.getDoubleFromDialog(view, R.id.editTextFade));
 
                 try {
                     // Set new button name
@@ -181,7 +180,7 @@ public class EditCueMenu extends MainActivity {
         editCueName.setText(alCues.get(currentCue).getCueName());
 
         EditText editFadeText = view.findViewById(R.id.editTextFade);
-        editFadeText.setText(String.format("%1$s", alCues.get(currentCue).getFadeUpTime()));
+        editFadeText.setText(String.format("%1$s", alCues.get(currentCue).getFadeTime()));
 
         alert.show();
     }

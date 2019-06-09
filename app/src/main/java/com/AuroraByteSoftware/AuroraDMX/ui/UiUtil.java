@@ -82,4 +82,26 @@ public class UiUtil {
         }
         return 0;
     }
+
+    /**
+     * Give the dialog and the view id of the EditText return the Double
+     * If empty then 0
+     * @param view dialog with the viewId
+     * @param viewId the viewId of an EditText
+     * @return typed Double value
+     */
+    public static Double getDoubleFromDialog(View view, int viewId) {
+        final String textFromDialog = getTextFromDialog(view, viewId);
+        if ("".equals(textFromDialog.trim())){
+            return 0.0;
+        }
+        try {
+            return Double.parseDouble(textFromDialog);
+        } catch (NumberFormatException n) {
+            Toast.makeText(view.getContext(), R.string.errNumConv, Toast.LENGTH_SHORT).show();
+        } catch (Throwable t) {
+            Toast.makeText(view.getContext(), R.string.Error, Toast.LENGTH_SHORT).show();
+        }
+        return 0.0;
+    }
 }

@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.AuroraByteSoftware.AuroraDMX.fixture.Fixture;
 
@@ -42,7 +41,7 @@ public class CueFade extends MainActivity implements Serializable {
      * @param nextCue the destination cue to set fixture levels
      */
     public void startCueFade(final CueObj nextCue) {
-        startCueFade(nextCue, nextCue.getFadeUpTime(), null, null);
+        startCueFade(nextCue, nextCue.getFadeTime(), null, null);
     }
 
     /**
@@ -51,7 +50,7 @@ public class CueFade extends MainActivity implements Serializable {
      * @param nextCue  the destination cue to set fixture levels
      * @param fadeTime Override the fade time
      */
-    public FadeObj startCueFade(final CueObj nextCue, int fadeTime, final FadeProgress fadeProgress, final FadeFinish finish) {
+    public FadeObj startCueFade(final CueObj nextCue, double fadeTime, final FadeProgress fadeProgress, final FadeFinish finish) {
 
         int prevCueNum = downwardCue;
         final CueObj prevCue;
@@ -84,7 +83,7 @@ public class CueFade extends MainActivity implements Serializable {
 
         //Set up steps
         // Number of runs it takes to get to destination level with MS_BETWEEN_UPDATES
-        final int steps = Math.max(0, fadeTime * (1000 / MS_BETWEEN_UPDATES));
+        final double steps = Math.max(0, fadeTime * (1000.0 / MS_BETWEEN_UPDATES));
         Log.d(getClass().getSimpleName(), String.format("Fading with %1$s steps", steps));
 
         // Set the channels to the cue
@@ -116,9 +115,9 @@ public class CueFade extends MainActivity implements Serializable {
                 @Override
                 public void run() {
                     if (progress < steps) {
-                        nextCue.setHighlight(0, nextCue.getHighlight() + (256 / steps), 0);
+                        nextCue.setHighlight(0, (int) (nextCue.getHighlight() + (256.0 / steps)), 0);
                         if (fadeProgress != null) {
-                            fadeProgress.update(progress * 100 / steps);
+                            fadeProgress.update((int) (progress * 100.0 / steps));
                         }
                         for (Fixture col : alColumns) {
                             col.incrementLevel();

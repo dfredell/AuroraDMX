@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [4.4.0-56]
 ### Added
 - Allow cue fade time less than a second
+### Fixed
+- Crash when reordering Cues
 
 ## [4.3.0-55]
 ### Added

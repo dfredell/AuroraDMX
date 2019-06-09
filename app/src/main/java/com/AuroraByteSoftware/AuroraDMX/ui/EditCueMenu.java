@@ -6,6 +6,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -217,7 +218,10 @@ public class EditCueMenu extends MainActivity {
                     parent.addView(childAt, secondPosition);
                 } else {
                     //Refresh the cue sheet screen
-                    ((GridView) alCues.get(0).getButton().getParent()).invalidateViews();
+                    ViewParent parent1 = button.getRootView().findViewById(R.id.cue_grid);
+                    if (parent1 != null) {
+                        ((GridView) parent1).invalidateViews();
+                    }
                 }
             }
         });

@@ -48,7 +48,7 @@ Donate: https://www.paypal.me/DanFredell
 
 * Download Android Studio and v23 SDKS
 * Open the AuroraDMX project
-* `git clone https://github.com/Furtchet/ArtNetStack` into a second directory
+* `git clone https://github.com/dfredell/ArtNetStack` into a second directory
 * Use File -> New -> Import Module to import the ArtNetStack module
 * Then the project should build
 

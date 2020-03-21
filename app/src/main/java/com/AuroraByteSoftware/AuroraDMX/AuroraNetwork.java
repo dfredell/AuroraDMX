@@ -1,6 +1,7 @@
 package com.AuroraByteSoftware.AuroraDMX;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetUpdate;
@@ -29,7 +30,11 @@ public class AuroraNetwork {
     }
 
     public static void setUpNetwork(Activity activity) {
-        String protocol = MainActivity.getSharedPref().getString("select_protocol", "");
+        SharedPreferences sharedPref = MainActivity.getSharedPref();
+        if (null == sharedPref){
+            return;
+        }
+        String protocol = sharedPref.getString("select_protocol", "");
         Log.i("AuroraNetwork", "Starting Network " + protocol);
         stopNetwork();
 

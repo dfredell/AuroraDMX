@@ -532,21 +532,20 @@ public class ProjectManagement extends MainActivity {
 
     public String getFileName(Uri uri, ContextWrapper activity) {
         String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
-            try {
+        if ("content".equals(uri.getScheme())) {
+            try (Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
-            } finally {
-                cursor.close();
             }
         }
         if (result == null) {
             result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
+            if (result != null) {
+                int cut = result.lastIndexOf('/');
+                if (cut != -1) {
+                    result = result.substring(cut + 1);
+                }
             }
         }
         return result;

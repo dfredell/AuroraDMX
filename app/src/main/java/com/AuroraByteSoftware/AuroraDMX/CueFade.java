@@ -91,9 +91,11 @@ public class CueFade extends MainActivity implements Serializable {
         for (int x = 0; x < alColumns.size() && x < newChLevels.size(); x++) {
             // If a channel changed value
             int fixtureUses = alColumns.get(x).getChLevels().size();
-            ArrayList<Integer> stepValues = new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses));
-            alColumns.get(x).setupIncrementLevelFade(stepValues, steps == 0 ? 1 : steps);
-            chIndex += fixtureUses;
+            if (newChLevels.size() >= chIndex + fixtureUses){
+                ArrayList<Integer> stepValues = new ArrayList<>(newChLevels.subList(chIndex, chIndex + fixtureUses));
+                alColumns.get(x).setupIncrementLevelFade(stepValues, steps == 0 ? 1 : steps);
+                chIndex += fixtureUses;
+            }
         }
 
         // Set fades inProgress

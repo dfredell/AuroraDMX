@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.5.0-57]
+### Added
+- Allow chase time less than a second
+### Fixed
+- When opening files
+- Starting network before the app is fully loaded
+- Fading cues
+
 ## [4.4.0-56]
 ### Added
 - Allow cue fade time less than a second

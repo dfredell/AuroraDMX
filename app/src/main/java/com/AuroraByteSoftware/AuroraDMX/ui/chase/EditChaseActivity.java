@@ -157,7 +157,7 @@ public class EditChaseActivity extends Activity implements
     }
 
     @Override
-    public void onEditChaseDetails(String name, int fadeTime, int waitTime, int buttonColor) {
+    public void onEditChaseDetails(String name, double fadeTime, double waitTime, int buttonColor) {
         chase.setName(name);
         chase.setFadeTime(fadeTime);
         chase.setWaitTime(waitTime);

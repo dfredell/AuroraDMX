@@ -44,9 +44,8 @@
             android:id="@+id/edit_chase_fade_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number" 
-            android:maxLength="3">
-        </EditText>
+            android:inputType="numberDecimal"
+            android:maxLength="3"></EditText>
     </LinearLayout>
 
     <LinearLayout
@@ -64,9 +63,8 @@
             android:id="@+id/edit_chase_wait_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:maxLength="3">
-        </EditText>
+            android:inputType="numberDecimal"
+            android:maxLength="3"></EditText>
     </LinearLayout>
 
     <LinearLayout

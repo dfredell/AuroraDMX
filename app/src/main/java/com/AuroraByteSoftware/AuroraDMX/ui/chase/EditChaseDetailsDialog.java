@@ -40,15 +40,15 @@ public class EditChaseDetailsDialog extends DialogFragment implements View.OnCli
     };
 
     public interface EditChaseDialogListener {
-        void onEditChaseDetails(String name, int fadeTime, int waitTime, int buttonColor);
+        void onEditChaseDetails(String name, double fadeTime, double waitTime, int buttonColor);
 
         EditChaseDetailsPOJO loadEditChaseDetails();
     }
 
     static class EditChaseDetailsPOJO {
         String name;
-        int fade;
-        int wait;
+        double fade;
+        double wait;
         int buttonColor;
     }
 
@@ -77,8 +77,8 @@ public class EditChaseDetailsDialog extends DialogFragment implements View.OnCli
         View inflate = inflater.inflate(R.layout.dialog_edit_chase_details, container, false);
         EditChaseDetailsPOJO detailsPojo = mListener.loadEditChaseDetails();
         ((EditText) inflate.findViewById(R.id.edit_chase_name)).setText(detailsPojo.name);
-        ((EditText) inflate.findViewById(R.id.edit_chase_fade_time)).setText(Integer.toString(detailsPojo.fade));
-        ((EditText) inflate.findViewById(R.id.edit_chase_wait_time)).setText(Integer.toString(detailsPojo.wait));
+        ((EditText) inflate.findViewById(R.id.edit_chase_fade_time)).setText(Double.toString(detailsPojo.fade));
+        ((EditText) inflate.findViewById(R.id.edit_chase_wait_time)).setText(Double.toString(detailsPojo.wait));
         inflate.findViewById(R.id.edit_chase_save).setOnClickListener(this);
         final View chaseButtonColor = inflate.findViewById(R.id.edit_chase_button_color);
         chaseButtonColor.setOnClickListener(this);
@@ -153,8 +153,8 @@ public class EditChaseDetailsDialog extends DialogFragment implements View.OnCli
      */
     public void save(View v) {
         String name = UiUtil.getTextFromDialog(getDialog(), R.id.edit_chase_name);
-        int fade = UiUtil.getIntFromDialog(getDialog(), R.id.edit_chase_fade_time, v);
-        int wait = UiUtil.getIntFromDialog(getDialog(), R.id.edit_chase_wait_time, v);
+        double fade = UiUtil.getDoubleFromDialog(getView(), R.id.edit_chase_fade_time);
+        double wait = UiUtil.getDoubleFromDialog(getView(), R.id.edit_chase_wait_time);
 
         if (wait + fade <= 0) {
             Toast.makeText(v.getContext(), R.string.errorZeroFade, Toast.LENGTH_SHORT).show();

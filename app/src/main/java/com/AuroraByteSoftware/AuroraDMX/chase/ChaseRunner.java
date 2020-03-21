@@ -94,8 +94,8 @@ public class ChaseRunner extends TimerTask {
             Looper.prepare();
         }
 
-        int fadeTime = chase.getFadeTime();
-        int waitTime = chase.getWaitTime();
+        double fadeTime = chase.getFadeTime();
+        double waitTime = chase.getWaitTime();
         Log.d("ChaseRunner", "Starting Chase '" + chase.getName() + "' with times " + fadeTime + ":" + waitTime);
 
         //Set progress bar
@@ -108,7 +108,7 @@ public class ChaseRunner extends TimerTask {
 //        chaseToChaseHandler.removeCallbacks(chaseRunner);
         waitFadeHandler.removeCallbacks(progressWait);
         this.chase = chase;
-        this.delay = (fadeTime + waitTime) * 1000L;
+        this.delay = (long) ((fadeTime + waitTime) * 1000L);
         this.isRunning = true;
         chaseToChaseHandler.postDelayed(this, 0);
     }
@@ -119,16 +119,16 @@ public class ChaseRunner extends TimerTask {
      */
     private class ProgressWait extends TimerTask {
 
-        private int waitTime;
+        private double waitTime;
         private int count = 0;
 
-        ProgressWait(int waitTime) {
+        ProgressWait(double waitTime) {
             this.waitTime = waitTime;
         }
 
         @Override
         public void run() {
-            int progress = count++ * 100 / (waitTime * PROGRESS_FRAMES_PER_SEC);
+            int progress = (int) (count++ * 100 / (waitTime * PROGRESS_FRAMES_PER_SEC));
             if (progress < 100) {
                 waitFadeHandler.postDelayed(this, 1000 / PROGRESS_FRAMES_PER_SEC);
                 Message msg = new Message();

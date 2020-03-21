@@ -53,7 +53,8 @@ public class ChaseActivity extends Activity {
     protected void onPause() {
 //        ChaseRunner.stopAll();
         AuroraNetwork.stopNetwork();
-        MainActivity.pm.save(null);
+        if (MainActivity.pm != null)
+            MainActivity.pm.save(null);
         super.onPause();
     }
 
@@ -149,8 +150,8 @@ public class ChaseActivity extends Activity {
 
     private void addChase() {
         String name = "Chase " + (MainActivity.getAlChases().size() + 1);
-        int chaseFadeTime = Integer.parseInt(MainActivity.getSharedPref().getString("chase_fade_time", "5"));
-        int waitTime = Integer.parseInt(MainActivity.getSharedPref().getString("chase_wait_time", "5"));
+        double chaseFadeTime = Double.parseDouble(MainActivity.getSharedPref().getString("chase_fade_time", "5"));
+        double waitTime = Double.parseDouble(MainActivity.getSharedPref().getString("chase_wait_time", "5"));
 
         ChaseObj chaseObj = new ChaseObj(name, chaseFadeTime, waitTime, new ArrayList<CueObj>(), null);
         chaseObj.setButton(ChaseClickListener.makeButton(chaseObj, this));

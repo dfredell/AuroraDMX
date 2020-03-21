@@ -12,8 +12,11 @@ import java.util.Timer;
 public class ChaseObj implements Serializable {
 
     private static final long serialVersionUID = -6835651116806619514L;
-    private int fadeTime = 5;
-    private int waitTime = 5;
+    // legacy variable, here for version upgrades
+    private int fadeTime = Integer.MAX_VALUE;
+    private int waitTime = Integer.MAX_VALUE;
+    private double fadeTime_d = 5.0;
+    private double waitTime_d = 5.0;
     private ArrayList<CueObj> cues;
     private int[] levels = new int[0];
     private transient ChaseButton button;
@@ -43,9 +46,9 @@ public class ChaseObj implements Serializable {
         this.button = button;
     }
 
-    public ChaseObj(String cueName, int a_fadeTime, int a_waitTime, ArrayList<CueObj> a_cues, ChaseButton a_button) {
-        fadeTime = a_fadeTime;
-        waitTime = a_waitTime;
+    public ChaseObj(String cueName, double a_fadeTime, double a_waitTime, ArrayList<CueObj> a_cues, ChaseButton a_button) {
+        fadeTime_d = a_fadeTime;
+        waitTime_d = a_waitTime;
         cues = a_cues;
         button = a_button;
         name = cueName;
@@ -54,29 +57,37 @@ public class ChaseObj implements Serializable {
     /**
      * @return the fadeTime
      */
-    public int getFadeTime() {
-        return fadeTime;
+    public double getFadeTime() {
+        if (fadeTime != Integer.MAX_VALUE) {
+            fadeTime_d = fadeTime;
+            fadeTime = Integer.MAX_VALUE;
+        }
+        return fadeTime_d;
     }
 
     /**
      * @param fadeUpTime2 the fadeTime to set
      */
-    public void setFadeTime(int fadeUpTime2) {
-        this.fadeTime = fadeUpTime2;
+    public void setFadeTime(double fadeUpTime2) {
+        this.fadeTime_d = fadeUpTime2;
     }
 
     /**
      * @return the waitTime
      */
-    public int getWaitTime() {
-        return waitTime;
+    public double getWaitTime() {
+        if (waitTime != Integer.MAX_VALUE) {
+            waitTime_d = waitTime;
+            waitTime = Integer.MAX_VALUE;
+        }
+        return waitTime_d;
     }
 
     /**
      * @param waitTime the waitTime to set
      */
-    public void setWaitTime(int waitTime) {
-        this.waitTime = waitTime;
+    public void setWaitTime(double waitTime) {
+        this.waitTime_d = waitTime;
     }
 
     public int getHighlight() {

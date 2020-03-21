@@ -4,3 +4,5 @@ build/
 release/
 .gradle/
 local.properties
+AuroraDMX.keystore
+private_key.pepk

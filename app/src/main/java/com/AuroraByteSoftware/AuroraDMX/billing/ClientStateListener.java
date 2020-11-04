@@ -24,6 +24,9 @@ public class ClientStateListener implements BillingClientStateListener {
      * 3 - error
      */
     private int purchaseStatus = 0;
+    public static int PURCHASED = 1;
+    public static int NOT_PURCHASED = 2;
+    public static int ERROR = 3;
 
     static {
         listOfSkus.add(ITEM_SKU);
@@ -50,13 +53,13 @@ public class ClientStateListener implements BillingClientStateListener {
             for (Purchase purchase : purchasesResult.getPurchasesList()) {
                 if (ITEM_SKU.equals(purchase.getSku())
                         && verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
-                    purchaseStatus = 1;
+                    purchaseStatus = PURCHASED;
                     return;
                 }
             }
-            purchaseStatus = 2;
+            purchaseStatus = NOT_PURCHASED;
         } else {
-            purchaseStatus = 3;
+            purchaseStatus = ERROR;
             Log.d(getClass().getSimpleName(), "Unknown billing response " + purchasesResult.getResponseCode());
         }
     }

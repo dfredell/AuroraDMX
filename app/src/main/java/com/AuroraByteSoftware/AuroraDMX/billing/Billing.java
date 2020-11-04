@@ -34,9 +34,9 @@ public class Billing implements PurchasesUpdatedListener, Serializable {
             Log.d(getClass().getSimpleName(), "Connection was lost, reconnecting");
         }
         Log.d(getClass().getSimpleName(), "Billing check: " + clientStateListener.getPurchaseStatus());
-        if (clientStateListener.getPurchaseStatus() == 2) {
+        if (clientStateListener.getPurchaseStatus() == ClientStateListener.NOT_PURCHASED) {
             return false;
-        } else if (clientStateListener.getPurchaseStatus() == 1) {
+        } else if (clientStateListener.getPurchaseStatus() == ClientStateListener.PURCHASED) {
             return true;
         }
         return true;

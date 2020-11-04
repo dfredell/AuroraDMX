@@ -142,14 +142,15 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         updatingFixtures = true;
         // check for app purchase
         boolean paid = true;
-        if (!BuildConfig.DEBUG) {
-            // Skip the paid check when developing
-            try {
-                paid = billing.check();
-            } catch (IllegalStateException | NullPointerException e) {
-                // Do nothing we must not be connected yet
-                e.printStackTrace();
-            }
+        // Skip the paid check when developing
+        try {
+            paid = billing.check();
+        } catch (IllegalStateException | NullPointerException e) {
+            // Do nothing we must not be connected yet
+            e.printStackTrace();
+        }
+        if (BuildConfig.DEBUG) {
+            paid = true;
         }
 
         // Input cleansing

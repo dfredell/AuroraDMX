@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.6.0-58]
+### Added
+- Keep screen on to allow continual ArtNet sending
+### Fixed
+- Updated Android SDK to v30
+- Use Gradle for ArtNetStack dependency management
+
 ## [4.5.0-57]
 ### Added
 - Allow chase time less than a second

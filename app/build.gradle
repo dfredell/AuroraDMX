@@ -8,8 +8,8 @@ android {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 15
         targetSdkVersion 30
-        versionCode 57
-        versionName '4.5.0'
+        versionCode 58
+        versionName '4.6.0'
     }
     buildTypes {
         release {
@@ -21,7 +21,7 @@ android {
     dexOptions {
         preDexLibraries = false
     }
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '30.0.2'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -35,15 +35,21 @@ dependencies {
     implementation 'com.android.billingclient:billing:1.1'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'com.larswerkman:HoloColorPicker:1.5'
-    implementation project(':ArtNetStack')
 
     testImplementation 'junit:junit:4.13-beta-3'
     // Required for instrumented tests
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
 
     // Font awesome v4.5
     implementation 'com.jmedeisis:draglinearlayout:1.1.0'
     implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+}
+
+git {
+    implementation 'https://github.com/corentin59/ArtNetStack', {
+        name 'ArtNetStack'
+        commit 'master'
+    }
 }

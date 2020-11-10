@@ -62,7 +62,8 @@ public class ChaseActivity extends Activity {
     protected void onStop() {
         Log.d(getClass().getSimpleName(), "Stopping");
         getChaseRunner().stopAll();
-        MainActivity.pm.save(null);
+        if (MainActivity.pm != null)
+            MainActivity.pm.save(null);
         super.onStop();
     }
 

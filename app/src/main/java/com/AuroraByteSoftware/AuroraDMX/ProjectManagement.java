@@ -80,7 +80,7 @@ public class ProjectManagement extends MainActivity {
     }
 
     private void save(String key, boolean share) {
-        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<String>());
+        HashSet<String> listOfProjects = (HashSet<String>) getSharedPref().getStringSet(PREF_SAVES, new HashSet<>());
         if (key == null) {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
         }
@@ -89,10 +89,10 @@ public class ProjectManagement extends MainActivity {
         }
         //Get ch levels
         final List<Integer> currentChannelArray = getCurrentChannelArray();
-        int[] currentChannelLevels = ArrayUtils.toPrimitive(currentChannelArray.toArray(new Integer[currentChannelArray.size()]));
+        int[] currentChannelLevels = ArrayUtils.toPrimitive(currentChannelArray.toArray(new Integer[0]));
 
         //Get the channel names as an array
-        String channelNames[] = new String[alColumns.size()];
+        String[] channelNames = new String[alColumns.size()];
         for (int i = 0; i < alColumns.size(); i++) {
             channelNames[i] = alColumns.get(i).getChText();
         }
@@ -104,13 +104,13 @@ public class ProjectManagement extends MainActivity {
         }
 
         //Get the presets as an array
-        String valuePresets[] = new String[alColumns.size()];
+        String[] valuePresets = new String[alColumns.size()];
         for (int i = 0; i < alColumns.size(); i++) {
             valuePresets[i] = alColumns.get(i).getValuePresets();
         }
 
         //Get the isParked as an array
-        Boolean isParked[] = new Boolean[alColumns.size()];
+        Boolean[] isParked = new Boolean[alColumns.size()];
         for (int i = 0; i < alColumns.size(); i++) {
             isParked[i] = alColumns.get(i).isParked();
         }
@@ -211,7 +211,7 @@ public class ProjectManagement extends MainActivity {
     /**
      * @param inputStream file to load
      * @return convertered inputStream file
-     * @throws IOException
+     * @throws IOException can't open file
      * @see <a href="http://stackoverflow.com/a/2436413/288568">http://stackoverflow.com/a/2436413/288568</a>
      */
     private byte[] readBytes(InputStream inputStream) throws IOException {

@@ -6,3 +6,4 @@ release/
 local.properties
 AuroraDMX.keystore
 private_key.pepk
+libs/

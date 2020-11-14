@@ -177,7 +177,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                             this,
                             channelNames == null ? null : channelNames[x],
                             valuePresets == null ? null : valuePresets[x]);
-                    if(isParked != null)
+                    if (isParked != null)
                         e.setParked(isParked[x]);
                     alColumns.add(e);
                 } else {
@@ -186,7 +186,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
                             channelNames == null ? null : channelNames[x],
                             valuePresets == null ? null : valuePresets[x]
                     );
-                    if(isParked != null)
+                    if (isParked != null)
                         e.setParked(isParked[x]);
                     alColumns.add(e);
                 }
@@ -343,7 +343,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(getClass().getSimpleName(), "Pref Change");
-        if (key.equals(SettingsActivity.channels)) {
+        if (key != null && key.equals(SettingsActivity.channels)) {
             setNumberOfFixtures(Integer.parseInt(sharedPreferences.getString(SettingsActivity.channels, "5")), null, null, null, null);
         }
     }
@@ -454,6 +454,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 
     /**
      * Listener that is called after the user selects a file to import
+     *
      * @param requestCode
      * @param resultCode
      * @param resultData

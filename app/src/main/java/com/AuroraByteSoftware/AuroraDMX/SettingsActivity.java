@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.AuroraByteSoftware.AuroraDMX.billing.Billing;
-import com.AuroraByteSoftware.AuroraDMX.billing.ClientStateListener;
 import com.AuroraByteSoftware.AuroraDMX.network.SendArtnetPoll;
 import com.AuroraByteSoftware.AuroraDMX.ui.ManualServerIP;
 import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
@@ -151,16 +150,16 @@ public class SettingsActivity extends PreferenceActivity {
             findPreference("unlock_channels").setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     //open browser or intent here
-                    Log.i(getClass().getSimpleName(), "unlock_channels");
-                    if (billing != null &&
-                            billing.getBillingClient() != null) {
-                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                                .setSku(ClientStateListener.ITEM_SKU)
-                                .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
-                                .build();
-                        int responseCode = billing.getBillingClient()
-                                .launchBillingFlow(getActivity(), flowParams);
-                    }
+//                    Log.i(getClass().getSimpleName(), "unlock_channels");
+//                    if (billing != null &&
+//                            billing.getBillingClient() != null) {
+//                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+//                                .setSku(ClientStateListener.ITEM_SKU)
+//                                .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
+//                                .build();
+//                        int responseCode = billing.getBillingClient()
+//                                .launchBillingFlow(getActivity(), flowParams);
+//                    }
                     return true;
                 }
             });

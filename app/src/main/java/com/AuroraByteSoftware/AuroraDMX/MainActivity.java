@@ -1,5 +1,7 @@
 package com.AuroraByteSoftware.AuroraDMX;
 
+import static com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager.addFAIcon;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -36,14 +38,13 @@ import java.util.List;
 
 import fr.azelart.artnetstack.domain.artpollreply.ArtPollReply;
 
-import static com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager.addFAIcon;
-
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
 
     private static SharedPreferences sharedPref;
     static Double cueCount = 1.0;// cueCount++ = new cue num
     private static boolean updatingFixtures = false;
     private int orgColor = 0;
+
     public Billing billing = new Billing();
 
     public static final ArrayList<ArtPollReply> foundServers = new ArrayList<>();

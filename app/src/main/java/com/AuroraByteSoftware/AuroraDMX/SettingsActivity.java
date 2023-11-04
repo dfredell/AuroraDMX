@@ -26,6 +26,8 @@ import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeIcons;
 import com.AuroraByteSoftware.AuroraDMX.ui.fontawesome.FontAwesomeManager;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public class SettingsActivity extends PreferenceActivity {
     public static final String restoredefaults = "restoredefaults";
     private static Thread t;
     private static SettingsActivity settings;
-    private static Billing billing = new Billing();
+    private static final Billing billing = new Billing();
 
     /**
      * {@inheritDoc}
@@ -150,16 +152,9 @@ public class SettingsActivity extends PreferenceActivity {
             findPreference("unlock_channels").setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     //open browser or intent here
-//                    Log.i(getClass().getSimpleName(), "unlock_channels");
-//                    if (billing != null &&
-//                            billing.getBillingClient() != null) {
-//                        BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-//                                .setSku(ClientStateListener.ITEM_SKU)
-//                                .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
-//                                .build();
-//                        int responseCode = billing.getBillingClient()
-//                                .launchBillingFlow(getActivity(), flowParams);
-//                    }
+                    Log.i(getClass().getSimpleName(), "unlock_channels");
+                    billing.requestPurchase(settings);
+
                     return true;
                 }
             });

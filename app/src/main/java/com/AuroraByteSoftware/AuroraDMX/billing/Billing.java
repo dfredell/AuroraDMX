@@ -1,13 +1,20 @@
 package com.AuroraByteSoftware.AuroraDMX.billing;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,13 +22,13 @@ import java.util.List;
  */
 public class Billing  {
 
-    private Boolean purchaced = null;
+    private Boolean purchased = true;
 
-
-        public static final String ITEM_SKU = "unlock_channels";
+    public static final String ITEM_SKU = "unlock_channels";
     private com.AuroraByteSoftware.AuroraDMX.billing.PurchasesUpdatedListener purchasesUpdatedListener = new com.AuroraByteSoftware.AuroraDMX.billing.PurchasesUpdatedListener();
 
     private BillingClient billingClient = null;
+    private ProductDetails productDetails;
 
     /**
      * 0 - Unknown
@@ -29,18 +36,9 @@ public class Billing  {
      * 2 - not purchased
      * 3 - error
      */
-    private int purchaseStatus = 0;
     public static int PURCHASED = 1;
-    public static int NOT_PURCHASED = 2;
-    public static int ERROR = 3;
 
     public void setup(Context mActivity) {
-//        activity = mActivity;
-//        mBillingClient = BillingClient.newBuilder(mActivity).setListener(this).build();
-//        clientStateListener = new ClientStateListener(mBillingClient);
-//        mBillingClient.startConnection(clientStateListener);
-//
-//
         billingClient = BillingClient.newBuilder(mActivity)
                 .setListener(purchasesUpdatedListener)
                 .enablePendingPurchases()
@@ -51,7 +49,11 @@ public class Billing  {
             public void onBillingSetupFinished(BillingResult billingResult) {
                 if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
-                    query();
+                    try {
+                        query();
+                    } catch (Exception e) {
+                        Log.e("Billing", "onBillingSetupFinished: ", e);
+                    }
                 }
             }
             @Override
@@ -68,50 +70,55 @@ public class Billing  {
     }
 
     private void query() {
+        QueryProductDetailsParams.Product build = QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(ITEM_SKU)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build();
+        List<QueryProductDetailsParams.Product> productList = new ArrayList<>();
+        productList.add(build);
         QueryProductDetailsParams queryProductDetailsParams =
                 QueryProductDetailsParams.newBuilder()
-                        .setProductList(
-                                (List<QueryProductDetailsParams.Product>) QueryProductDetailsParams.Product.newBuilder()
-                                        .setProductId(ITEM_SKU)
-                                        .setProductType(BillingClient.ProductType.SUBS)
-                                        .build())
+                        .setProductList(productList)
                         .build();
+
+        Log.d("Billing", "query: queryProductDetailsParams" + queryProductDetailsParams);
+
         billingClient.queryProductDetailsAsync(
                 queryProductDetailsParams,
                 (billingResult, productDetailsList) -> {
                     // check billingResult
                     // process returned productDetailsList
-                    purchaced = billingResult.getResponseCode() == PURCHASED;
-                    String responseMessage = getBillingResponseMessage(billingResult.getResponseCode());
-                    Log.d(getClass().getSimpleName(), "Billing response " + responseMessage);
-                    ;
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
+                        String responseMessage = getBillingResponseMessage(billingResult.getResponseCode());
+                        Log.d(getClass().getSimpleName(), "Billing response " + responseMessage);
+                        productDetails = productDetailsList.get(0);
+                    }
                 }
         );
+
+
+        billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder()
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build(),
+                (billingResult, purchases) -> {
+                    // check billingResult
+                    // process returned purchase list, e.g. display the plans user owns
+                    purchased = false;
+                    if (purchases.size() > 0 && purchases.get(0) != null){
+                        Purchase purchase = purchases.get(0);
+                        purchased = purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED;
+                    }
+
+                }
+        );
+
+
     }
 
     public boolean check() {
-
-        //
-//        if (!clientStateListener.connect()) {
-//            Log.d(getClass().getSimpleName(), "Connection was lost, reconnecting");
-//        }
-//        Log.d(getClass().getSimpleName(), "Billing check: " + clientStateListener.getPurchaseStatus());
-//        if (clientStateListener.getPurchaseStatus() == ClientStateListener.NOT_PURCHASED) {
-//            return false;
-//        } else if (clientStateListener.getPurchaseStatus() == ClientStateListener.PURCHASED) {
-//            return true;
-//        }
-//        return true;
-
-        return purchaced;
+        return purchased;
     }
-//
-//        @Override
-//    public void onPurchasesUpdated(@BillingClient.BillingResponse int responseCode, @Nullable List<Purchase> purchases) {
-//        Log.d(getClass().getSimpleName(), "onPurchasesUpdated " + responseCode + " " + purchases);
-//        Toast.makeText(activity, getBillingResponseMessage(responseCode), Toast.LENGTH_SHORT).show();
-//
-//    }
 
     private String getBillingResponseMessage(int responseCode) {
         switch (responseCode) {
@@ -139,6 +146,24 @@ public class Billing  {
                 return "Item not owned";
             default:
                 return "Store Message " + responseCode;
+        }
+    }
+    public void requestPurchase(Activity activity){
+        String offerToken = null;
+        if (productDetails!= null && productDetails.getOneTimePurchaseOfferDetails() != null) {
+            List<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
+                    Collections.singletonList(BillingFlowParams.ProductDetailsParams.newBuilder()
+                            // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                            .setProductDetails(productDetails)
+                            .build());
+
+            BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                    .setProductDetailsParamsList(productDetailsParamsList)
+                    .build();
+
+            // Launch the billing flow
+            BillingResult billingResult = billingClient.launchBillingFlow(activity, billingFlowParams);
+            Log.d("Billing", "billingResult: " + billingResult);
         }
     }
 }

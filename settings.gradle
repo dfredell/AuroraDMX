@@ -1,5 +1,2 @@
-plugins {
-    id 'com.alexvasilkov.git-dependencies' version '2.0.1'
-}
-
 include ':app'
+include ':ArtNetStack'

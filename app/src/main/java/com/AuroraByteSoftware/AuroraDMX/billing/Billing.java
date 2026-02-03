@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.QueryProductDetailsParams;
@@ -25,7 +28,7 @@ public class Billing  {
     private Boolean purchased = true;
 
     public static final String ITEM_SKU = "unlock_channels";
-    private com.AuroraByteSoftware.AuroraDMX.billing.PurchasesUpdatedListener purchasesUpdatedListener = new com.AuroraByteSoftware.AuroraDMX.billing.PurchasesUpdatedListener();
+    private final com.AuroraByteSoftware.AuroraDMX.billing.PurchasesUpdatedListener purchasesUpdatedListener = new com.AuroraByteSoftware.AuroraDMX.billing.PurchasesUpdatedListener();
 
     private BillingClient billingClient = null;
     private ProductDetails productDetails;
@@ -39,14 +42,17 @@ public class Billing  {
     public static int PURCHASED = 1;
 
     public void setup(Context mActivity) {
+        PendingPurchasesParams params = PendingPurchasesParams.newBuilder()
+                .enableOneTimeProducts()
+                .build();
         billingClient = BillingClient.newBuilder(mActivity)
                 .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
+                .enablePendingPurchases(params)
                 .build();
         //start billing
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
+            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
                     try {
@@ -91,7 +97,7 @@ public class Billing  {
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
                         String responseMessage = getBillingResponseMessage(billingResult.getResponseCode());
                         Log.d(getClass().getSimpleName(), "Billing response " + responseMessage);
-                        productDetails = productDetailsList.get(0);
+                        productDetails = productDetailsList.getProductDetailsList().get(0);
                     }
                 }
         );
@@ -105,7 +111,7 @@ public class Billing  {
                     // check billingResult
                     // process returned purchase list, e.g. display the plans user owns
                     purchased = false;
-                    if (purchases.size() > 0 && purchases.get(0) != null){
+                    if (!purchases.isEmpty() && purchases.get(0) != null){
                         Purchase purchase = purchases.get(0);
                         purchased = purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED;
                     }
@@ -149,7 +155,6 @@ public class Billing  {
         }
     }
     public void requestPurchase(Activity activity){
-        String offerToken = null;
         if (productDetails!= null && productDetails.getOneTimePurchaseOfferDetails() != null) {
             List<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
                     Collections.singletonList(BillingFlowParams.ProductDetailsParams.newBuilder()

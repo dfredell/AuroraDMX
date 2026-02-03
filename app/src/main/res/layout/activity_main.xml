@@ -4,47 +4,59 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:fitsSystemWindows="true"
     android:keepScreenOn="true"
     tools:context=".MainActivity"
     style="@style/TiledWallpaper"
     android:id="@+id/main">
-        
+
     <com.AuroraByteSoftware.AuroraDMX.ui.MyHorizontalScrollView
         android:id="@+id/horizontalScrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/horizontalScrollView2"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:fillViewport="true"
-        android:clipToPadding="true">
+        android:layout_alignParentEnd="true"
+        android:clipToPadding="false"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/ChanelLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingBottom="3pt" >
+            android:paddingBottom="3pt">
 
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_rgb"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
-            <include layout="@layout/fixture_standard"/>
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_rgb" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
+
+            <include layout="@layout/fixture_standard" />
         </LinearLayout>
 
     </com.AuroraByteSoftware.AuroraDMX.ui.MyHorizontalScrollView>

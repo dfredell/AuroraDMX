@@ -98,6 +98,7 @@ public class Billing  {
                         String responseMessage = getBillingResponseMessage(billingResult.getResponseCode());
                         Log.d(getClass().getSimpleName(), "Billing response " + responseMessage);
                         productDetails = productDetailsList.getProductDetailsList().get(0);
+                        Log.d(getClass().getSimpleName(), "Billing product Details " + productDetails);
                     }
                 }
         );
@@ -115,7 +116,7 @@ public class Billing  {
                         Purchase purchase = purchases.get(0);
                         purchased = purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED;
                     }
-
+                    Log.d(getClass().getSimpleName(), "Checking purchased " + purchased);
                 }
         );
 

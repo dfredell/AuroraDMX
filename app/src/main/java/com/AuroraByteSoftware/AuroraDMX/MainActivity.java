@@ -141,18 +141,19 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
     void setNumberOfFixtures(int numberFixtures, String[] channelNames, boolean[] isRGB,
                              String[] valuePresets, Boolean[] isParked) {
         updatingFixtures = true;
+        // TEMPORARILY DISABLED: Billing check commented out while allowing >5 fixtures
         // check for app purchase
-        boolean paid = true;
-        // Skip the paid check when developing
-        try {
-            paid = billing.check();
-        } catch (IllegalStateException | NullPointerException e) {
-            // Do nothing we must not be connected yet
-            e.printStackTrace();
-        }
-        if (BuildConfig.DEBUG) {
-            paid = true;
-        }
+        // boolean paid = true;
+        // // Skip the paid check when developing
+        // try {
+        //     paid = billing.check();
+        // } catch (IllegalStateException | NullPointerException e) {
+        //     // Do nothing we must not be connected yet
+        //     e.printStackTrace();
+        // }
+        // if (BuildConfig.DEBUG) {
+        //     paid = true;
+        // }
 
         // Input cleansing
         if (numberFixtures > MAX_CHANNEL) {
@@ -161,10 +162,14 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         } else if (numberFixtures < 1) {
             Toast.makeText(MainActivity.this, R.string.dmxRangeError, Toast.LENGTH_SHORT).show();
             numberFixtures = 1;
-        } else if (numberFixtures > 5 && !paid) {
-            Toast.makeText(MainActivity.this, R.string.dmxRangePurchaseLimit, Toast.LENGTH_SHORT).show();
-            numberFixtures = 5;
         }
+        // TEMPORARILY DISABLED: Allow users to keep >5 fixtures they created during billing bug
+        // This prevents deleting users' work when they update the app or load their saves
+        // May re-enable enforcement in a future update
+        // } else if (numberFixtures > 5 && !paid) {
+        //     Toast.makeText(MainActivity.this, R.string.dmxRangePurchaseLimit, Toast.LENGTH_SHORT).show();
+        //     numberFixtures = 5;
+        // }
 
         int change = numberFixtures - alColumns.size();
         int numOfChannelsUsed = 0;//use calculateChannelCount() ?

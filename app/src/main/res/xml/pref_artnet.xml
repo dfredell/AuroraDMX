@@ -2,7 +2,7 @@
 
     <Preference
         android:key="static_text_info"
-        android:summary="Server format 'IP:Universe'"
+        android:summary="@string/serverNameTip"
         android:selectable="false" />
 
     <CheckBoxPreference
@@ -12,5 +12,6 @@
           android:key="checkboxPrefManual" />
 
     
-    <PreferenceCategory android:key="targetCategory"></PreferenceCategory>
+    <PreferenceCategory android:key="targetCategory">
+    </PreferenceCategory>
 </PreferenceScreen>

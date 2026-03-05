@@ -44,7 +44,7 @@
     <string name="title_activity_chase">Chase Sheet</string>
     <string name="title_activity_edit_chase">Edit Chase</string>
     <string name="unlock_channels_title">Purchase App</string>
-    <string name="unlock_channels_sum">Allow more than 5 fixtures</string>
+    <string name="unlock_channels_sum">Support the app (all fixtures currently unlocked)</string>
     <string name="dmxRangePurchaseLimit">Free version limited to 5 fixtures</string>
     <string name="errorProcessPurchases">Unable to process purchases currently</string>
     <string name="select_protocol_title">Select DMX protocol</string>
@@ -59,6 +59,7 @@
     <string name="pref_sacn_unicast_ip_def">192.168.0.0</string>
     <string name="serverUnknown">DMX Server %s Not Found</string>
     <string name="serverName">Server</string>
+    <string name="serverNameTip">Server format \'IP:Universe\'</string>
     <string name="confirm_revert">Are you sure you want to revert all settings to their default values?</string>
     <string name="confirm_revert_summary">Revert all settings to their default values.</string>
     <string name="display_value_title">Brightness as Steps</string>

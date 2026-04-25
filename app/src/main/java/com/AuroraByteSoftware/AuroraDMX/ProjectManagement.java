@@ -239,9 +239,10 @@ public class ProjectManagement extends MainActivity {
             key = getSharedPref().getString(PREF_DEF, PREF_OLD_POINTER);
         }
         // Read data back
-        byte[] bytes = getSharedPref().getString(key, "{}").getBytes();
-
-        loadData(bytes);
+        String data = getSharedPref().getString(key, "{}");
+        if (!data.isEmpty() && !data.equals("{}")) {
+            loadData(data.getBytes());
+        }
 
         // Save a new default
         SharedPreferences.Editor ed = getSharedPref().edit();
@@ -258,6 +259,9 @@ public class ProjectManagement extends MainActivity {
     }
 
     private void loadData(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
+            return;
+        }
         setUpdatingFixtures(true);
         ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
         Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);

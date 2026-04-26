@@ -3,7 +3,7 @@ package com.AuroraByteSoftware.AuroraDMX.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.preference.CheckBoxPreference;
+import androidx.preference.CheckBoxPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;

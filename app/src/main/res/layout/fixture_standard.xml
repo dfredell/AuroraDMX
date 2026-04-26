@@ -1,14 +1,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
+    android:layout_width="60dp"
+    android:minWidth="60dp"
     android:id="@+id/fixture_standard">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:textSize="24sp"
-        android:gravity="center_horizontal|center"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:id="@+id/channel_number"
         android:layout_alignParentTop="true"
@@ -16,11 +16,11 @@
         android:padding="3dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/default_level"
         android:textSize="14sp"
-        android:gravity="center_horizontal|center"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:id="@+id/channel_level"
         android:layout_below="@id/channel_number"
@@ -40,7 +40,7 @@
 
 
     <com.AuroraByteSoftware.AuroraDMX.ui.VerticalSeekBar
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:id="@+id/channel_seek"
         android:max="255"
@@ -48,12 +48,14 @@
         android:layout_above="@id/channel_edit"
         android:layout_below="@id/channel_level"
         android:thumb="@null"
-        android:minHeight="40dp"
-        android:maxHeight="40dp"
+        android:padding="0dp"
+        android:splitTrack="false"
+        android:minHeight="60dp"
+        android:maxHeight="60dp"
         />
 
     <com.AuroraByteSoftware.AuroraDMX.ui.VerticalTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/channel_name"
         android:textColor="@android:color/white"

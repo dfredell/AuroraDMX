@@ -60,7 +60,7 @@ public class RGBFixture extends Fixture implements OnClickListener {
 
     private void init() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_rgb, null);
+        viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_rgb, context.findViewById(R.id.ChanelLayout), false);
 
         tvChNum = viewGroup.findViewById(R.id.channel_rgb_number);
 

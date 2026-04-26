@@ -1,7 +1,6 @@
 package com.AuroraByteSoftware.AuroraDMX.ui;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,6 +28,10 @@ public class VerticalSeekBar extends SeekBar {
         super(context, attrs);
     }
 
+    public VerticalSeekBar(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(h, w, oldh, oldw);
@@ -44,9 +47,9 @@ public class VerticalSeekBar extends SeekBar {
     protected void onDraw(Canvas c) {
         c.rotate(-90);
         c.translate(-getHeight(), 0);
-        drawTicks(c);
 
         super.onDraw(c);
+        drawTicks(c);
     }
 
     private void drawTicks(Canvas canvas) {
@@ -59,11 +62,8 @@ public class VerticalSeekBar extends SeekBar {
         mPaint.setAntiAlias(true);
 
 
-        Resources r = getResources();
-        int columnWidth = Float.floatToIntBits(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, r.getDisplayMetrics()));
-
         int left = getPaddingTop();
-        int right = columnWidth - getPaddingBottom();
+        int right = getWidth() - getPaddingBottom();
         final int scrollBarHeight = getHeight() - getPaddingRight() - getPaddingLeft();
 
         for (Double presetTick : presetTicks) {

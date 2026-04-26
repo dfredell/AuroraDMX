@@ -39,7 +39,8 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:theme="@style/SettingsTheme" />
         <activity
             android:name=".CueFade"
             android:label="@string/title_activity_cue_fade" />

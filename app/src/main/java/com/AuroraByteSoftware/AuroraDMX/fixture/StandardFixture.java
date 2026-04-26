@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable.Orientation;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     private void init() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_standard, null);
+        viewGroup = (RelativeLayout) inflater.inflate(R.layout.fixture_standard, context.findViewById(R.id.ChanelLayout), false);
 
         tvChNum = viewGroup.findViewById(R.id.channel_number);
 
@@ -67,6 +68,11 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
 
         seekBar = viewGroup.findViewById(R.id.channel_seek);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            int thickness = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, context.getResources().getDisplayMetrics());
+            seekBar.setMinHeight(thickness);
+            seekBar.setMaxHeight(thickness);
+        }
         seekBar.setOnSeekBarChangeListener(this);
 
         TextView editButton = viewGroup.findViewById(R.id.channel_edit);
@@ -97,23 +103,32 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     private LayerDrawable generateLayerDrawable(Context context, int scrollColor) {
 
+        // Better: use the actual column width we want
+        int thickness = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, context.getResources().getDisplayMetrics());
+
         //Foreground column color
         GradientDrawable shape2 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
                 Color.rgb(0, 0, 0), scrollColor});
         shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
-        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.START, ClipDrawable.HORIZONTAL);
+        shape2.setSize(thickness, thickness);
+        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.LEFT | Gravity.FILL_VERTICAL, ClipDrawable.HORIZONTAL);
 
         //Background column color
         GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
                 Color.rgb(10, 10, 10), Color.rgb(110, 110, 110)});
         shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
-        InsetDrawable background = new InsetDrawable(shape1, 5, 5, 5, 5);// the padding u want to use
+        shape1.setSize(thickness, thickness);
+        InsetDrawable background = new InsetDrawable(shape1, 0, 0, 0, 0);// the padding u want to use
 
         //Update the text view
         TextView channelName = viewGroup.findViewById(R.id.channel_name);
         channelName.setText(chText);
 
-        return new LayerDrawable(new Drawable[]{background, foreground});
+        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground});
+        layerDrawable.setId(0, android.R.id.background);
+        layerDrawable.setId(1, android.R.id.progress);
+
+        return layerDrawable;
     }
 
     /**
@@ -266,11 +281,9 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
 
     @Override
     public void setScrollColor(int scrollColor) {
-        seekBar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         LayerDrawable mylayer = generateLayerDrawable(viewGroup.getContext(), scrollColor);
         seekBar.setProgressDrawable(mylayer);
         seekBar.updateThumb();
-        mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
     }
 
     @Override
@@ -282,8 +295,6 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         seekBar.setProgressDrawable(mylayer);
         seekBar.updateThumb();
         seekBar.setProgress((int) chLevel);
-
-        mylayer.setLevel((int) (chLevel / MAX_LEVEL * 10000));
     }
 
     public String getValuePresets() {

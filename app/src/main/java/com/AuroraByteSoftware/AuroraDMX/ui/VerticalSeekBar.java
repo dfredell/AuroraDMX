@@ -88,17 +88,39 @@ public class VerticalSeekBar extends SeekBar {
         if (!isEnabled()) {
             return false;
         }
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-            case MotionEvent.ACTION_UP:
-                setProgress(getMax() - (int) (getMax() * event.getY() / getHeight()));
-                onSizeChanged(getWidth(), getHeight(), 0, 0);
+                if (getParent() != null) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                setSelected(true);
+                setPressed(true);
                 break;
-
+            case MotionEvent.ACTION_MOVE:
+                setSelected(true);
+                setPressed(true);
+                break;
+            case MotionEvent.ACTION_UP:
+                setSelected(false);
+                setPressed(false);
+                if (getParent() != null) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                break;
             case MotionEvent.ACTION_CANCEL:
+                setSelected(false);
+                setPressed(false);
+                if (getParent() != null) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
                 break;
         }
+
+        int i = getMax() - (int) (getMax() * event.getY() / getHeight());
+        if (i < 0) i = 0;
+        if (i > getMax()) i = getMax();
+        setProgress(i);
         return true;
     }
 

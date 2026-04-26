@@ -68,6 +68,7 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
         defaultLvlTextColor = tvVal.getTextColors().getDefaultColor();
 
         seekBar = viewGroup.findViewById(R.id.channel_seek);
+        seekBar.setPadding(0, 0, 0, 0);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             int thickness = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, context.getResources().getDisplayMetrics());
             seekBar.setMinHeight(thickness);
@@ -111,20 +112,19 @@ public class StandardFixture extends Fixture implements OnSeekBarChangeListener,
                 Color.rgb(0, 0, 0), scrollColor});
         shape2.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));
         shape2.setSize(thickness, thickness);
-        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.LEFT | Gravity.FILL_VERTICAL, ClipDrawable.HORIZONTAL);
+        ClipDrawable foreground = new ClipDrawable(shape2, Gravity.FILL_VERTICAL | Gravity.START, ClipDrawable.HORIZONTAL);
 
         //Background column color
         GradientDrawable shape1 = new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{
                 Color.rgb(10, 10, 10), Color.rgb(110, 110, 110)});
         shape1.setCornerRadius((int) context.getResources().getDimension(R.dimen.column_round_corners));// change the corners of the rectangle
         shape1.setSize(thickness, thickness);
-        InsetDrawable background = new InsetDrawable(shape1, 0, 0, 0, 0);// the padding u want to use
-
+        
         //Update the text view
         TextView channelName = viewGroup.findViewById(R.id.channel_name);
         channelName.setText(chText);
 
-        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{background, foreground});
+        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{shape1, foreground});
         layerDrawable.setId(0, android.R.id.background);
         layerDrawable.setId(1, android.R.id.progress);
 

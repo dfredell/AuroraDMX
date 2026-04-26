@@ -4,13 +4,13 @@ android {
     namespace = "com.AuroraByteSoftware.AuroraDMX"
     signingConfigs {
     }
-    compileSdkVersion 36
+    compileSdk 37
     defaultConfig {
         applicationId "com.AuroraByteSoftware.AuroraDMX"
         minSdkVersion 23
-        targetSdkVersion 36
-        versionCode 68
-        versionName '4.7.2'
+        targetSdkVersion 37
+        versionCode 70
+        versionName '4.8.0'
     }
     buildTypes {
         release {
@@ -46,27 +46,29 @@ android {
     buildFeatures {
         buildConfig true
     }
+    buildToolsVersion '36.1.0'
+    compileSdkMinor 0
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.20.0'
+    implementation libs.commons.lang3
     //  from  https://dl.google.com/dl/android/maven2/index.html
-    implementation 'com.android.billingclient:billing:8.1.0'
-    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
-    implementation 'com.larswerkman:HoloColorPicker:1.5'
-    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation libs.billing
+    implementation libs.legacy.support.v13
+    implementation libs.holocolorpicker
+    implementation libs.annotation
 
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation libs.junit
     // Required for instrumented tests
-    androidTestImplementation 'androidx.annotation:annotation:1.9.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation libs.annotation
+    androidTestImplementation libs.ext.junit
 
     // Font awesome v4.5
-    implementation 'ro.andob.draglinearlayout:draglinearlayout:1.1.3'
-    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation libs.draglinearlayout
+    implementation libs.android.iconify.fontawesome
+    implementation libs.recyclerview
+    implementation libs.preference
+    implementation libs.appcompat
 
     // ArtNetStack as local module
     implementation project(':ArtNetStack')
